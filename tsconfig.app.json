@@ -30,7 +30,7 @@
       "@/*": ["src/*"],
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
-      "@components/*": ["src/components/*"],
+      "@components": ["src/components/index.ts"],
       "@hooks/*": ["src/hooks/*"],
       "@services/*": ["src/services/*"],
       "@types/*": ["src/types/*"],
