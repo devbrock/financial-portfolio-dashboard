@@ -1,0 +1,23 @@
+import type * as React from "react";
+import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from "../_internal/charts";
+
+export type StackedBarChartProps<TDatum extends Record<string, unknown>> = {
+  data: readonly TDatum[];
+  xKey: DatumKey<TDatum>;
+  series: readonly ChartSeries<TDatum>[];
+  height?: number;
+  grid?: boolean;
+  legend?: boolean;
+  xTickFormatter?: ChartAxisTickFormatter;
+  yTickFormatter?: ChartAxisTickFormatter;
+  tooltipLabelFormatter?: (label: string | number) => React.ReactNode;
+  tooltipValueFormatter?: (value: string | number) => React.ReactNode;
+  /**
+   * Recharts stackId used for all series.
+   * @defaultValue "stack"
+   */
+  stackId?: string;
+  className?: string;
+};
+
+

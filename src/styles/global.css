@@ -1,1 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-brand-dark: #081639;
+  --color-brand-cyan: #00aeef;
+  --color-brand-lavendar: #aea1ed;
+  --color-brand-gray: #8696a2;
+  --color-brand-light-blue: #c1dcee;
+
+  --font-brand: "Bricolage Grotesque";
+  --font-brand-secondary: "Plus Jakarta Sans";
+}
+
+/**
+ * Semantic color system contract (see `src/components/design_system.json` -> foundations.themingStrategy.cssVariables).
+ * These variables are what our components read (via `var(--...)`) so light/dark stays consistent.
+ */
+:root {
+  --ui-bg: #ffffff;
+  --ui-surface: #f7f9fc;
+  --ui-surface-2: #eef3f9;
+  --ui-border: rgba(8, 22, 57, 0.12);
+  --ui-border-strong: rgba(8, 22, 57, 0.18);
+  --ui-text: #081639;
+  --ui-text-muted: rgba(8, 22, 57, 0.72);
+  --ui-text-subtle: rgba(8, 22, 57, 0.56);
+  --ui-primary: #00aeef;
+  --ui-primary-ink: #081639;
+  --ui-accent: #aea1ed;
+  --ui-focus: #00aeef;
+  --ui-inverse-bg: #081639;
+  --ui-inverse-text: #ffffff;
+}
+
+.dark {
+  --ui-bg: #070f24;
+  --ui-surface: rgba(255, 255, 255, 0.06);
+  --ui-surface-2: rgba(255, 255, 255, 0.09);
+  --ui-border: rgba(255, 255, 255, 0.12);
+  --ui-border-strong: rgba(255, 255, 255, 0.18);
+  --ui-text: rgba(255, 255, 255, 0.92);
+  --ui-text-muted: rgba(255, 255, 255, 0.72);
+  --ui-text-subtle: rgba(255, 255, 255, 0.56);
+  --ui-primary: #00aeef;
+  --ui-primary-ink: #081639;
+  --ui-accent: #aea1ed;
+  --ui-focus: #c1dcee;
+  --ui-inverse-bg: #081639;
+  --ui-inverse-text: #ffffff;
+}
+
+* {
+  @apply font-brand-secondary;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-brand;
+}

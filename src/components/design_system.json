@@ -1,0 +1,789 @@
+{
+  "meta": {
+    "docType": "component-design-spec",
+    "libraryName": "Orion Executive UI",
+    "stack": {
+      "framework": "React",
+      "styling": "Tailwind CSS",
+      "a11yTarget": "WCAG 2.2 AA",
+      "themes": ["light", "dark"],
+      "noExternalUiLibs": true,
+      "variants": {
+        "library": "class-variance-authority",
+        "usage": "All variant-able components must use cva() + VariantProps for type-safe variants."
+      },
+      "animations": {
+        "library": "tw-animate-css",
+        "usage": "Use tw-animate-css utility classes for non-essential motion; always respect motion-reduce."
+      }
+    },
+    "brandIntent": [
+      "Modern, professional, executive-ready",
+      "Calm, trustworthy financial tone",
+      "Clean white surfaces + deep navy sections + cyan accents",
+      "Soft elevation, generous whitespace, subtle borders"
+    ],
+    "visualRefs": {
+      "layoutMotifs": [
+        "Hero/feature sections with dark navy background + light text",
+        "Cards with rounded corners, light borders, subtle shadow",
+        "Pill/chip navigation for product/service categories",
+        "Section headings with clear hierarchy and short supporting copy",
+        "Icon-in-tile feature grids"
+      ]
+    },
+    "inputTokensProvided": {
+      "colors": {
+        "--color-brand-dark": "#081639",
+        "--color-brand-cyan": "#00aeef",
+        "--color-brand-lavendar": "#aea1ed",
+        "--color-brand-gray": "#8696a2",
+        "--color-brand-light-blue": "#c1dcee"
+      },
+      "fonts": {
+        "--font-brand": "Bricolage Grotesque",
+        "--font-brand-secondary": "Plus Jakarta Sans"
+      }
+    }
+  },
+  "foundations": {
+    "themingStrategy": {
+      "modeToggle": "class",
+      "darkClass": "dark",
+      "tokenApproach": [
+        "Use your existing @theme tokens as the brand palette.",
+        "Create semantic CSS variables for UI roles (bg, surface, text, border, primary, focus, etc.).",
+        "Map semantics to brand tokens differently in light vs dark for contrast."
+      ],
+      "cssVariables": {
+        "light": {
+          "--ui-bg": "#ffffff",
+          "--ui-surface": "#f7f9fc",
+          "--ui-surface-2": "#eef3f9",
+          "--ui-border": "rgba(8,22,57,0.12)",
+          "--ui-border-strong": "rgba(8,22,57,0.18)",
+          "--ui-text": "#081639",
+          "--ui-text-muted": "rgba(8,22,57,0.72)",
+          "--ui-text-subtle": "rgba(8,22,57,0.56)",
+          "--ui-primary": "#00aeef",
+          "--ui-primary-ink": "#081639",
+          "--ui-accent": "#aea1ed",
+          "--ui-focus": "#00aeef",
+          "--ui-inverse-bg": "#081639",
+          "--ui-inverse-text": "#ffffff"
+        },
+        "dark": {
+          "--ui-bg": "#070f24",
+          "--ui-surface": "rgba(255,255,255,0.06)",
+          "--ui-surface-2": "rgba(255,255,255,0.09)",
+          "--ui-border": "rgba(255,255,255,0.12)",
+          "--ui-border-strong": "rgba(255,255,255,0.18)",
+          "--ui-text": "rgba(255,255,255,0.92)",
+          "--ui-text-muted": "rgba(255,255,255,0.72)",
+          "--ui-text-subtle": "rgba(255,255,255,0.56)",
+          "--ui-primary": "#00aeef",
+          "--ui-primary-ink": "#081639",
+          "--ui-accent": "#aea1ed",
+          "--ui-focus": "#c1dcee",
+          "--ui-inverse-bg": "#081639",
+          "--ui-inverse-text": "#ffffff"
+        }
+      },
+      "tailwindUsage": {
+        "preferredPattern": "Use utility classes that reference semantic vars via arbitrary values (e.g. bg-[var(--ui-surface)] text-[var(--ui-text)] border-[var(--ui-border)]).",
+        "avoid": [
+          "Hardcoding hex values in component classes (except in the theme layer).",
+          "Using color-only state to convey meaning (always pair with icon/text)."
+        ]
+      }
+    },
+    "typography": {
+      "fontFamilies": {
+        "display": "var(--font-brand)",
+        "body": "var(--font-brand-secondary)"
+      },
+      "scale": {
+        "h1": "text-4xl md:text-5xl font-semibold tracking-tight",
+        "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+        "h3": "text-2xl md:text-3xl font-semibold tracking-tight",
+        "h4": "text-xl md:text-2xl font-semibold",
+        "h5": "text-lg font-semibold",
+        "h6": "text-base font-semibold",
+        "body": "text-base leading-7",
+        "bodySm": "text-sm leading-6",
+        "caption": "text-xs leading-5"
+      },
+      "defaults": {
+        "textColor": "text-[var(--ui-text)]",
+        "mutedTextColor": "text-[var(--ui-text-muted)]"
+      }
+    },
+    "layoutAndSpacing": {
+      "container": {
+        "maxWidth": "max-w-6xl",
+        "padding": "px-4 sm:px-6 lg:px-8"
+      },
+      "sectionSpacing": {
+        "y": "py-12 sm:py-16 lg:py-20",
+        "gap": "gap-6 sm:gap-8"
+      },
+      "gridPresets": {
+        "featureGrid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
+        "statsGrid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      }
+    },
+    "shapeAndElevation": {
+      "radii": {
+        "sm": "rounded-lg",
+        "md": "rounded-xl",
+        "lg": "rounded-2xl",
+        "pill": "rounded-full"
+      },
+      "shadows": {
+        "sm": "shadow-sm",
+        "md": "shadow-sm shadow-black/5",
+        "lg": "shadow-md shadow-black/10"
+      },
+      "borders": {
+        "default": "border border-[var(--ui-border)]",
+        "strong": "border border-[var(--ui-border-strong)]"
+      }
+    },
+    "interaction": {
+      "focusRing": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ui-bg)]",
+      "transitions": "transition-colors duration-200",
+      "reducedMotion": {
+        "rule": "Respect prefers-reduced-motion: reduce by removing non-essential animations.",
+        "utilityHint": "Use motion-reduce:transition-none motion-reduce:animate-none"
+      },
+      "interaction": {
+        "animationFramework": {
+          "library": "tw-animate-css",
+          "rules": [
+            "Only animate feedback/transitions (popover open/close, toast enter/exit, subtle refresh pulse).",
+            "Prefer opacity/translate/scale animations; avoid large motion.",
+            "Always provide motion-reduce fallbacks (motion-reduce:animate-none)."
+          ],
+          "recommendedPatterns": [
+            {
+              "name": "Fade + slight rise",
+              "classes": "animate-in fade-in slide-in-from-bottom-1 duration-200 motion-reduce:animate-none"
+            },
+            {
+              "name": "Fade out",
+              "classes": "animate-out fade-out duration-150 motion-reduce:animate-none"
+            },
+            {
+              "name": "Scale in (menus)",
+              "classes": "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+            }
+          ]
+        }
+      }
+    },
+    "icons": {
+      "guidance": [
+        "Icons are optional but if used must be decorative (aria-hidden=true) unless conveying unique meaning.",
+        "If icon conveys meaning, provide accessible name via adjacent text or aria-label."
+      ],
+      "size": {
+        "sm": "h-4 w-4",
+        "md": "h-5 w-5",
+        "lg": "h-6 w-6"
+      }
+    }
+  },
+  "accessibility": {
+    "globalRules": [
+      "All interactive elements must be keyboard reachable and usable (Tab/Shift+Tab, Enter/Space, Esc where appropriate).",
+      "Use :focus-visible styles (not :focus) and never remove outlines without replacement.",
+      "Ensure minimum target size ~44x44px for touch where possible (IconButton included).",
+      "Do not rely on color alone for status; include text and/or icon.",
+      "Provide visible error text tied to inputs via aria-describedby; mark invalid via aria-invalid.",
+      "For async UI: announce status changes using aria-live regions (polite for updates, assertive for critical errors).",
+      "Use aria attributes where applicable."
+    ],
+    "contrastGuidance": [
+      "Text on light surfaces should meet 4.5:1 (normal) / 3:1 (large).",
+      "Text on brand-dark sections should be white/near-white; avoid brand-cyan as body text on white if contrast fails—use it for accents/borders/focus."
+    ],
+    "componentSpecificA11y": {
+      "Dialog/Modal": [
+        "role=dialog, aria-modal=true, label via aria-labelledby, description via aria-describedby",
+        "Trap focus; restore focus to trigger on close; Esc closes"
+      ],
+      "Menu/Dropdown": [
+        "role=menu with roving tabindex; arrow key navigation; Esc closes; Enter activates"
+      ],
+      "Tabs": [
+        "role=tablist/tab/tabpanel; arrow key navigation between tabs; selected state via aria-selected"
+      ],
+      "Tooltip": [
+        "Must appear on focus and hover; content referenced via aria-describedby; do not trap focus"
+      ]
+    }
+  },
+  "componentArchitecture": {
+    "directoryConventions": {
+      "pattern": "src/components/<ComponentName>/",
+      "files": [
+        "index.ts",
+        "<ComponentName>.tsx",
+        "<ComponentName>.types.ts",
+        "<ComponentName>.styles.ts"
+      ]
+    },
+    "stylingConventions": {
+      "cnUtil": "Use a cn() utility to merge Tailwind classes safely.",
+      "variantStrategy": {
+        "required": true,
+        "library": "class-variance-authority",
+        "rules": [
+          "Use cva() for class definitions and VariantProps<typeof variants> for prop typing.",
+          "Keep variant names consistent across components (size: sm|md|lg, intent/variant: primary|secondary|ghost|destructive|inverse).",
+          "Prefer compound variants over deeply nested conditionals."
+        ]
+      },
+      "slots": "Prefer composition via children and subcomponents for complex components (Card, Table, Dialog).",
+      "animationConventions": {
+        "library": "tw-animate-css",
+        "rules": [
+          "Overlays (Modal/Dropdown/Popover/Tooltip) must include enter/exit animations using tw-animate-css classes.",
+          "Never animate layout in a way that impacts readability; keep durations short (150–250ms)."
+        ]
+      }
+    },
+    "propConventions": {
+      "common": [
+        "className?: string",
+        "asChild?: boolean (optional) for polymorphic components (Button/LinkButton)",
+        "data-testid?: string (optional)",
+        "disabled?: boolean",
+        "size?: 'sm'|'md'|'lg' (where relevant)",
+        "ariaLabel: string (required when applicable)"
+      ],
+      "events": ["onClick", "onOpenChange", "onValueChange", "onSubmit"]
+    }
+  },
+  "components": {
+    "primitives": {
+      "Container": {
+        "intent": "Page-width constraint + horizontal padding; centers content.",
+        "slots": ["children"],
+        "classes": {
+          "base": "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
+        },
+        "a11y": { "notes": ["No special requirements."] }
+      },
+      "Stack": {
+        "intent": "Vertical layout with consistent spacing.",
+        "props": {
+          "gap": { "type": "'none'|'sm'|'md'|'lg'|'xl'", "default": "md" },
+          "align": {
+            "type": "'start'|'center'|'end'|'stretch'",
+            "default": "stretch"
+          }
+        },
+        "classes": {
+          "base": "flex flex-col",
+          "gap": {
+            "none": "gap-0",
+            "sm": "gap-2",
+            "md": "gap-4",
+            "lg": "gap-6",
+            "xl": "gap-8"
+          },
+          "align": {
+            "start": "items-start",
+            "center": "items-center",
+            "end": "items-end",
+            "stretch": "items-stretch"
+          }
+        }
+      },
+      "Inline": {
+        "intent": "Horizontal layout row with wrapping and spacing.",
+        "props": {
+          "gap": { "type": "'sm'|'md'|'lg'", "default": "md" },
+          "wrap": { "type": "boolean", "default": true },
+          "align": {
+            "type": "'start'|'center'|'end'|'baseline'|'stretch'",
+            "default": "center"
+          },
+          "justify": {
+            "type": "'start'|'between'|'end'|'center'",
+            "default": "start"
+          }
+        },
+        "classes": {
+          "base": "flex",
+          "wrap": { "true": "flex-wrap", "false": "flex-nowrap" },
+          "gap": { "sm": "gap-2", "md": "gap-3", "lg": "gap-4" },
+          "align": {
+            "start": "items-start",
+            "center": "items-center",
+            "end": "items-end",
+            "baseline": "items-baseline",
+            "stretch": "items-stretch"
+          },
+          "justify": {
+            "start": "justify-start",
+            "between": "justify-between",
+            "end": "justify-end",
+            "center": "justify-center"
+          }
+        }
+      },
+      "Card": {
+        "intent": "Primary surface container used throughout the site/app; supports header/body/footer regions.",
+        "slots": ["CardHeader", "CardBody", "CardFooter"],
+        "props": {
+          "tone": {
+            "type": "'default'|'inverse'|'soft'",
+            "default": "default"
+          },
+          "elevation": { "type": "'none'|'sm'|'md'", "default": "sm" }
+        },
+        "classes": {
+          "base": "rounded-2xl border border-[var(--ui-border)]",
+          "tone": {
+            "default": "bg-[var(--ui-bg)] text-[var(--ui-text)]",
+            "soft": "bg-[var(--ui-surface)] text-[var(--ui-text)]",
+            "inverse": "bg-[var(--ui-inverse-bg)] text-[var(--ui-inverse-text)] border-white/10"
+          },
+          "elevation": {
+            "none": "shadow-none",
+            "sm": "shadow-sm shadow-black/5",
+            "md": "shadow-md shadow-black/10"
+          },
+          "padding": "p-6"
+        },
+        "subcomponents": {
+          "CardHeader": {
+            "classes": "flex items-start justify-between gap-4 pb-4",
+            "slots": ["title", "subtitle", "actions"]
+          },
+          "CardBody": {
+            "classes": "space-y-4"
+          },
+          "CardFooter": {
+            "classes": "pt-4 flex items-center justify-end gap-3"
+          }
+        }
+      },
+      "Heading": {
+        "intent": "Consistent headings h1–h6 with brand typography.",
+        "props": {
+          "as": { "type": "'h1'|'h2'|'h3'|'h4'|'h5'|'h6'", "default": "h2" },
+          "tone": {
+            "type": "'default'|'muted'|'inverse'",
+            "default": "default"
+          }
+        },
+        "classes": {
+          "base": "font-[var(--font-brand)] tracking-tight",
+          "as": {
+            "h1": "text-4xl md:text-5xl font-semibold",
+            "h2": "text-3xl md:text-4xl font-semibold",
+            "h3": "text-2xl md:text-3xl font-semibold",
+            "h4": "text-xl md:text-2xl font-semibold",
+            "h5": "text-lg font-semibold",
+            "h6": "text-base font-semibold"
+          },
+          "tone": {
+            "default": "text-[var(--ui-text)]",
+            "muted": "text-[var(--ui-text-muted)]",
+            "inverse": "text-[var(--ui-inverse-text)]"
+          }
+        }
+      },
+      "Text": {
+        "intent": "Typography primitive for paragraphs/labels/muted text variants.",
+        "props": {
+          "size": { "type": "'body'|'sm'|'caption'", "default": "body" },
+          "tone": {
+            "type": "'default'|'muted'|'subtle'|'inverse'",
+            "default": "default"
+          }
+        },
+        "classes": {
+          "base": "font-[var(--font-brand-secondary)]",
+          "size": {
+            "body": "text-base leading-7",
+            "sm": "text-sm leading-6",
+            "caption": "text-xs leading-5"
+          },
+          "tone": {
+            "default": "text-[var(--ui-text)]",
+            "muted": "text-[var(--ui-text-muted)]",
+            "subtle": "text-[var(--ui-text-subtle)]",
+            "inverse": "text-[var(--ui-inverse-text)]"
+          }
+        }
+      },
+      "Divider": {
+        "intent": "Subtle separator for content groups.",
+        "props": {
+          "orientation": {
+            "type": "'horizontal'|'vertical'",
+            "default": "horizontal"
+          }
+        },
+        "classes": {
+          "horizontal": "h-px w-full bg-[var(--ui-border)]",
+          "vertical": "w-px self-stretch bg-[var(--ui-border)]"
+        }
+      }
+    },
+    "controls": {
+      "Button": {
+        "intent": "Primary action; supports variants, sizes, loading state, icons.",
+        "props": {
+          "variant": {
+            "type": "'primary'|'secondary'|'ghost'|'destructive'|'inverse'",
+            "default": "primary"
+          },
+          "size": { "type": "'sm'|'md'|'lg'", "default": "md" },
+          "loading": { "type": "boolean", "default": false },
+          "leftIcon": { "type": "ReactNode", "default": null },
+          "rightIcon": { "type": "ReactNode", "default": null },
+          "asChild": { "type": "boolean", "default": false }
+        },
+        "classes": {
+          "base": "inline-flex items-center justify-center gap-2 rounded-xl font-[var(--font-brand-secondary)] font-semibold disabled:opacity-50 disabled:pointer-events-none select-none",
+          "focus": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ui-bg)]",
+          "transition": "transition-colors duration-200",
+          "size": {
+            "sm": "h-9 px-3 text-sm",
+            "md": "h-10 px-4 text-sm",
+            "lg": "h-12 px-5 text-base"
+          },
+          "variant": {
+            "primary": "bg-[var(--ui-primary)] text-[var(--ui-primary-ink)] hover:brightness-95",
+            "secondary": "bg-[var(--ui-surface-2)] text-[var(--ui-text)] border border-[var(--ui-border)] hover:bg-[var(--ui-surface)]",
+            "ghost": "bg-transparent text-[var(--ui-text)] hover:bg-[var(--ui-surface)]",
+            "destructive": "bg-red-600 text-white hover:bg-red-700",
+            "inverse": "bg-[var(--ui-inverse-bg)] text-[var(--ui-inverse-text)] hover:brightness-110 border border-white/10"
+          }
+        },
+        "a11y": {
+          "rules": [
+            "When loading=true: set aria-busy=true; optionally aria-disabled=true; keep width stable; show Spinner with aria-hidden.",
+            "If icon-only usage: use IconButton instead."
+          ]
+        }
+      },
+      "IconButton": {
+        "intent": "Square icon action button with accessible label.",
+        "props": {
+          "variant": {
+            "type": "'ghost'|'secondary'|'inverse'",
+            "default": "ghost"
+          },
+          "size": { "type": "'sm'|'md'|'lg'", "default": "md" },
+          "ariaLabel": { "type": "string", "required": true }
+        },
+        "classes": {
+          "base": "inline-flex items-center justify-center rounded-xl",
+          "size": { "sm": "h-9 w-9", "md": "h-10 w-10", "lg": "h-12 w-12" },
+          "variant": {
+            "ghost": "hover:bg-[var(--ui-surface)] text-[var(--ui-text)]",
+            "secondary": "bg-[var(--ui-surface-2)] border border-[var(--ui-border)] hover:bg-[var(--ui-surface)]",
+            "inverse": "bg-white/10 text-white hover:bg-white/15 border border-white/10"
+          },
+          "focus": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ui-bg)]"
+        },
+        "a11y": {
+          "rules": [
+            "aria-label is required.",
+            "Icon inside should be aria-hidden unless it conveys unique meaning."
+          ]
+        }
+      },
+      "Badge": {
+        "intent": "Small status/type label pill (asset type, status, etc.).",
+        "props": {
+          "tone": {
+            "type": "'neutral'|'info'|'success'|'warning'|'danger'|'accent'",
+            "default": "neutral"
+          }
+        },
+        "classes": {
+          "base": "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border",
+          "tone": {
+            "neutral": "bg-[var(--ui-surface)] text-[var(--ui-text)] border-[var(--ui-border)]",
+            "info": "bg-[color:var(--color-brand-light-blue)] text-[var(--ui-text)] border-[var(--ui-border)] dark:bg-white/10 dark:text-[var(--ui-text)]",
+            "success": "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-200 dark:border-emerald-500/25",
+            "warning": "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-500/15 dark:text-amber-200 dark:border-amber-500/25",
+            "danger": "bg-red-50 text-red-800 border-red-200 dark:bg-red-500/15 dark:text-red-200 dark:border-red-500/25",
+            "accent": "bg-[color:var(--color-brand-lavendar)]/25 text-[var(--ui-text)] border-[var(--ui-border)] dark:bg-[color:var(--color-brand-lavendar)]/20"
+          }
+        },
+        "a11y": {
+          "notes": [
+            "Badges are non-interactive by default. If clickable, use Chip."
+          ]
+        }
+      },
+      "Chip": {
+        "intent": "Selectable pill for toggles (e.g., time ranges).",
+        "props": {
+          "selected": { "type": "boolean", "default": false },
+          "disabled": { "type": "boolean", "default": false }
+        },
+        "classes": {
+          "base": "inline-flex items-center justify-center rounded-full px-3 py-1.5 text-sm font-semibold border",
+          "states": {
+            "default": "bg-[var(--ui-bg)] text-[var(--ui-text)] border-[var(--ui-border)] hover:bg-[var(--ui-surface)]",
+            "selected": "bg-[var(--ui-primary)] text-[var(--ui-primary-ink)] border-transparent",
+            "disabled": "opacity-50 pointer-events-none"
+          },
+          "focus": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ui-bg)]"
+        },
+        "a11y": {
+          "rules": [
+            "Render as <button type='button'> by default.",
+            "Expose pressed state via aria-pressed when used as toggle."
+          ]
+        }
+      },
+      "Input": {
+        "intent": "Text input with label/description/error handled by FormField wrapper.",
+        "props": { "size": { "type": "'sm'|'md'|'lg'", "default": "md" } },
+        "classes": {
+          "base": "w-full rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg)] px-3 text-[var(--ui-text)] placeholder:text-[var(--ui-text-subtle)]",
+          "size": {
+            "sm": "h-9 text-sm",
+            "md": "h-10 text-sm",
+            "lg": "h-12 text-base"
+          },
+          "focus": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ui-bg)]",
+          "invalid": "aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-200 dark:aria-[invalid=true]:border-red-500/50 dark:aria-[invalid=true]:ring-red-500/20",
+          "disabled": "disabled:opacity-60 disabled:cursor-not-allowed"
+        },
+        "a11y": {
+          "rules": [
+            "id must be set and label must reference it (via FormLabel htmlFor).",
+            "When error: set aria-invalid=true and connect error text via aria-describedby."
+          ]
+        }
+      },
+      "Select": {
+        "intent": "Native select styled to match inputs (accessible and simple).",
+        "implementation": "Prefer <select> with custom chevron icon for reliability and accessibility.",
+        "classes": {
+          "base": "w-full h-10 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg)] px-3 text-sm text-[var(--ui-text)]"
+        },
+        "a11y": {
+          "rules": [
+            "Use native select unless requirements demand searchable combobox."
+          ]
+        }
+      },
+      "Combobox": {
+        "intent": "Searchable select for symbols; async suggestions; debounced input.",
+        "behavior": {
+          "debounceMs": 250,
+          "minChars": 1,
+          "closeOnSelect": true,
+          "closeOnBlur": true,
+          "keyboard": [
+            "ArrowDown/Up to navigate",
+            "Enter to select",
+            "Esc to close"
+          ]
+        },
+        "a11y": {
+          "rules": [
+            "Follow ARIA combobox pattern: role=combobox, aria-expanded, aria-controls, aria-activedescendant.",
+            "Suggestions list: role=listbox; items role=option; selected state via aria-selected.",
+            "Announce loading and 'no results' via aria-live polite region."
+          ]
+        },
+        "visual": {
+          "input": "Use Input styles.",
+          "panel": "rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg)] shadow-md shadow-black/10 overflow-hidden",
+          "option": "px-3 py-2 text-sm hover:bg-[var(--ui-surface)] aria-selected:bg-[var(--ui-surface-2)]"
+        }
+      }
+    },
+    "navigationAndOverlays": {
+      "Tabs": {
+        "intent": "Accessible tabs; can also be used as pill category switcher similar to screenshot.",
+        "classes": {
+          "tabList": "inline-flex rounded-full bg-[var(--ui-surface)] p-1 border border-[var(--ui-border)]",
+          "tab": "rounded-full px-4 py-2 text-sm font-semibold text-[var(--ui-text-muted)] hover:text-[var(--ui-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus)]",
+          "tabActive": "bg-[var(--ui-bg)] text-[var(--ui-text)] shadow-sm shadow-black/5 border border-[var(--ui-border)]"
+        },
+        "a11y": {
+          "rules": [
+            "Use roving tabindex among tabs.",
+            "Arrow keys move focus; Enter/Space activates.",
+            "tabpanel has aria-labelledby to active tab."
+          ]
+        }
+      },
+      "DropdownMenu": {
+        "intent": "Action menu (sort presets, row actions).",
+        "classes": {
+          "trigger": "Use Button/IconButton",
+          "content": "min-w-48 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg)] shadow-md shadow-black/10 p-1",
+          "item": "w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-[var(--ui-surface)] focus:bg-[var(--ui-surface)] outline-none",
+          "separator": "my-1 h-px bg-[var(--ui-border)]"
+        },
+        "a11y": {
+          "rules": [
+            "Menu opens on Enter/Space/ArrowDown.",
+            "Arrow keys navigate; typeahead optional; Esc closes.",
+            "Return focus to trigger on close."
+          ]
+        }
+      },
+      "Modal": {
+        "intent": "Accessible modal dialog for confirmations and forms.",
+        "classes": {
+          "overlay": "fixed inset-0 bg-black/40 backdrop-blur-[1px]",
+          "content": "fixed left-1/2 top-1/2 w-[min(92vw,560px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg)] shadow-lg shadow-black/20 p-6",
+          "header": "mb-4 space-y-1",
+          "title": "text-xl font-semibold font-[var(--font-brand)] text-[var(--ui-text)]",
+          "description": "text-sm text-[var(--ui-text-muted)]",
+          "footer": "mt-6 flex items-center justify-end gap-3"
+        },
+        "a11y": {
+          "rules": [
+            "Trap focus inside; restore focus on close.",
+            "Esc closes unless explicitly disabled for critical flows.",
+            "aria-labelledby and aria-describedby are required."
+          ]
+        }
+      },
+      "Tooltip": {
+        "intent": "Short supporting text on hover/focus.",
+        "classes": {
+          "content": "rounded-lg bg-[var(--ui-inverse-bg)] text-[var(--ui-inverse-text)] text-xs px-2 py-1 shadow-md shadow-black/20"
+        },
+        "a11y": {
+          "rules": [
+            "Must appear on focus as well as hover.",
+            "Do not contain interactive content."
+          ]
+        }
+      }
+    },
+    "dataDisplay": {
+      "Table": {
+        "intent": "Responsive table with sticky header option; executive-friendly readability.",
+        "classes": {
+          "wrapper": "w-full overflow-x-auto rounded-2xl border border-[var(--ui-border)] bg-[var(--ui-bg)]",
+          "table": "w-full min-w-[720px] border-separate border-spacing-0",
+          "thead": "bg-[var(--ui-surface)]",
+          "th": "text-left text-xs font-semibold uppercase tracking-wide text-[var(--ui-text-muted)] px-4 py-3 border-b border-[var(--ui-border)]",
+          "td": "px-4 py-3 text-sm text-[var(--ui-text)] border-b border-[var(--ui-border)]",
+          "rowHover": "hover:bg-[var(--ui-surface)]"
+        },
+        "a11y": {
+          "rules": [
+            "Use <th scope='col'> for headers.",
+            "Sortable headers must be buttons with aria-sort."
+          ]
+        }
+      },
+      "Stat": {
+        "intent": "Metric display (label + value + delta) for dashboards/overview cards.",
+        "classes": {
+          "container": "space-y-1",
+          "label": "text-xs font-semibold uppercase tracking-wide text-[var(--ui-text-muted)]",
+          "value": "text-2xl font-semibold font-[var(--font-brand)] text-[var(--ui-text)]",
+          "subvalue": "text-sm text-[var(--ui-text-muted)]"
+        }
+      },
+      "DeltaPill": {
+        "intent": "Positive/negative delta indicator with arrow + color + text.",
+        "props": {
+          "direction": { "type": "'up'|'down'|'flat'", "required": true },
+          "tone": { "type": "'success'|'danger'|'neutral'", "required": true }
+        },
+        "classes": {
+          "base": "inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold border",
+          "success": "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-200 dark:border-emerald-500/25",
+          "danger": "bg-red-50 text-red-800 border-red-200 dark:bg-red-500/15 dark:text-red-200 dark:border-red-500/25",
+          "neutral": "bg-[var(--ui-surface)] text-[var(--ui-text)] border-[var(--ui-border)]"
+        },
+        "a11y": {
+          "rules": [
+            "Include text like '+2.4%' or '-1.1%'—do not convey meaning via arrow/color only."
+          ]
+        }
+      },
+      "Skeleton": {
+        "intent": "Loading placeholder blocks for cards/table/chart.",
+        "classes": {
+          "base": "animate-pulse rounded-xl bg-[var(--ui-surface-2)] dark:bg-white/10"
+        },
+        "a11y": {
+          "rules": [
+            "Mark parent region aria-busy=true while loading.",
+            "Skeleton itself aria-hidden=true."
+          ]
+        }
+      },
+      "Alert": {
+        "intent": "Inline alert banner for errors/warnings/info.",
+        "props": {
+          "tone": {
+            "type": "'info'|'success'|'warning'|'danger'",
+            "default": "info"
+          }
+        },
+        "classes": {
+          "base": "rounded-2xl border p-4 flex gap-3",
+          "tone": {
+            "info": "bg-[var(--ui-surface)] border-[var(--ui-border)] text-[var(--ui-text)]",
+            "success": "bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-500/10 dark:border-emerald-500/25 dark:text-emerald-100",
+            "warning": "bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/25 dark:text-amber-100",
+            "danger": "bg-red-50 border-red-200 text-red-900 dark:bg-red-500/10 dark:border-red-500/25 dark:text-red-100"
+          }
+        },
+        "a11y": {
+          "rules": [
+            "Use role='status' for info/success; role='alert' for danger when immediate attention required."
+          ]
+        }
+      }
+    }
+  },
+  "compositionGuidelinesForYourExistingInventory": {
+    "howToApplyThisSpec": [
+      "For each component in your inventory JSON, map it into one of: primitives, controls, navigationAndOverlays, dataDisplay, feedback, layout.",
+      "Use the Foundations (semantic vars + typography + radii + focus ring) as the non-negotiable baseline.",
+      "Prefer fewer visual variants; rely on tone + elevation + spacing to express hierarchy."
+    ],
+    "highPriorityExecutivePolish": [
+      "AppShell / Page / SectionHeader: consistent spacing, breadcrumbs area optional, right-side actions align",
+      "Cards and Tables: crisp borders, soft shadows, strong typography hierarchy",
+      "Buttons/Chips/Tabs: pill-forward, subtle hover, strong focus",
+      "Error/Empty states: calm language, single primary CTA, do not look 'developer-ish'"
+    ],
+    "requiredCrossCuttingBehaviors": {
+      "lightDark": "Every component must use semantic vars for bg/text/border; do not hardcode light-only grays.",
+      "a11y": "Every component must document ARIA + keyboard behavior in code comments and tests.",
+      "density": "Default to comfortable spacing; add compact options only where data density demands it (Table)."
+    }
+  },
+  "agentBuildChecklist": {
+    "deliverables": [
+      "Tailwind semantic variable usage throughout components",
+      "TypeScript types for props + variants",
+      "Keyboard + aria behaviors for all overlays and composite widgets",
+      "Dark mode verified visually (no low-contrast text)",
+      "Example usage snippets per component (Storybook or simple demo pages if allowed)"
+    ],
+    "definitionOfDone": [
+      "No component uses raw hex colors except theme layer",
+      "All interactive elements have focus-visible ring",
+      "Forms show label + hint + error patterns consistently",
+      "All overlays trap focus and restore it on close",
+      "Contrast passes WCAG AA for standard text"
+    ]
+  }
+}
