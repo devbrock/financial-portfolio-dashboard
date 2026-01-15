@@ -34,7 +34,9 @@
       "@hooks/*": ["src/hooks/*"],
       "@services/*": ["src/services/*"],
       "@types/*": ["src/types/*"],
-      "@test/*": ["src/test/*"]
+      "@test/*": ["src/test/*"],
+      "@clients/*": ["src/services/api/clients/*"],
+      "@functions/*": ["src/services/api/functions/*"]
     }
   },
   "include": ["src"]
