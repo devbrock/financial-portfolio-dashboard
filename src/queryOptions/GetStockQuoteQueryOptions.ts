@@ -1,10 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
-import { finhubApi } from "@functions/finhubApi";
+import { finnhubApi } from "@/services/api/functions/finnhubApi";
 
 export type GetStockQuoteQueryKey = readonly ["stockPrice", string];
 
 const getStockQuote = async (symbol: string) => {
-  const { data } = await finhubApi.getStockQuote(symbol);
+  const { data } = await finnhubApi.getStockQuote(symbol);
   return data;
 };
 
