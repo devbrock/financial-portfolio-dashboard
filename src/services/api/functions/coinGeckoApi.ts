@@ -1,6 +1,7 @@
 import type {
   CoinGeckoSimplePrice,
   CoinGeckoMarketChart,
+  CoinGeckoCoin,
 } from "@/types/coinGecko";
 import { coinGeckoClient } from "@/services/api/clients/coinGeckoClient";
 
@@ -18,6 +19,15 @@ export type MarketChartParams = {
   days: string; // Number of days (1, 7, 14, 30, 90, 180, 365, max)
 };
 
+export type CoinDetailsParams = {
+  localization?: boolean;
+  tickers?: boolean;
+  market_data?: boolean;
+  community_data?: boolean;
+  developer_data?: boolean;
+  sparkline?: boolean;
+};
+
 /* Type-safe API functions */
 export const coinGeckoApi = {
   getSimplePrice: async (params: SimplePriceParams) => {
@@ -33,5 +43,11 @@ export const coinGeckoApi = {
         params,
       }
     );
+  },
+
+  getCoin: async (coinId: string, params: CoinDetailsParams) => {
+    return coinGeckoClient.get<CoinGeckoCoin>(`/coins/${coinId}`, {
+      params,
+    });
   },
 };

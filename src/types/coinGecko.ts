@@ -13,3 +13,14 @@ export type CoinGeckoMarketChart = {
   market_caps: Array<[number, number]>;
   total_volumes: Array<[number, number]>;
 };
+
+export type CoinGeckoCoin = {
+  id: string;
+  symbol: string;
+  name: string;
+  image?: {
+    thumb?: string;
+    small?: string;
+    large?: string;
+  };
+};

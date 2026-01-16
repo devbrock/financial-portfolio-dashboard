@@ -5,6 +5,7 @@ import { usePortfolioHoldings } from "./usePortfolioHoldings";
 import { useStockPrices } from "./useStockPrices";
 import { useStockProfiles } from "./useStockProfiles";
 import { useCryptoPrices } from "./useCryptoPrices";
+import { useCryptoProfiles } from "./useCryptoProfiles";
 import {
   enrichHoldingWithPrice,
   calculatePortfolioMetrics,
@@ -27,17 +28,25 @@ export function usePortfolioData() {
   // Extract symbols by asset type
   const stockSymbols = useMemo(
     () =>
-      holdings
-        .filter((h) => h.assetType === "stock")
-        .map((h) => h.symbol.toUpperCase()),
+      Array.from(
+        new Set(
+          holdings
+            .filter((h) => h.assetType === "stock")
+            .map((h) => h.symbol.toUpperCase())
+        )
+      ),
     [holdings]
   );
 
   const cryptoSymbols = useMemo(
     () =>
-      holdings
-        .filter((h) => h.assetType === "crypto")
-        .map((h) => h.symbol.toLowerCase()),
+      Array.from(
+        new Set(
+          holdings
+            .filter((h) => h.assetType === "crypto")
+            .map((h) => h.symbol.toLowerCase())
+        )
+      ),
     [holdings]
   );
 
@@ -61,6 +70,12 @@ export function usePortfolioData() {
     isLoading: cryptoLoading,
     isError: cryptoError,
   } = useCryptoPrices(cryptoSymbols);
+
+  const {
+    profileMap: cryptoProfileMap,
+    isLoading: cryptoProfilesLoading,
+    isError: cryptoProfilesError,
+  } = useCryptoProfiles(cryptoSymbols);
 
   // Get the latest data update timestamp
   const dataUpdatedAt = Math.max(stockDataUpdatedAt, 0);
@@ -88,10 +103,20 @@ export function usePortfolioData() {
         // Crypto
         const currentPrice =
           cryptoPriceMap.get(symbol) || holding.purchasePrice;
-        return enrichHoldingWithPrice(holding, currentPrice);
+        const profile = cryptoProfileMap.get(symbol);
+        const logo =
+          profile?.image?.small ||
+          profile?.image?.thumb ||
+          profile?.image?.large;
+        return enrichHoldingWithPrice(
+          holding,
+          currentPrice,
+          profile?.name,
+          logo
+        );
       }
     });
-  }, [holdings, quoteMap, profileMap, cryptoPriceMap]);
+  }, [holdings, quoteMap, profileMap, cryptoPriceMap, cryptoProfileMap]);
 
   // Calculate portfolio metrics
   const metrics = useMemo(() => {
@@ -99,8 +124,10 @@ export function usePortfolioData() {
   }, [holdings, holdingsWithPrice]);
 
   // Loading state
-  const isLoading = stocksLoading || profilesLoading || cryptoLoading;
-  const isError = stocksError || profilesError || cryptoError;
+  const isLoading =
+    stocksLoading || profilesLoading || cryptoLoading || cryptoProfilesLoading;
+  const isError =
+    stocksError || profilesError || cryptoError || cryptoProfilesError;
 
   return {
     holdings,
