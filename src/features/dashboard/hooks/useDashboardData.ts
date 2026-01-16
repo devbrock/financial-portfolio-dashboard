@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { usePortfolioData } from "@/features/portfolio/hooks/usePortfolioData";
 import type {
   AssetCardModel,
   PerformancePoint,
@@ -6,132 +7,119 @@ import type {
   HoldingRow,
 } from "@/types/dashboard";
 
+/**
+ * Format date for display in holdings table
+ */
+function formatDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
 export function useDashboardData() {
-  const assets: readonly AssetCardModel[] = useMemo(
-    () => [
-      {
-        id: "goog",
-        name: "Google",
-        ticker: "GOOG",
-        valueUsd: 67859,
-        weeklyDeltaPct: 8.2,
-      },
-      {
-        id: "aapl",
-        name: "Applagin",
-        ticker: "AAPL",
-        valueUsd: 85950,
-        weeklyDeltaPct: -3.6,
-      },
-      {
-        id: "spot",
-        name: "Spotify",
-        ticker: "SPOT",
-        valueUsd: 48785,
-        weeklyDeltaPct: 4.8,
-      },
-      {
-        id: "dbx",
-        name: "Dropbox",
-        ticker: "DBX",
-        valueUsd: 56749,
-        weeklyDeltaPct: 8.9,
-      },
-    ],
-    []
-  );
+  const { holdingsWithPrice, metrics, isLoading, isError } = usePortfolioData();
 
-  const perfDaily: readonly PerformancePoint[] = useMemo(
-    () => [
-      { month: "6am", profitUsd: 120 },
-      { month: "9am", profitUsd: 280 },
-      { month: "12pm", profitUsd: 450 },
-      { month: "3pm", profitUsd: 520 },
-      { month: "6pm", profitUsd: 680 },
-    ],
-    []
-  );
+  // Transform holdings into asset cards (top 4 by value)
+  const assets: readonly AssetCardModel[] = useMemo(() => {
+    return [...holdingsWithPrice]
+      .sort((a, b) => b.currentValue - a.currentValue)
+      .slice(0, 4)
+      .map((holding) => ({
+        id: holding.id,
+        name: holding.companyName || holding.symbol,
+        ticker: holding.symbol.toUpperCase(),
+        valueUsd: holding.currentValue,
+        weeklyDeltaPct: holding.plPct, // Using total P/L% as weekly delta for now
+      }));
+  }, [holdingsWithPrice]);
 
-  const perfWeekly: readonly PerformancePoint[] = useMemo(
-    () => [
-      { month: "Mon", profitUsd: 1200 },
-      { month: "Tue", profitUsd: 2100 },
-      { month: "Wed", profitUsd: 1800 },
-      { month: "Thu", profitUsd: 2800 },
-      { month: "Fri", profitUsd: 3200 },
-      { month: "Sat", profitUsd: 2900 },
-      { month: "Sun", profitUsd: 3400 },
-    ],
-    []
-  );
+  // Transform holdings into table rows
+  const holdings: readonly HoldingRow[] = useMemo(() => {
+    return holdingsWithPrice.map((holding) => ({
+      id: holding.id,
+      name: holding.companyName || holding.symbol,
+      ticker: holding.symbol.toUpperCase(),
+      date: formatDate(holding.purchaseDate),
+      volume: holding.quantity,
+      changePct: holding.plPct,
+      priceUsd: holding.currentPrice,
+      pnlUsd: holding.plUsd,
+      status: "active" as const, // All holdings are active in this demo
+    }));
+  }, [holdingsWithPrice]);
 
-  const perfMonthly: readonly PerformancePoint[] = useMemo(
-    () => [
-      { month: "Jan", profitUsd: 4000 },
-      { month: "Feb", profitUsd: 8200 },
-      { month: "Mar", profitUsd: 7500 },
-      { month: "Apr", profitUsd: 12200 },
-      { month: "May", profitUsd: 15100 },
-      { month: "Jun", profitUsd: 18800 },
-      { month: "Jul", profitUsd: 21000 },
-      { month: "Aug", profitUsd: 34500 },
-      { month: "Sep", profitUsd: 38500 },
-    ],
-    []
-  );
+  // Transform metrics into allocation chart data
+  const allocation: readonly AllocationSlice[] = useMemo(() => {
+    // Only show stocks and crypto (no ETFs/Bonds in our data model)
+    const slices: AllocationSlice[] = [];
 
-  const allocation: readonly AllocationSlice[] = useMemo(
-    () => [
-      { name: "ETFs", value: 48, color: "var(--ui-inverse-bg)" },
-      { name: "Stocks", value: 28, color: "var(--ui-primary)" },
-      { name: "Bonds", value: 20, color: "var(--ui-accent)" },
-      {
+    if (metrics.stockPct > 0) {
+      slices.push({
+        name: "Stocks",
+        value: metrics.stockPct,
+        color: "var(--ui-primary)",
+      });
+    }
+
+    if (metrics.cryptoPct > 0) {
+      slices.push({
         name: "Crypto",
-        value: 16,
+        value: metrics.cryptoPct,
         color: "color-mix(in oklab, var(--ui-accent) 45%, white 55%)",
-      },
-    ],
-    []
-  );
+      });
+    }
 
-  const holdings: readonly HoldingRow[] = useMemo(
-    () => [
-      {
-        id: "h1",
-        name: "Applagin",
-        ticker: "AAPL",
-        date: "22 June 2024",
-        volume: 8.2e9,
-        changePct: 4.1,
-        priceUsd: 87580,
-        pnlUsd: 24.05,
-        status: "active",
-      },
-      {
-        id: "h2",
-        name: "Spotify",
-        ticker: "SPOT",
-        date: "24 June 2024",
-        volume: 9.16e9,
-        changePct: -3.6,
-        priceUsd: 98478,
-        pnlUsd: -32.05,
-        status: "pending",
-      },
-      {
-        id: "h3",
-        name: "Dropbox",
-        ticker: "DBX",
-        date: "26 June 2024",
-        volume: 3.06e9,
-        changePct: 2.2,
-        priceUsd: 56749,
-        pnlUsd: 18.7,
-        status: "active",
-      },
-    ],
-    []
-  );
+    return slices;
+  }, [metrics]);
+
+  // Mock performance data - will be replaced with historical transaction data
+  // For now, we'll generate simple mock data based on current P/L
+  const perfDaily: readonly PerformancePoint[] = useMemo(() => {
+    const currentPL = metrics.totalPL;
+    const dailyBase = currentPL / 5;
+
+    return [
+      { month: "6am", profitUsd: dailyBase * 0.2 },
+      { month: "9am", profitUsd: dailyBase * 0.4 },
+      { month: "12pm", profitUsd: dailyBase * 0.6 },
+      { month: "3pm", profitUsd: dailyBase * 0.8 },
+      { month: "6pm", profitUsd: currentPL },
+    ];
+  }, [metrics.totalPL]);
+
+  const perfWeekly: readonly PerformancePoint[] = useMemo(() => {
+    const currentPL = metrics.totalPL;
+    const weeklyBase = currentPL / 7;
+
+    return [
+      { month: "Mon", profitUsd: weeklyBase * 2 },
+      { month: "Tue", profitUsd: weeklyBase * 3 },
+      { month: "Wed", profitUsd: weeklyBase * 2.5 },
+      { month: "Thu", profitUsd: weeklyBase * 4 },
+      { month: "Fri", profitUsd: weeklyBase * 5 },
+      { month: "Sat", profitUsd: weeklyBase * 4.5 },
+      { month: "Sun", profitUsd: currentPL },
+    ];
+  }, [metrics.totalPL]);
+
+  const perfMonthly: readonly PerformancePoint[] = useMemo(() => {
+    const currentPL = metrics.totalPL;
+
+    return [
+      { month: "Jan", profitUsd: currentPL * 0.1 },
+      { month: "Feb", profitUsd: currentPL * 0.2 },
+      { month: "Mar", profitUsd: currentPL * 0.18 },
+      { month: "Apr", profitUsd: currentPL * 0.3 },
+      { month: "May", profitUsd: currentPL * 0.4 },
+      { month: "Jun", profitUsd: currentPL * 0.5 },
+      { month: "Jul", profitUsd: currentPL * 0.6 },
+      { month: "Aug", profitUsd: currentPL * 0.85 },
+      { month: "Sep", profitUsd: currentPL },
+    ];
+  }, [metrics.totalPL]);
 
   return {
     assets,
@@ -140,5 +128,8 @@ export function useDashboardData() {
     perfMonthly,
     allocation,
     holdings,
+    isLoading,
+    isError,
+    metrics, // Expose metrics for header (total value, P/L)
   };
 }

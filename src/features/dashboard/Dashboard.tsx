@@ -68,8 +68,15 @@ export function Dashboard() {
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
 
   // Get dashboard data
-  const { assets, perfDaily, perfWeekly, perfMonthly, allocation, holdings } =
-    useDashboardData();
+  const {
+    assets,
+    perfDaily,
+    perfWeekly,
+    perfMonthly,
+    allocation,
+    holdings,
+    metrics,
+  } = useDashboardData();
 
   // Update "last updated" timer
   useEffect(() => {
@@ -119,12 +126,6 @@ export function Dashboard() {
 
     return sorted;
   }, [holdings, holdingsQuery, sortDir, sortKey]);
-
-  const totalInvestedUsd = useMemo(() => 8847.04, []);
-
-  const totalPortfolioValueUsd = useMemo(() => {
-    return assets.reduce((sum, asset) => sum + asset.valueUsd, 0);
-  }, [assets]);
 
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === "dark" ? "light" : "dark"));
@@ -346,7 +347,7 @@ export function Dashboard() {
                 {/* Welcome + top actions */}
                 <DashboardHeader
                   userName="Brock"
-                  portfolioValue={totalPortfolioValueUsd}
+                  portfolioValue={metrics.totalValue}
                   lastUpdated={lastUpdatedSeconds}
                   onAddAsset={() => undefined}
                 />
@@ -372,7 +373,7 @@ export function Dashboard() {
                   />
                   <AllocationChart
                     data={allocation}
-                    totalInvested={totalInvestedUsd}
+                    totalInvested={metrics.totalCostBasis}
                   />
                 </section>
 

@@ -6,6 +6,6 @@ const BASE_URL = "https://finnhub.io/api/v1";
 export const finnhubClient = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "X-Finnhub-Token": process.env.FINNHUB_API_KEY,
+    "X-Finnhub-Token": import.meta.env.VITE_FINNHUB_API_KEY,
   },
 });
