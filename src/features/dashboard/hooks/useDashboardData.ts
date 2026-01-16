@@ -4,7 +4,7 @@ import type {
   PerformancePoint,
   AllocationSlice,
   HoldingRow,
-} from "@types/dashboard";
+} from "@/types/dashboard";
 
 export function useDashboardData() {
   const assets: readonly AssetCardModel[] = useMemo(

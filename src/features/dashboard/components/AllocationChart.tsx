@@ -7,7 +7,7 @@ import {
   Text,
 } from "@components";
 import { cn } from "@/utils/cn";
-import type { AllocationSlice } from "@types/dashboard";
+import type { AllocationSlice } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 
 type AllocationChartProps = {

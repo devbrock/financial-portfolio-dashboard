@@ -40,7 +40,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import type { SortKey, SortDir, HoldingRow } from "@types/dashboard";
+import type { SortKey, SortDir, HoldingRow } from "@/types/dashboard";
 import { clampNumber } from "@utils/clampNumber";
 import { compareStrings } from "@utils/compareStrings";
 import { useDashboardData } from "./hooks/useDashboardData";

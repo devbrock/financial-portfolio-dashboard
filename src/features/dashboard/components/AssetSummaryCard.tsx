@@ -15,7 +15,7 @@ import {
 } from "@components";
 import { EllipsisVertical } from "lucide-react";
 import { cn } from "@/utils/cn";
-import type { AssetCardModel } from "@types/dashboard";
+import type { AssetCardModel } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatSignedPct } from "@utils/formatSignedPct";
 
@@ -31,15 +31,15 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
     asset.weeklyDeltaPct > 0
       ? ("success" as const)
       : asset.weeklyDeltaPct < 0
-      ? ("danger" as const)
-      : ("neutral" as const);
+        ? ("danger" as const)
+        : ("neutral" as const);
 
   const deltaDir =
     asset.weeklyDeltaPct > 0
       ? ("up" as const)
       : asset.weeklyDeltaPct < 0
-      ? ("down" as const)
-      : ("flat" as const);
+        ? ("down" as const)
+        : ("flat" as const);
 
   return (
     <Card

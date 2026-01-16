@@ -15,7 +15,7 @@ import {
 } from "@components";
 import { EllipsisVertical } from "lucide-react";
 import { cn } from "@/utils/cn";
-import type { HoldingRow } from "@types/dashboard";
+import type { HoldingRow } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatSignedPct } from "@utils/formatSignedPct";
 
@@ -76,9 +76,7 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
         </Inline>
 
         <Inline wrap gap="sm" className="gap-2">
-          <Badge
-            tone={holding.status === "active" ? "success" : "warning"}
-          >
+          <Badge tone={holding.status === "active" ? "success" : "warning"}>
             {holding.status === "active" ? "Active" : "Pending"}
           </Badge>
           <DeltaPill
@@ -86,15 +84,15 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
               holding.changePct > 0
                 ? "up"
                 : holding.changePct < 0
-                ? "down"
-                : "flat"
+                  ? "down"
+                  : "flat"
             }
             tone={
               holding.changePct > 0
                 ? "success"
                 : holding.changePct < 0
-                ? "danger"
-                : "neutral"
+                  ? "danger"
+                  : "neutral"
             }
           >
             {formatSignedPct(holding.changePct)}

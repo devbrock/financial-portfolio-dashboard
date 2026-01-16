@@ -19,7 +19,7 @@ import {
 } from "@components";
 import { ChevronUp, EllipsisVertical } from "lucide-react";
 import { cn } from "@/utils/cn";
-import type { HoldingRow, SortKey, SortDir } from "@types/dashboard";
+import type { HoldingRow, SortKey, SortDir } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatCompact } from "@utils/formatCompact";
 import { formatSignedPct } from "@utils/formatSignedPct";
@@ -121,8 +121,8 @@ export function HoldingsTable(props: HoldingsTableProps) {
                   h.changePct > 0
                     ? "success"
                     : h.changePct < 0
-                    ? "danger"
-                    : "neutral"
+                      ? "danger"
+                      : "neutral"
                 }
               >
                 {formatSignedPct(h.changePct)}

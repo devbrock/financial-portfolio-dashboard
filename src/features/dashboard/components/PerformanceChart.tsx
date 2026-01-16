@@ -8,7 +8,7 @@ import {
   Skeleton,
   Text,
 } from "@components";
-import type { PerformancePoint } from "@types/dashboard";
+import type { PerformancePoint } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatCompact } from "@utils/formatCompact";
 import { formatSignedPct } from "@utils/formatSignedPct";
@@ -82,15 +82,15 @@ export function PerformanceChart(props: PerformanceChartProps) {
                 profitPercentage > 0
                   ? "up"
                   : profitPercentage < 0
-                  ? "down"
-                  : "flat"
+                    ? "down"
+                    : "flat"
               }
               tone={
                 profitPercentage > 0
                   ? "success"
                   : profitPercentage < 0
-                  ? "danger"
-                  : "neutral"
+                    ? "danger"
+                    : "neutral"
               }
             >
               {formatSignedPct(profitPercentage)}
