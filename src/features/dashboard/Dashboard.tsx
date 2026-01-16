@@ -360,7 +360,6 @@ export function Dashboard() {
                   userName="Brock"
                   portfolioValue={metrics.totalValue}
                   lastUpdated={lastUpdatedSeconds}
-                  onAddAsset={() => undefined}
                 />
 
                 {/* Summary cards */}
@@ -399,7 +398,7 @@ export function Dashboard() {
                       >
                         <div>
                           <Heading as="h3" className="text-base">
-                            My Stocks
+                            My Holdings
                           </Heading>
                           <Text as="div" size="sm" tone="muted">
                             Track positions, performance, and status.
