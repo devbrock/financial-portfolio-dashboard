@@ -2,6 +2,18 @@ import * as React from "react";
 import { cn } from "@utils/cn";
 import { useSidebar } from "./sidebar.context";
 import type { SidebarProps, SidebarTriggerProps } from "./sidebar.types";
+import { ChevronLeft, ChevronRight, PanelLeft } from "lucide-react";
+
+/**
+ * `React.CSSProperties` plus support for CSS Custom Properties (`--*`).
+ *
+ * React's `style` prop types are based on `csstype`, which intentionally does not
+ * include arbitrary CSS variables. This adds a safe, strongly-typed index
+ * signature for `--foo` style keys.
+ */
+interface CSSPropertiesWithVars extends React.CSSProperties {
+  [key: `--${string}`]: string | number | undefined;
+}
 
 /**
  * Sidebar
@@ -23,9 +35,9 @@ export function Sidebar(props: SidebarProps) {
   const { open } = useSidebar();
 
   // CSS variables for easy theming/override (similar to shadcn approach).
-  const styleVars = {
-    ["--sidebar-width" as const]: `${width}px`,
-    ["--sidebar-icon-width" as const]: `${iconWidth}px`,
+  const styleVars: CSSPropertiesWithVars = {
+    "--sidebar-width": `${width}px`,
+    "--sidebar-icon-width": `${iconWidth}px`,
   };
 
   const dataState = open ? "open" : "collapsed";
@@ -118,22 +130,7 @@ export function SidebarTrigger(props: SidebarTriggerProps) {
       )}
       {...rest}
     >
-      {/* Hamburger icon */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        className="lucide lucide-panel-left-icon lucide-panel-left"
-      >
-        <rect width="18" height="18" x="3" y="3" rx="2" />
-        <path d="M9 3v18" />
-      </svg>
+      <PanelLeft />
     </button>
   );
 }
@@ -142,11 +139,12 @@ export function SidebarTrigger(props: SidebarTriggerProps) {
  * SidebarRail
  * Optional narrow rail used in icon-collapsed mode for quick toggling.
  */
+
 export function SidebarRail(
   props: React.ButtonHTMLAttributes<HTMLButtonElement>
 ) {
   const { className, ...rest } = props;
-  const { toggle } = useSidebar();
+  const { open, toggle } = useSidebar();
 
   return (
     <button
@@ -167,20 +165,7 @@ export function SidebarRail(
       )}
       {...rest}
     >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="mx-auto h-4 w-4"
-        fill="none"
-      >
-        <path
-          d="M14 6l-6 6 6 6"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      {open ? <ChevronLeft /> : <ChevronRight />}
     </button>
   );
 }

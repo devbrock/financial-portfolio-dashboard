@@ -22,7 +22,6 @@ import {
   Inline,
   Input,
   Modal,
-  Select,
   Skeleton,
   Sidebar,
   SidebarContent,
@@ -44,8 +43,9 @@ import {
   TableRow,
   Text,
   PieDonutChart,
+  SidebarRail,
 } from "@components";
-import { ListFilter, Plus } from "lucide-react";
+import { Moon, Plus, Sun } from "lucide-react";
 
 type DemoMode = "loaded" | "loading" | "error-empty";
 
@@ -589,22 +589,12 @@ function DashboardDemo(props: DashboardDemoProps) {
           >
             <SidebarHeader>
               <Inline align="center" className="gap-3 px-1">
-                <div
-                  aria-hidden="true"
-                  className={cx(
-                    "grid h-10 w-10 place-items-center rounded-2xl bg-white/10 text-white",
-                    // When collapsed-to-icons, center the brand mark.
-                    "group-data-[state=collapsed]/sidebar:mx-auto"
-                  )}
-                >
-                  <span className="font-semibold">D</span>
-                </div>
                 <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
                   <Text as="div" className="truncate font-semibold text-white">
-                    Deli-Vest
+                    Orion Wealth
                   </Text>
                   <Text as="div" size="sm" className="text-white/70">
-                    Portfolio Suite
+                    Wealth Management Platform
                   </Text>
                 </div>
               </Inline>
@@ -701,6 +691,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarFooter>
+            <SidebarRail />
           </Sidebar>
 
           {/* Main content */}
@@ -754,19 +745,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         variant="ghost"
                         size="md"
                         onClick={toggleTheme}
-                        icon={
-                          theme === "dark" ? (
-                            <Icon
-                              stroke
-                              path="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"
-                            />
-                          ) : (
-                            <Icon
-                              stroke
-                              path="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"
-                            />
-                          )
-                        }
+                        icon={theme === "dark" ? <Sun /> : <Moon />}
                       />
                       <div className="relative">
                         <IconButton
