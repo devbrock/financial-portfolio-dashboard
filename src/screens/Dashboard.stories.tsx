@@ -45,7 +45,22 @@ import {
   PieDonutChart,
   SidebarRail,
 } from "@components";
-import { Moon, Plus, Sun } from "lucide-react";
+import {
+  Bell,
+  ChartLine,
+  ChevronDown,
+  ChevronUp,
+  EllipsisVertical,
+  Folder,
+  HelpCircle,
+  Home,
+  Moon,
+  Newspaper,
+  Plus,
+  Sun,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 type DemoMode = "loaded" | "loading" | "error-empty";
 
@@ -165,26 +180,6 @@ function clampNumber(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function Icon(props: { path: string; className?: string; stroke?: boolean }) {
-  const { path, className, stroke = false } = props;
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className={cx("h-5 w-5", className)}
-      fill={stroke ? "none" : "currentColor"}
-    >
-      <path
-        d={path}
-        stroke={stroke ? "currentColor" : undefined}
-        strokeWidth={stroke ? 2 : undefined}
-        strokeLinecap={stroke ? "round" : undefined}
-        strokeLinejoin={stroke ? "round" : undefined}
-      />
-    </svg>
-  );
-}
-
 function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
   const { asset, loading = false } = props;
 
@@ -300,13 +295,7 @@ function DropdownMenuTriggerIcon(props: { ariaLabel?: string }) {
         ariaLabel={ariaLabel}
         variant="ghost"
         size="sm"
-        icon={
-          <Icon
-            stroke
-            path="M12 6h.01M12 12h.01M12 18h.01"
-            className="h-5 w-5"
-          />
-        }
+        icon={<EllipsisVertical />}
       />
     </DropdownMenuTrigger>
   );
@@ -609,10 +598,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "Overview"}
                         onClick={() => setActiveNav("Overview")}
                       >
-                        <Icon
-                          stroke
-                          path="M4 10.5l8-6 8 6V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"
-                        />
+                        <Home />
                         <span data-slot="label">Overview</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -621,10 +607,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "Portfolio"}
                         onClick={() => setActiveNav("Portfolio")}
                       >
-                        <Icon
-                          stroke
-                          path="M4 7h16M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M6 7v14h12V7"
-                        />
+                        <Folder />
                         <span data-slot="label">Portfolio</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -633,10 +616,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "Wallet"}
                         onClick={() => setActiveNav("Wallet")}
                       >
-                        <Icon
-                          stroke
-                          path="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8zm0 0V6a2 2 0 0 1 2-2h10"
-                        />
+                        <Wallet />
                         <span data-slot="label">Wallet</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -645,7 +625,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "Market"}
                         onClick={() => setActiveNav("Market")}
                       >
-                        <Icon stroke path="M4 19V5m0 14h16M8 15l3-3 2 2 5-6" />
+                        <ChartLine />
                         <span data-slot="label">Market</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -654,10 +634,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "Community"}
                         onClick={() => setActiveNav("Community")}
                       >
-                        <Icon
-                          stroke
-                          path="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm8 10v-2a4 4 0 0 0-3-3.87"
-                        />
+                        <Users />
                         <span data-slot="label">Community</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -666,10 +643,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         isActive={activeNav === "News"}
                         onClick={() => setActiveNav("News")}
                       >
-                        <Icon
-                          stroke
-                          path="M6 4h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2zm2 4h8M8 12h8M8 16h5"
-                        />
+                        <Newspaper />
                         <span data-slot="label">News</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -682,10 +656,7 @@ function DashboardDemo(props: DashboardDemoProps) {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => undefined}>
-                    <Icon
-                      stroke
-                      path="M12 18h.01M9.09 9a3 3 0 0 1 5.82 1c-.6 1.2-2.91 1.5-2.91 3v.5M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"
-                    />
+                    <HelpCircle />
                     <span data-slot="label">Help &amp; Support</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -752,12 +723,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                           ariaLabel="Notifications"
                           variant="ghost"
                           size="md"
-                          icon={
-                            <Icon
-                              stroke
-                              path="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7zM13.73 21a2 2 0 0 1-3.46 0"
-                            />
-                          }
+                          icon={<Bell />}
                         />
                         <span
                           aria-hidden="true"
@@ -778,13 +744,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                             size="md"
                             className="h-auto rounded-2xl px-3 py-2"
                             aria-label="Open profile menu"
-                            rightIcon={
-                              <Icon
-                                stroke
-                                path="M6 9l6 6 6-6"
-                                className="h-4 w-4 text-(--ui-text-muted)"
-                              />
-                            }
+                            rightIcon={<ChevronDown />}
                             leftIcon={
                               <span
                                 aria-hidden="true"
@@ -1558,17 +1518,7 @@ function SortableTh(props: {
           aria-hidden="true"
           className={cx("inline-flex", !active && "opacity-40")}
         >
-          <Icon
-            stroke
-            path={
-              dir === "asc"
-                ? "M8 14l4-4 4 4"
-                : dir === "desc"
-                ? "M8 10l4 4 4-4"
-                : "M8 10l4-4 4 4M8 14l4 4 4-4"
-            }
-            className="h-4 w-4"
-          />
+          <ChevronUp />
         </span>
       </button>
     </TableHeadCell>

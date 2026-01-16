@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 import "@styles/global.css";
 
 const preview: Preview = {
+  tags: ["autodocs"],
   parameters: {
     controls: {
       matchers: {
