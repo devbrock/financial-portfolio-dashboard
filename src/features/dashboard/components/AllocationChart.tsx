@@ -52,7 +52,7 @@ export function AllocationChart(props: AllocationChartProps) {
               {formatMoneyUsd(totalInvested)}
             </Text>
             <Text as="div" size="sm" tone="muted">
-              Invested in ETFs
+              Total invested
             </Text>
           </div>
         </div>

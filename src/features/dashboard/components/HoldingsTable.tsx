@@ -93,11 +93,22 @@ export function HoldingsTable(props: HoldingsTableProps) {
               <Inline align="center" className="gap-3">
                 <span
                   aria-hidden="true"
-                  className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
+                  className={cn(
+                    "grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)",
+                    h.logo && "overflow-hidden"
+                  )}
                 >
-                  <span className="text-sm font-semibold">
-                    {h.name.slice(0, 1)}
-                  </span>
+                  {h.logo ? (
+                    <img
+                      src={h.logo}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-sm font-semibold">
+                      {h.name.slice(0, 1)}
+                    </span>
+                  )}
                 </span>
                 <div className="min-w-0">
                   <Text as="div" className="truncate font-semibold">

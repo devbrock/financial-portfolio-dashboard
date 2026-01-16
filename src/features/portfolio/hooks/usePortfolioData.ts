@@ -3,6 +3,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { initializePortfolio } from "../portfolioSlice";
 import { usePortfolioHoldings } from "./usePortfolioHoldings";
 import { useStockPrices } from "./useStockPrices";
+import { useStockProfiles } from "./useStockProfiles";
 import { useCryptoPrices } from "./useCryptoPrices";
 import {
   enrichHoldingWithPrice,
@@ -40,33 +41,57 @@ export function usePortfolioData() {
     [holdings]
   );
 
-  // Fetch prices
+  // Fetch stock data (prices and profiles)
   const {
-    priceMap: stockPriceMap,
+    quoteMap,
     isLoading: stocksLoading,
     isError: stocksError,
+    dataUpdatedAt: stockDataUpdatedAt,
   } = useStockPrices(stockSymbols);
 
+  const {
+    profileMap,
+    isLoading: profilesLoading,
+    isError: profilesError,
+  } = useStockProfiles(stockSymbols);
+
+  // Fetch crypto prices
   const {
     priceMap: cryptoPriceMap,
     isLoading: cryptoLoading,
     isError: cryptoError,
   } = useCryptoPrices(cryptoSymbols);
 
+  // Get the latest data update timestamp
+  const dataUpdatedAt = Math.max(stockDataUpdatedAt, 0);
+
   // Combine holdings with prices
   const holdingsWithPrice: HoldingWithPrice[] = useMemo(() => {
     return holdings.map((holding) => {
-      const priceMap =
-        holding.assetType === "stock" ? stockPriceMap : cryptoPriceMap;
       const symbol =
         holding.assetType === "stock"
           ? holding.symbol.toUpperCase()
           : holding.symbol.toLowerCase();
-      const currentPrice = priceMap.get(symbol) || holding.purchasePrice;
 
-      return enrichHoldingWithPrice(holding, currentPrice);
+      if (holding.assetType === "stock") {
+        const quote = quoteMap.get(symbol);
+        const profile = profileMap.get(symbol);
+        const currentPrice = quote?.c || holding.purchasePrice;
+
+        return enrichHoldingWithPrice(
+          holding,
+          currentPrice,
+          profile?.name,
+          profile?.logo
+        );
+      } else {
+        // Crypto
+        const currentPrice =
+          cryptoPriceMap.get(symbol) || holding.purchasePrice;
+        return enrichHoldingWithPrice(holding, currentPrice);
+      }
     });
-  }, [holdings, stockPriceMap, cryptoPriceMap]);
+  }, [holdings, quoteMap, profileMap, cryptoPriceMap]);
 
   // Calculate portfolio metrics
   const metrics = useMemo(() => {
@@ -74,8 +99,8 @@ export function usePortfolioData() {
   }, [holdings, holdingsWithPrice]);
 
   // Loading state
-  const isLoading = stocksLoading || cryptoLoading;
-  const isError = stocksError || cryptoError;
+  const isLoading = stocksLoading || profilesLoading || cryptoLoading;
+  const isError = stocksError || profilesError || cryptoError;
 
   return {
     holdings,
@@ -84,5 +109,6 @@ export function usePortfolioData() {
     isLoading,
     isError,
     hasHoldings: holdings.length > 0,
+    dataUpdatedAt,
   };
 }

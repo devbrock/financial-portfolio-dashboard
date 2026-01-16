@@ -20,7 +20,8 @@ function formatDate(isoDate: string): string {
 }
 
 export function useDashboardData() {
-  const { holdingsWithPrice, metrics, isLoading, isError } = usePortfolioData();
+  const { holdingsWithPrice, metrics, isLoading, isError, dataUpdatedAt } =
+    usePortfolioData();
 
   // Transform holdings into asset cards (top 4 by value)
   const assets: readonly AssetCardModel[] = useMemo(() => {
@@ -33,6 +34,7 @@ export function useDashboardData() {
         ticker: holding.symbol.toUpperCase(),
         valueUsd: holding.currentValue,
         weeklyDeltaPct: holding.plPct, // Using total P/L% as weekly delta for now
+        logo: holding.logo,
       }));
   }, [holdingsWithPrice]);
 
@@ -48,6 +50,7 @@ export function useDashboardData() {
       priceUsd: holding.currentPrice,
       pnlUsd: holding.plUsd,
       status: "active" as const, // All holdings are active in this demo
+      logo: holding.logo,
     }));
   }, [holdingsWithPrice]);
 
@@ -76,47 +79,51 @@ export function useDashboardData() {
   }, [metrics]);
 
   // Mock performance data - will be replaced with historical transaction data
-  // For now, we'll generate simple mock data based on current P/L
+  // Simulate realistic period-specific profits
   const perfDaily: readonly PerformancePoint[] = useMemo(() => {
     const currentPL = metrics.totalPL;
-    const dailyBase = currentPL / 5;
+    // Daily profit is estimated as ~3% of total P/L
+    const dailyProfit = currentPL * 0.03;
+    const base = dailyProfit / 5;
 
     return [
-      { month: "6am", profitUsd: dailyBase * 0.2 },
-      { month: "9am", profitUsd: dailyBase * 0.4 },
-      { month: "12pm", profitUsd: dailyBase * 0.6 },
-      { month: "3pm", profitUsd: dailyBase * 0.8 },
-      { month: "6pm", profitUsd: currentPL },
+      { month: "6am", profitUsd: base * 0.5 },
+      { month: "9am", profitUsd: base * 1.2 },
+      { month: "12pm", profitUsd: base * 2.1 },
+      { month: "3pm", profitUsd: base * 3.5 },
+      { month: "6pm", profitUsd: dailyProfit },
     ];
   }, [metrics.totalPL]);
 
   const perfWeekly: readonly PerformancePoint[] = useMemo(() => {
     const currentPL = metrics.totalPL;
-    const weeklyBase = currentPL / 7;
+    // Weekly profit is estimated as ~20% of total P/L
+    const weeklyProfit = currentPL * 0.2;
+    const base = weeklyProfit / 7;
 
     return [
-      { month: "Mon", profitUsd: weeklyBase * 2 },
-      { month: "Tue", profitUsd: weeklyBase * 3 },
-      { month: "Wed", profitUsd: weeklyBase * 2.5 },
-      { month: "Thu", profitUsd: weeklyBase * 4 },
-      { month: "Fri", profitUsd: weeklyBase * 5 },
-      { month: "Sat", profitUsd: weeklyBase * 4.5 },
-      { month: "Sun", profitUsd: currentPL },
+      { month: "Mon", profitUsd: base * 0.8 },
+      { month: "Tue", profitUsd: base * 1.6 },
+      { month: "Wed", profitUsd: base * 2.2 },
+      { month: "Thu", profitUsd: base * 3.5 },
+      { month: "Fri", profitUsd: base * 5.2 },
+      { month: "Sat", profitUsd: base * 6.1 },
+      { month: "Sun", profitUsd: weeklyProfit },
     ];
   }, [metrics.totalPL]);
 
   const perfMonthly: readonly PerformancePoint[] = useMemo(() => {
     const currentPL = metrics.totalPL;
-
+    // Monthly shows full current P/L accumulated over the year
     return [
-      { month: "Jan", profitUsd: currentPL * 0.1 },
-      { month: "Feb", profitUsd: currentPL * 0.2 },
-      { month: "Mar", profitUsd: currentPL * 0.18 },
-      { month: "Apr", profitUsd: currentPL * 0.3 },
-      { month: "May", profitUsd: currentPL * 0.4 },
-      { month: "Jun", profitUsd: currentPL * 0.5 },
-      { month: "Jul", profitUsd: currentPL * 0.6 },
-      { month: "Aug", profitUsd: currentPL * 0.85 },
+      { month: "Jan", profitUsd: currentPL * 0.08 },
+      { month: "Feb", profitUsd: currentPL * 0.15 },
+      { month: "Mar", profitUsd: currentPL * 0.22 },
+      { month: "Apr", profitUsd: currentPL * 0.35 },
+      { month: "May", profitUsd: currentPL * 0.48 },
+      { month: "Jun", profitUsd: currentPL * 0.62 },
+      { month: "Jul", profitUsd: currentPL * 0.75 },
+      { month: "Aug", profitUsd: currentPL * 0.88 },
       { month: "Sep", profitUsd: currentPL },
     ];
   }, [metrics.totalPL]);
@@ -131,5 +138,6 @@ export function useDashboardData() {
     isLoading,
     isError,
     metrics, // Expose metrics for header (total value, P/L)
+    dataUpdatedAt, // Timestamp of last data update
   };
 }

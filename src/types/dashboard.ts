@@ -4,6 +4,7 @@ export type AssetCardModel = {
   ticker: string;
   valueUsd: number;
   weeklyDeltaPct: number;
+  logo?: string;
 };
 
 export type PerformancePoint = {
@@ -29,6 +30,7 @@ export type HoldingRow = {
   priceUsd: number;
   pnlUsd: number;
   status: HoldingStatus;
+  logo?: string;
 };
 
 export type SortKey =

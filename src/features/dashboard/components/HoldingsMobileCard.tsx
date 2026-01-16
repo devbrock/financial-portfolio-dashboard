@@ -33,11 +33,22 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
           <Inline align="center" className="gap-3">
             <span
               aria-hidden="true"
-              className="grid h-10 w-10 place-items-center rounded-2xl bg-(--ui-surface-2)"
+              className={cn(
+                "grid h-10 w-10 place-items-center rounded-2xl bg-(--ui-surface-2)",
+                holding.logo && "overflow-hidden"
+              )}
             >
-              <span className="text-sm font-semibold">
-                {holding.name.slice(0, 1)}
-              </span>
+              {holding.logo ? (
+                <img
+                  src={holding.logo}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-semibold">
+                  {holding.name.slice(0, 1)}
+                </span>
+              )}
             </span>
             <div className="min-w-0">
               <Text as="div" className="truncate font-semibold">

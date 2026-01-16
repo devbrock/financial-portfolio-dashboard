@@ -52,10 +52,13 @@ import {
   HoldingsMobileCard,
   EmptyHoldings,
 } from "./components";
+import { useAppDispatch } from "@/store/hooks";
+import { removeHolding } from "@/features/portfolio/portfolioSlice";
 
 type ThemeMode = "light" | "dark";
 
 export function Dashboard() {
+  const dispatch = useAppDispatch();
   const [theme, setTheme] = useState<ThemeMode>("light");
   const [range, setRange] = useState<"month" | "week" | "day">("month");
   const [holdingsQuery, setHoldingsQuery] = useState("");
@@ -76,6 +79,7 @@ export function Dashboard() {
     allocation,
     holdings,
     metrics,
+    dataUpdatedAt,
   } = useDashboardData();
 
   // Update "last updated" timer
@@ -85,6 +89,13 @@ export function Dashboard() {
     }, 1000);
     return () => window.clearInterval(t);
   }, []);
+
+  // Reset timer when data updates
+  useEffect(() => {
+    if (dataUpdatedAt > 0) {
+      setLastUpdatedSeconds(0);
+    }
+  }, [dataUpdatedAt]);
 
   // Select performance data based on range
   const perf = useMemo(() => {
@@ -471,6 +482,9 @@ export function Dashboard() {
               <Button
                 variant="destructive"
                 onClick={() => {
+                  if (confirmRemoveId) {
+                    dispatch(removeHolding(confirmRemoveId));
+                  }
                   setConfirmRemoveId(null);
                 }}
               >

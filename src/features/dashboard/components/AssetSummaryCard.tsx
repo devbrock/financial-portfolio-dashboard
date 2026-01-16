@@ -55,13 +55,22 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
             <div
               className={cn(
                 "grid h-10 w-10 place-items-center rounded-2xl",
-                "border border-(--ui-border) bg-(--ui-surface)"
+                "border border-(--ui-border) bg-(--ui-surface)",
+                asset.logo && "overflow-hidden"
               )}
               aria-hidden="true"
             >
-              <span className="text-sm font-semibold">
-                {asset.name.slice(0, 1)}
-              </span>
+              {asset.logo ? (
+                <img
+                  src={asset.logo}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-semibold">
+                  {asset.name.slice(0, 1)}
+                </span>
+              )}
             </div>
             <div className="min-w-0">
               {loading ? (
