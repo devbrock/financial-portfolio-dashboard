@@ -39,7 +39,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/utils/cn";
@@ -59,8 +59,12 @@ import {
   HoldingsMobileCard,
   EmptyHoldings,
 } from "./components";
-import { useAppDispatch } from "@/store/hooks";
-import { addHolding, removeHolding } from "@/features/portfolio/portfolioSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  addHolding,
+  removeHolding,
+  updatePreferences,
+} from "@/features/portfolio/portfolioSlice";
 import type { AssetType } from "@/types/portfolio";
 import OrionLogoLight from "@assets/orion_logo_light.svg";
 
@@ -81,11 +85,9 @@ function generateHoldingId(): string {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-type ThemeMode = "light" | "dark";
-
 export function Dashboard() {
   const dispatch = useAppDispatch();
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const theme = useAppSelector((state) => state.portfolio.preferences.theme);
   const [range, setRange] = useState<"month" | "week" | "day">("month");
   const [holdingsQuery, setHoldingsQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("name");
@@ -97,12 +99,9 @@ export function Dashboard() {
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [assetQuery, setAssetQuery] = useState("");
+  const [selectedAssetLabel, setSelectedAssetLabel] = useState("");
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
   const today = useMemo(() => new Date().toISOString().split("T")[0], []);
-  const handleAssetQueryChange = useCallback((nextQuery: string) => {
-    const trimmed = nextQuery.trim();
-    setAssetQuery(trimmed.length >= 2 ? trimmed : "");
-  }, []);
   const {
     register,
     handleSubmit,
@@ -122,6 +121,20 @@ export function Dashboard() {
     },
   });
 
+  const selectedAssetValue = useWatch({
+    control,
+    name: "assetSelection",
+  });
+
+  const handleAssetQueryChange = useCallback(
+    (nextQuery: string) => {
+      if (selectedAssetLabel && nextQuery === selectedAssetLabel) return;
+      const trimmed = nextQuery.trim();
+      setAssetQuery(trimmed.length >= 2 ? trimmed : "");
+    },
+    [selectedAssetLabel]
+  );
+
   const { data: stockSearch, isFetching: isStockSearchLoading } =
     useSymbolSearch(assetQuery);
   const { data: cryptoSearch, isFetching: isCryptoSearchLoading } =
@@ -139,8 +152,24 @@ export function Dashboard() {
       value: `crypto:${coin.id.toLowerCase()}`,
       label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
     }));
-    return [...stockItems, ...cryptoItems];
-  }, [stockSearch, cryptoSearch]);
+    const merged = [...stockItems, ...cryptoItems];
+    if (
+      selectedAssetValue &&
+      selectedAssetLabel &&
+      !merged.some((item) => item.value === selectedAssetValue)
+    ) {
+      return [
+        { value: selectedAssetValue, label: selectedAssetLabel },
+        ...merged,
+      ];
+    }
+    return merged;
+  }, [
+    stockSearch,
+    cryptoSearch,
+    selectedAssetLabel,
+    selectedAssetValue,
+  ]);
 
   const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
 
@@ -244,8 +273,10 @@ export function Dashboard() {
   }, [holdings, holdingsQuery, sortDir, sortKey]);
 
   const toggleTheme = useCallback(() => {
-    setTheme((t) => (t === "dark" ? "light" : "dark"));
-  }, []);
+    dispatch(
+      updatePreferences({ theme: theme === "dark" ? "light" : "dark" })
+    );
+  }, [dispatch, theme]);
 
   useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
@@ -610,6 +641,7 @@ export function Dashboard() {
             if (!open) {
               setIsAddAssetOpen(false);
               setAssetQuery("");
+              setSelectedAssetLabel("");
               reset({
                 assetSelection: "",
                 assetType: "stock",
@@ -661,6 +693,10 @@ export function Dashboard() {
                     value={field.value}
                     onValueChange={(nextValue) => {
                       field.onChange(nextValue);
+                      const selectedItem = assetOptions.find(
+                        (item) => item.value === nextValue
+                      );
+                      setSelectedAssetLabel(selectedItem?.label ?? "");
                       const isStock = nextValue.startsWith("stock:");
                       const rawSymbol = nextValue.replace(
                         isStock ? "stock:" : "crypto:",
@@ -680,6 +716,7 @@ export function Dashboard() {
                     onInputChange={() => {
                       if (field.value) {
                         field.onChange("");
+                        setSelectedAssetLabel("");
                         setValue("assetType", "stock", {
                           shouldValidate: true,
                         });

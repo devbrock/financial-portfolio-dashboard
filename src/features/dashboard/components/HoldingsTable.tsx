@@ -1,5 +1,4 @@
 import {
-  Badge,
   DeltaPill,
   DropdownMenu,
   DropdownMenuContent,
@@ -70,16 +69,10 @@ export function HoldingsTable(props: HoldingsTableProps) {
             onClick={() => onSort("priceUsd")}
           />
           <SortableTh
-            label="Number of lost"
+            label="Profit/Loss"
             active={sortKey === "pnlUsd"}
             dir={sortKey === "pnlUsd" ? sortDir : null}
             onClick={() => onSort("pnlUsd")}
-          />
-          <SortableTh
-            label="Status"
-            active={sortKey === "status"}
-            dir={sortKey === "status" ? sortDir : null}
-            onClick={() => onSort("status")}
           />
           <TableHeadCell className="w-12">
             <span className="sr-only">Actions</span>
@@ -150,11 +143,6 @@ export function HoldingsTable(props: HoldingsTableProps) {
                 {h.pnlUsd >= 0 ? "+" : ""}
                 {formatMoneyUsd(h.pnlUsd)}
               </Text>
-            </TableCell>
-            <TableCell>
-              <Badge tone={h.status === "active" ? "success" : "warning"}>
-                {h.status === "active" ? "Active" : "Pending"}
-              </Badge>
             </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
