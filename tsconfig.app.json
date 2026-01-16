@@ -36,7 +36,9 @@
       "@types/*": ["src/types/*"],
       "@test/*": ["src/test/*"],
       "@clients/*": ["src/services/api/clients/*"],
-      "@functions/*": ["src/services/api/functions/*"]
+      "@functions/*": ["src/services/api/functions/*"],
+      "@features/*": ["src/features/*"],
+      "@routes/*": ["src/routes/*"]
     }
   },
   "include": ["src"]
