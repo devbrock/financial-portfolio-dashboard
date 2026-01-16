@@ -12,6 +12,8 @@ const GetStockQuoteQueryOptions = (symbol: string) => {
   return queryOptions({
     queryKey: ["stockPrice", symbol] as GetStockQuoteQueryKey,
     queryFn: () => getStockQuote(symbol),
+    refetchInterval: 60000,
+    staleTime: 50000,
   });
 };
 

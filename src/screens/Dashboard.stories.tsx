@@ -56,10 +56,12 @@ import {
   Moon,
   Newspaper,
   Plus,
+  Search,
   Sun,
   Users,
   Wallet,
 } from "lucide-react";
+import { cn } from "@/utils/cn";
 
 type DemoMode = "loaded" | "loading" | "error-empty";
 
@@ -139,9 +141,9 @@ export const ErrorAndEmptyStates: Story = {
 /**
  * Join class names without `clsx` to keep this file self-contained.
  */
-function cx(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(" ");
-}
+// function cn(...parts: Array<string | false | null | undefined>): string {
+//   return parts.filter(Boolean).join(" ");
+// }
 
 function formatMoneyUsd(value: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -195,7 +197,7 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
   return (
     <Card
       elevation="sm"
-      className={cx(
+      className={cn(
         "p-5",
         "transition-shadow duration-200 motion-reduce:transition-none",
         !loading && "hover:shadow-md hover:shadow-black/10"
@@ -205,7 +207,7 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
         <Inline align="center" justify="between" className="gap-3">
           <Inline align="center" className="min-w-0 gap-3">
             <div
-              className={cx(
+              className={cn(
                 "grid h-10 w-10 place-items-center rounded-2xl",
                 "border border-(--ui-border) bg-(--ui-surface)"
               )}
@@ -237,7 +239,7 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
           <DropdownMenu>
             <DropdownMenuTriggerIcon />
             <DropdownMenuContent
-              className={cx(
+              className={cn(
                 "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
               )}
             >
@@ -551,7 +553,7 @@ function DashboardDemo(props: DashboardDemoProps) {
   return (
     <SidebarProvider defaultOpen>
       <div
-        className={cx(
+        className={cn(
           // Fixed app shell: sidebar stays pinned; main content scrolls.
           "h-screen overflow-hidden",
           // In dark mode `--ui-surface` is intentionally translucent; use a solid base
@@ -565,7 +567,7 @@ function DashboardDemo(props: DashboardDemoProps) {
           <Sidebar
             collapsible="icon"
             width={260}
-            className={cx("rounded-2xl overflow-hidden", "h-full")}
+            className={cn("rounded-2xl overflow-hidden", "h-full")}
           >
             <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
               <Inline align="center" className="gap-3 px-1">
@@ -661,7 +663,7 @@ function DashboardDemo(props: DashboardDemoProps) {
               <Stack gap="lg">
                 {/* App header */}
                 <header
-                  className={cx(
+                  className={cn(
                     "rounded-2xl border border-(--ui-border) bg-(--ui-bg)",
                     "px-4 py-3 shadow-sm shadow-black/5"
                   )}
@@ -674,21 +676,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                     >
                       <div className="relative w-full">
                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-search-icon lucide-search"
-                          >
-                            <path d="m21 21-4.34-4.34" />
-                            <circle cx="11" cy="11" r="8" />
-                          </svg>
+                          <Search />
                         </span>
                         <Input
                           aria-label="Search"
@@ -717,7 +705,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                         />
                         <span
                           aria-hidden="true"
-                          className={cx(
+                          className={cn(
                             "absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full",
                             "bg-red-600 px-1 text-[10px] font-semibold text-white"
                           )}
@@ -841,7 +829,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                     <Inline align="center" className="gap-3">
                       <span
                         aria-hidden="true"
-                        className={cx(
+                        className={cn(
                           "h-2.5 w-2.5 rounded-full bg-(--ui-primary)",
                           "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
                         )}
@@ -999,7 +987,7 @@ function DashboardDemo(props: DashboardDemoProps) {
 
                         {/* Center label */}
                         <div
-                          className={cx(
+                          className={cn(
                             "pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
                             "text-center"
                           )}
@@ -1057,21 +1045,7 @@ function DashboardDemo(props: DashboardDemoProps) {
 
                         <div className="relative w-full max-w-[280px]">
                           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              className="lucide lucide-search-icon lucide-search"
-                            >
-                              <path d="m21 21-4.34-4.34" />
-                              <circle cx="11" cy="11" r="8" />
-                            </svg>
+                            <Search />
                           </span>
                           <Input
                             aria-label="Search holdings"
@@ -1207,7 +1181,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                   <TableCell>
                                     <Text
                                       as="span"
-                                      className={cx(
+                                      className={cn(
                                         "font-semibold",
                                         h.pnlUsd >= 0
                                           ? "text-emerald-700"
@@ -1237,7 +1211,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                         ariaLabel={`Row actions for ${h.ticker}`}
                                       />
                                       <DropdownMenuContent
-                                        className={cx(
+                                        className={cn(
                                           "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
                                         )}
                                       >
@@ -1313,7 +1287,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                         ariaLabel={`Row actions for ${h.ticker}`}
                                       />
                                       <DropdownMenuContent
-                                        className={cx(
+                                        className={cn(
                                           "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
                                         )}
                                       >
@@ -1388,7 +1362,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                     </Text>
                                     <Text
                                       as="div"
-                                      className={cx(
+                                      className={cn(
                                         "font-semibold",
                                         h.pnlUsd >= 0
                                           ? "text-emerald-700"
@@ -1496,7 +1470,7 @@ function SortableTh(props: {
       <button
         type="button"
         onClick={onClick}
-        className={cx(
+        className={cn(
           "inline-flex items-center gap-2",
           "rounded-lg px-2 py-1",
           "hover:bg-(--ui-surface)",
@@ -1506,7 +1480,7 @@ function SortableTh(props: {
         <span>{label}</span>
         <span
           aria-hidden="true"
-          className={cx("inline-flex", !active && "opacity-40")}
+          className={cn("inline-flex", !active && "opacity-40")}
         >
           <ChevronUp />
         </span>
