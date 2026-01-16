@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import {
   Button,
   Card,
@@ -21,7 +21,6 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-  Skeleton,
   Stack,
   Text,
 } from "@components";
@@ -57,25 +56,23 @@ import {
 type ThemeMode = "light" | "dark";
 
 export function Dashboard() {
-  const [theme, setTheme] = React.useState<ThemeMode>("light");
-  const [range, setRange] = React.useState<"month" | "week" | "day">("month");
-  const [holdingsQuery, setHoldingsQuery] = React.useState("");
-  const [sortKey, setSortKey] = React.useState<SortKey>("name");
-  const [sortDir, setSortDir] = React.useState<SortDir>("asc");
-  const [activeNav, setActiveNav] = React.useState<
+  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [range, setRange] = useState<"month" | "week" | "day">("month");
+  const [holdingsQuery, setHoldingsQuery] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [activeNav, setActiveNav] = useState<
     "Overview" | "Portfolio" | "Wallet" | "Market" | "Community" | "News"
   >("Overview");
-  const [confirmRemoveId, setConfirmRemoveId] = React.useState<string | null>(
-    null
-  );
-  const [lastUpdatedSeconds, setLastUpdatedSeconds] = React.useState(12);
+  const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
+  const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
 
   // Get dashboard data
   const { assets, perfDaily, perfWeekly, perfMonthly, allocation, holdings } =
     useDashboardData();
 
   // Update "last updated" timer
-  React.useEffect(() => {
+  useEffect(() => {
     const t = window.setInterval(() => {
       setLastUpdatedSeconds((s) => clampNumber(s + 1, 0, 999));
     }, 1000);
@@ -83,14 +80,14 @@ export function Dashboard() {
   }, []);
 
   // Select performance data based on range
-  const perf = React.useMemo(() => {
+  const perf = useMemo(() => {
     if (range === "day") return perfDaily;
     if (range === "week") return perfWeekly;
     return perfMonthly;
   }, [range, perfDaily, perfWeekly, perfMonthly]);
 
   // Filter and sort holdings
-  const visibleHoldings: readonly HoldingRow[] = React.useMemo(() => {
+  const visibleHoldings: readonly HoldingRow[] = useMemo(() => {
     const q = holdingsQuery.trim().toLowerCase();
     const filtered = q
       ? holdings.filter(
@@ -123,17 +120,17 @@ export function Dashboard() {
     return sorted;
   }, [holdings, holdingsQuery, sortDir, sortKey]);
 
-  const totalInvestedUsd = React.useMemo(() => 8847.04, []);
+  const totalInvestedUsd = useMemo(() => 8847.04, []);
 
-  const totalPortfolioValueUsd = React.useMemo(() => {
+  const totalPortfolioValueUsd = useMemo(() => {
     return assets.reduce((sum, asset) => sum + asset.valueUsd, 0);
   }, [assets]);
 
-  const toggleTheme = React.useCallback(() => {
+  const toggleTheme = useCallback(() => {
     setTheme((t) => (t === "dark" ? "light" : "dark"));
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");

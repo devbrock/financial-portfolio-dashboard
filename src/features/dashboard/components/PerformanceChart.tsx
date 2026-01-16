@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import {
   AreaChart,
   ChartContainer,
@@ -23,7 +23,7 @@ type PerformanceChartProps = {
 export function PerformanceChart(props: PerformanceChartProps) {
   const { data, range, onRangeChange, loading = false } = props;
 
-  const { totalProfitUsd, profitPercentage } = React.useMemo(() => {
+  const { totalProfitUsd, profitPercentage } = useMemo(() => {
     if (data.length === 0) return { totalProfitUsd: 0, profitPercentage: 0 };
 
     const total = data[data.length - 1].profitUsd;

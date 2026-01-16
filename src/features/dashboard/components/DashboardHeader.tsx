@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button, Heading, Inline, Skeleton, Text } from "@components";
 import { Plus } from "lucide-react";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
@@ -13,8 +12,13 @@ type DashboardHeaderProps = {
 };
 
 export function DashboardHeader(props: DashboardHeaderProps) {
-  const { userName, portfolioValue, lastUpdated, onAddAsset, loading = false } =
-    props;
+  const {
+    userName,
+    portfolioValue,
+    lastUpdated,
+    onAddAsset,
+    loading = false,
+  } = props;
 
   return (
     <Inline align="center" justify="between" className="gap-3">
