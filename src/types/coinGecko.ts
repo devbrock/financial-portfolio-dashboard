@@ -24,3 +24,16 @@ export type CoinGeckoCoin = {
     large?: string;
   };
 };
+
+export type CoinGeckoSearchCoin = {
+  id: string;
+  name: string;
+  symbol: string;
+  thumb?: string;
+  large?: string;
+  market_cap_rank?: number;
+};
+
+export type CoinGeckoSearchResponse = {
+  coins: CoinGeckoSearchCoin[];
+};

@@ -32,9 +32,21 @@ export type ComboboxProps = {
    */
   debounceMs?: number;
   /**
+   * Called with the debounced query string.
+   */
+  onQueryChange?: (query: string) => void;
+  /**
+   * Called with the raw query string on each input change.
+   */
+  onInputChange?: (query: string) => void;
+  /**
    * Minimum characters before opening suggestions.
    */
   minChars?: number;
+  /**
+   * Filter items locally based on the query.
+   */
+  filterItems?: boolean;
   /**
    * Close suggestions when an item is selected.
    */
@@ -63,5 +75,3 @@ export type ComboboxProps = {
   React.InputHTMLAttributes<HTMLInputElement>,
   "value" | "defaultValue" | "onChange" | "className" | "placeholder"
 >;
-
-

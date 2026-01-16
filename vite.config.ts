@@ -37,6 +37,7 @@ export default defineConfig({
       "@functions": path.resolve(__dirname, "./src/services/api/functions"),
       "@features": path.resolve(__dirname, "./src/features"),
       "@routes": path.resolve(__dirname, "./src/routes"),
+      "@assets": path.resolve(__dirname, "./src/assets"),
     },
   },
   test: {

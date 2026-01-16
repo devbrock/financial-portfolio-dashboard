@@ -33,7 +33,10 @@ export function Combobox(props: ComboboxProps) {
     onValueChange,
     placeholder,
     debounceMs = 250,
+    onQueryChange,
+    onInputChange,
     minChars = 1,
+    filterItems = true,
     closeOnSelect = true,
     closeOnBlur = true,
     loading = false,
@@ -78,11 +81,16 @@ export function Combobox(props: ComboboxProps) {
     return () => window.clearTimeout(handle);
   }, [query, debounceMs]);
 
+  React.useEffect(() => {
+    onQueryChange?.(debouncedQuery);
+  }, [debouncedQuery, onQueryChange]);
+
   const filtered = React.useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
     if (q.length < minChars) return [] as ComboboxItem[];
+    if (!filterItems) return [...items];
     return items.filter((it) => it.label.toLowerCase().includes(q));
-  }, [items, debouncedQuery, minChars]);
+  }, [items, debouncedQuery, minChars, filterItems]);
 
   const activeItemId =
     activeIndex >= 0 && activeIndex < filtered.length
@@ -179,6 +187,7 @@ export function Combobox(props: ComboboxProps) {
           setQuery(next);
           setActiveIndex(-1);
           openIfReady(next);
+          onInputChange?.(next);
         }}
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}

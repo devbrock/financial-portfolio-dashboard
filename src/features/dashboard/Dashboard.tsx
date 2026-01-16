@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Combobox,
   Container,
   Heading,
   IconButton,
@@ -25,7 +26,6 @@ import {
   Text,
 } from "@components";
 import {
-  Bell,
   ChartLine,
   ChevronDown,
   Folder,
@@ -33,16 +33,23 @@ import {
   Home,
   Moon,
   Newspaper,
+  Plus,
   Search,
   Sun,
   Users,
   Wallet,
 } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/utils/cn";
+import type { ComboboxItem } from "@components";
 import type { SortKey, SortDir, HoldingRow } from "@/types/dashboard";
 import { clampNumber } from "@utils/clampNumber";
 import { compareStrings } from "@utils/compareStrings";
 import { useDashboardData } from "./hooks/useDashboardData";
+import { useSymbolSearch } from "@/hooks/useSymbolSearch";
+import { useCryptoSearch } from "@/hooks/useCryptoSearch";
 import {
   AssetSummaryCard,
   DashboardHeader,
@@ -53,7 +60,26 @@ import {
   EmptyHoldings,
 } from "./components";
 import { useAppDispatch } from "@/store/hooks";
-import { removeHolding } from "@/features/portfolio/portfolioSlice";
+import { addHolding, removeHolding } from "@/features/portfolio/portfolioSlice";
+import type { AssetType } from "@/types/portfolio";
+import OrionLogoLight from "@assets/orion_logo_light.svg";
+
+const addAssetSchema = z.object({
+  assetSelection: z.string().min(1, "Select an asset from search"),
+  assetType: z.enum(["stock", "crypto"]),
+  symbol: z.string().min(1, "Select an asset from search"),
+  quantity: z.number().positive("Quantity must be greater than 0"),
+  purchasePrice: z.number().positive("Purchase price must be greater than 0"),
+  purchaseDate: z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
+    message: "Purchase date is required",
+  }),
+});
+
+type AddAssetFormValues = z.infer<typeof addAssetSchema>;
+
+function generateHoldingId(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
 
 type ThemeMode = "light" | "dark";
 
@@ -69,6 +95,85 @@ export function Dashboard() {
   >("Overview");
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
+  const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [assetQuery, setAssetQuery] = useState("");
+  const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
+  const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const handleAssetQueryChange = useCallback((nextQuery: string) => {
+    const trimmed = nextQuery.trim();
+    setAssetQuery(trimmed.length >= 2 ? trimmed : "");
+  }, []);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+    setValue,
+    control,
+  } = useForm<AddAssetFormValues>({
+    resolver: zodResolver(addAssetSchema),
+    defaultValues: {
+      assetSelection: "",
+      assetType: "stock",
+      symbol: "",
+      quantity: 0,
+      purchasePrice: 0,
+      purchaseDate: today,
+    },
+  });
+
+  const { data: stockSearch, isFetching: isStockSearchLoading } =
+    useSymbolSearch(assetQuery);
+  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } =
+    useCryptoSearch(assetQuery);
+
+  const assetOptions: ComboboxItem[] = useMemo(() => {
+    const stockItems = (stockSearch?.result ?? [])
+      .filter((result) => result.symbol)
+      .slice(0, 6)
+      .map((result) => ({
+        value: `stock:${result.symbol.toUpperCase()}`,
+        label: `Stock · ${result.displaySymbol} — ${result.description}`,
+      }));
+    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map((coin) => ({
+      value: `crypto:${coin.id.toLowerCase()}`,
+      label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
+    }));
+    return [...stockItems, ...cryptoItems];
+  }, [stockSearch, cryptoSearch]);
+
+  const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
+
+  const onSubmitAddAsset = useCallback(
+    (values: AddAssetFormValues) => {
+      const assetType = values.assetType as AssetType;
+      const normalizedSymbol =
+        assetType === "stock"
+          ? values.symbol.trim().toUpperCase()
+          : values.symbol.trim().toLowerCase();
+
+      dispatch(
+        addHolding({
+          id: generateHoldingId(),
+          symbol: normalizedSymbol,
+          assetType,
+          quantity: values.quantity,
+          purchasePrice: values.purchasePrice,
+          purchaseDate: values.purchaseDate,
+        })
+      );
+      reset({
+        assetSelection: "",
+        assetType: values.assetType,
+        symbol: "",
+        quantity: 0,
+        purchasePrice: 0,
+        purchaseDate: today,
+      });
+      setIsAddAssetOpen(false);
+    },
+    [dispatch, reset, today]
+  );
 
   // Get dashboard data
   const {
@@ -184,6 +289,11 @@ export function Dashboard() {
             <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
               <Inline align="center" className="gap-3 px-1">
                 <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
+                  <img
+                    src={OrionLogoLight}
+                    alt="Orion"
+                    className="h-7 w-auto"
+                  />
                   <Text as="div" className="truncate font-semibold text-white">
                     Orion Wealth
                   </Text>
@@ -308,23 +418,6 @@ export function Dashboard() {
                         onClick={toggleTheme}
                         icon={theme === "dark" ? <Sun /> : <Moon />}
                       />
-                      <div className="relative">
-                        <IconButton
-                          ariaLabel="Notifications"
-                          variant="ghost"
-                          size="md"
-                          icon={<Bell />}
-                        />
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            "absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full",
-                            "bg-red-600 px-1 text-[10px] font-semibold text-white"
-                          )}
-                        >
-                          3
-                        </span>
-                      </div>
 
                       <Button
                         type="button"
@@ -396,7 +489,7 @@ export function Dashboard() {
                         justify="between"
                         className="w-full gap-3"
                       >
-                        <div>
+                        <div className="min-w-0 flex-1">
                           <Heading as="h3" className="text-base">
                             My Holdings
                           </Heading>
@@ -405,19 +498,31 @@ export function Dashboard() {
                           </Text>
                         </div>
 
-                        <div className="relative w-full max-w-[280px]">
-                          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
-                            <Search />
-                          </span>
-                          <Input
-                            aria-label="Search holdings"
-                            placeholder="Search..."
-                            value={holdingsQuery}
-                            onChange={(e) =>
-                              setHoldingsQuery(e.currentTarget.value)
-                            }
-                            className="pl-9"
-                          />
+                        <div className="flex w-full flex-1 justify-center">
+                          <div className="relative w-full max-w-[280px]">
+                            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
+                              <Search />
+                            </span>
+                            <Input
+                              aria-label="Search holdings"
+                              placeholder="Search..."
+                              value={holdingsQuery}
+                              onChange={(e) =>
+                                setHoldingsQuery(e.currentTarget.value)
+                              }
+                              className="pl-9"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-1 justify-end">
+                          <Button
+                            variant="primary"
+                            leftIcon={<Plus />}
+                            onClick={handleAddAsset}
+                          >
+                            Add Asset
+                          </Button>
                         </div>
                       </Inline>
                     </CardHeader>
@@ -426,7 +531,7 @@ export function Dashboard() {
                       {/* Desktop table */}
                       <div className="hidden md:block">
                         {visibleHoldings.length === 0 ? (
-                          <EmptyHoldings onAddHolding={() => undefined} />
+                          <EmptyHoldings onAddHolding={handleAddAsset} />
                         ) : (
                           <HoldingsTable
                             holdings={visibleHoldings}
@@ -441,7 +546,7 @@ export function Dashboard() {
                       {/* Mobile cards */}
                       <div className="md:hidden">
                         {visibleHoldings.length === 0 ? (
-                          <EmptyHoldings onAddHolding={() => undefined} />
+                          <EmptyHoldings onAddHolding={handleAddAsset} />
                         ) : (
                           <div className="space-y-3">
                             {visibleHoldings.map((h) => (
@@ -496,6 +601,165 @@ export function Dashboard() {
             Think of this like removing a sticky note from your desk: it doesn't
             change the company, it just clears your view.
           </Text>
+        </Modal>
+
+        {/* Add asset dialog */}
+        <Modal
+          open={isAddAssetOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              setIsAddAssetOpen(false);
+              setAssetQuery("");
+              reset({
+                assetSelection: "",
+                assetType: "stock",
+                symbol: "",
+                quantity: 0,
+                purchasePrice: 0,
+                purchaseDate: today,
+              });
+            }
+          }}
+          title="Add asset"
+          description="Record a new position to update your portfolio totals."
+          footer={
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => setIsAddAssetOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                form="add-asset-form"
+                disabled={isSubmitting}
+              >
+                Add Asset
+              </Button>
+            </>
+          }
+        >
+          <form
+            id="add-asset-form"
+            onSubmit={handleSubmit(onSubmitAddAsset)}
+            className="space-y-3"
+          >
+            <div>
+              <Text as="label" htmlFor="assetSearch" size="sm">
+                Search asset
+              </Text>
+              <Controller
+                control={control}
+                name="assetSelection"
+                render={({ field }) => (
+                  <Combobox
+                    id="assetSearch"
+                    placeholder="Search RBLX, Adobe, BTC, Ethereum..."
+                    items={assetOptions}
+                    value={field.value}
+                    onValueChange={(nextValue) => {
+                      field.onChange(nextValue);
+                      const isStock = nextValue.startsWith("stock:");
+                      const rawSymbol = nextValue.replace(
+                        isStock ? "stock:" : "crypto:",
+                        ""
+                      );
+                      setValue("assetType", isStock ? "stock" : "crypto", {
+                        shouldValidate: true,
+                      });
+                      setValue(
+                        "symbol",
+                        isStock
+                          ? rawSymbol.toUpperCase()
+                          : rawSymbol.toLowerCase(),
+                        { shouldValidate: true }
+                      );
+                    }}
+                    onInputChange={() => {
+                      if (field.value) {
+                        field.onChange("");
+                        setValue("assetType", "stock", {
+                          shouldValidate: true,
+                        });
+                        setValue("symbol", "", { shouldValidate: true });
+                      }
+                    }}
+                    onQueryChange={handleAssetQueryChange}
+                    loading={isAssetSearchLoading}
+                    minChars={2}
+                    inputClassName="mt-1"
+                  />
+                )}
+              />
+              <Text as="div" size="sm" tone="muted" className="mt-1">
+                Results include stocks and crypto. Pick one to continue.
+              </Text>
+              {errors.assetSelection ? (
+                <Text as="div" size="sm" className="mt-1 text-red-600">
+                  {errors.assetSelection.message}
+                </Text>
+              ) : null}
+            </div>
+
+            <input type="hidden" {...register("assetType")} />
+            <input type="hidden" {...register("symbol")} />
+
+            <Inline align="start" className="gap-3">
+              <div className="w-full">
+                <Text as="label" htmlFor="quantity" size="sm">
+                  Quantity
+                </Text>
+                <Input
+                  id="quantity"
+                  type="number"
+                  step="any"
+                  className="mt-1"
+                  {...register("quantity", { valueAsNumber: true })}
+                />
+                {errors.quantity ? (
+                  <Text as="div" size="sm" className="mt-1 text-red-600">
+                    {errors.quantity.message}
+                  </Text>
+                ) : null}
+              </div>
+              <div className="w-full">
+                <Text as="label" htmlFor="purchasePrice" size="sm">
+                  Purchase price (USD)
+                </Text>
+                <Input
+                  id="purchasePrice"
+                  type="number"
+                  step="any"
+                  className="mt-1"
+                  {...register("purchasePrice", { valueAsNumber: true })}
+                />
+                {errors.purchasePrice ? (
+                  <Text as="div" size="sm" className="mt-1 text-red-600">
+                    {errors.purchasePrice.message}
+                  </Text>
+                ) : null}
+              </div>
+            </Inline>
+
+            <div>
+              <Text as="label" htmlFor="purchaseDate" size="sm">
+                Purchase date
+              </Text>
+              <Input
+                id="purchaseDate"
+                type="date"
+                className="mt-1"
+                {...register("purchaseDate")}
+              />
+              {errors.purchaseDate ? (
+                <Text as="div" size="sm" className="mt-1 text-red-600">
+                  {errors.purchaseDate.message}
+                </Text>
+              ) : null}
+            </div>
+          </form>
         </Modal>
       </div>
     </SidebarProvider>

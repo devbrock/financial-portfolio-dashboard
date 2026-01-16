@@ -2,6 +2,7 @@ import type {
   CoinGeckoSimplePrice,
   CoinGeckoMarketChart,
   CoinGeckoCoin,
+  CoinGeckoSearchResponse,
 } from "@/types/coinGecko";
 import { coinGeckoClient } from "@/services/api/clients/coinGeckoClient";
 
@@ -48,6 +49,12 @@ export const coinGeckoApi = {
   getCoin: async (coinId: string, params: CoinDetailsParams) => {
     return coinGeckoClient.get<CoinGeckoCoin>(`/coins/${coinId}`, {
       params,
+    });
+  },
+
+  searchCoins: async (query: string) => {
+    return coinGeckoClient.get<CoinGeckoSearchResponse>("/search", {
+      params: { query },
     });
   },
 };

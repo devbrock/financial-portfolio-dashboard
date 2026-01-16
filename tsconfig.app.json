@@ -37,7 +37,8 @@
       "@clients/*": ["src/services/api/clients/*"],
       "@functions/*": ["src/services/api/functions/*"],
       "@features/*": ["src/features/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": ["src"]
