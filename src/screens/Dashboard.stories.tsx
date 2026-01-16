@@ -43,7 +43,6 @@ import {
   TableRow,
   Text,
   PieDonutChart,
-  SidebarRail,
 } from "@components";
 import {
   Bell,
@@ -64,10 +63,6 @@ import {
 
 type DemoMode = "loaded" | "loading" | "error-empty";
 
-/**
- * ThemeMode
- * Local Storybook-only theme toggle that maps to the `.dark` CSS variables override in `src/App.css`.
- */
 type ThemeMode = "light" | "dark";
 
 type AssetCardModel = {
@@ -570,13 +565,9 @@ function DashboardDemo(props: DashboardDemoProps) {
           <Sidebar
             collapsible="icon"
             width={260}
-            className={cx(
-              // keep the demo "inset" (not edge-to-edge) while using the official Sidebar component
-              "rounded-2xl overflow-hidden",
-              "h-full"
-            )}
+            className={cx("rounded-2xl overflow-hidden", "h-full")}
           >
-            <SidebarHeader>
+            <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
               <Inline align="center" className="gap-3 px-1">
                 <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
                   <Text as="div" className="truncate font-semibold text-white">
@@ -662,7 +653,6 @@ function DashboardDemo(props: DashboardDemoProps) {
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarFooter>
-            <SidebarRail />
           </Sidebar>
 
           {/* Main content */}
