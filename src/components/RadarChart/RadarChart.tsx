@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import {
   Legend,
   PolarAngleAxis,
@@ -36,12 +36,13 @@ export function RadarChart<TDatum extends Record<string, unknown>>(
     className,
   } = props;
 
+  const chartData = useMemo(() => [...data], [data]);
   const angleDataKey = angleKey as DatumKey<TDatum>;
 
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsRadarChart data={data}>
+        <RechartsRadarChart data={chartData}>
           {grid ? <PolarGrid stroke="var(--ui-border)" /> : null}
 
           <PolarAngleAxis

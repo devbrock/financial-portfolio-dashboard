@@ -73,5 +73,5 @@ export type ComboboxProps = {
   "data-testid"?: string;
 } & Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "value" | "defaultValue" | "onChange" | "className" | "placeholder"
+  "value" | "defaultValue" | "onChange" | "className" | "placeholder" | "size"
 >;

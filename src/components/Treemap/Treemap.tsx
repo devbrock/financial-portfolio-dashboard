@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import {
   ResponsiveContainer,
   Tooltip,
@@ -7,7 +7,7 @@ import {
 import { cn } from "@utils/cn";
 import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
 import type { ChartTooltipItem } from "../ChartTooltip/ChartTooltip.types";
-import type { TreemapNode, TreemapProps } from "./Treemap.types";
+import type { TreemapProps } from "./Treemap.types";
 
 const DEFAULT_COLORS = [
   "var(--ui-primary)",
@@ -109,11 +109,13 @@ export function Treemap(props: TreemapProps) {
     className,
   } = props;
 
+  const chartData = useMemo(() => [...data], [data]);
+
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsTreemap
-          data={data as readonly TreemapNode[]}
+          data={chartData}
           dataKey="value"
           nameKey="name"
           stroke="var(--ui-border)"

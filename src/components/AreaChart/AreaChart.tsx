@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Area,
   AreaChart as RechartsAreaChart,
@@ -35,12 +36,13 @@ export function AreaChart<TDatum extends Record<string, unknown>>(
     className,
   } = props;
 
+  const chartData = useMemo(() => [...data], [data]);
   const xDataKey = xKey as DatumKey<TDatum>;
 
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsAreaChart data={data}>
+        <RechartsAreaChart data={chartData}>
           {grid ? (
             <CartesianGrid stroke="var(--ui-border)" strokeDasharray="3 3" />
           ) : null}

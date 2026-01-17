@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
+import { useMemo, useEffect, useState, useCallback, useRef } from "react";
 import {
   Button,
   Card,
@@ -56,6 +56,8 @@ export function Dashboard() {
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
   const handleLogout = useCallback(() => undefined, []);
+  const dataUpdatedAtRef = useRef(0);
+  const lastResetRef = useRef(0);
 
   // Get dashboard data
   const {
@@ -72,16 +74,19 @@ export function Dashboard() {
   // Update "last updated" timer
   useEffect(() => {
     const t = window.setInterval(() => {
-      setLastUpdatedSeconds((s) => clampNumber(s + 1, 0, 999));
+      setLastUpdatedSeconds((s) => {
+        if (dataUpdatedAtRef.current !== lastResetRef.current) {
+          lastResetRef.current = dataUpdatedAtRef.current;
+          return 0;
+        }
+        return clampNumber(s + 1, 0, 999);
+      });
     }, 1000);
     return () => window.clearInterval(t);
   }, []);
 
-  // Reset timer when data updates
   useEffect(() => {
-    if (dataUpdatedAt > 0) {
-      setLastUpdatedSeconds(0);
-    }
+    dataUpdatedAtRef.current = dataUpdatedAt;
   }, [dataUpdatedAt]);
 
   // Select performance data based on range

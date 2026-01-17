@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 /**
@@ -7,12 +7,9 @@ import { createPortal } from "react-dom";
  */
 export function Portal(props: { children: ReactNode }) {
   const { children } = props;
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const [mounted] = useState(() => typeof document !== "undefined");
   if (!mounted) return null;
 
   return createPortal(children, document.body);
 }
-
 

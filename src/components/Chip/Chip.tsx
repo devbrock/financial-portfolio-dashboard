@@ -1,4 +1,3 @@
-import * as React from "react";
 import { cn } from "@utils/cn";
 import type { ChipProps } from "./Chip.types";
 import { chipFocusStyles, chipStyles } from "./Chip.styles";

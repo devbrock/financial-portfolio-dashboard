@@ -6,7 +6,8 @@
       "WebSearch",
       "WebFetch(domain:www.alphavantage.co)",
       "WebFetch(domain:docs.coingecko.com)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)"
     ]
   }
 }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -36,12 +36,13 @@ export function LineChart<TDatum extends Record<string, unknown>>(
     className,
   } = props;
 
+  const chartData = useMemo(() => [...data], [data]);
   const xDataKey = xKey as DatumKey<TDatum>;
 
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsLineChart data={data}>
+        <RechartsLineChart data={chartData}>
           {grid ? (
             <CartesianGrid stroke="var(--ui-border)" strokeDasharray="3 3" />
           ) : null}

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 import {
   Cell,
   Pie,
@@ -42,6 +42,7 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
 
   const nameDataKey = nameKey as DatumKey<TDatum>;
   const valueDataKey = valueKey as DatumKey<TDatum>;
+  const chartData = useMemo(() => [...data], [data]);
 
   const derivedOuter = outerRadius ?? 90;
   const derivedInner =
@@ -63,7 +64,7 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
             )}
           />
           <Pie
-            data={data}
+            data={chartData}
             dataKey={valueDataKey}
             nameKey={nameDataKey}
             innerRadius={derivedInner}
@@ -71,7 +72,7 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
             stroke="var(--ui-bg)"
             strokeWidth={2}
           >
-            {data.map((_, idx) => (
+            {chartData.map((_, idx) => (
               <Cell
                 key={idx}
                 fill={colors[idx % colors.length] ?? "var(--ui-primary)"}

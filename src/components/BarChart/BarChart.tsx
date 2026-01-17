@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Bar,
   BarChart as RechartsBarChart,
@@ -35,12 +36,13 @@ export function BarChart<TDatum extends Record<string, unknown>>(
     className,
   } = props;
 
+  const chartData = useMemo(() => [...data], [data]);
   const xDataKey = xKey as DatumKey<TDatum>;
 
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsBarChart data={data}>
+        <RechartsBarChart data={chartData}>
           {grid ? (
             <CartesianGrid stroke="var(--ui-border)" strokeDasharray="3 3" />
           ) : null}

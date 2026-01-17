@@ -1,4 +1,3 @@
-import * as React from "react";
 import { cn } from "@utils/cn";
 import type { IconButtonProps } from "./IconButton.types";
 import { iconButtonStyles } from "./IconButton.styles";

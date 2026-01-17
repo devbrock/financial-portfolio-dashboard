@@ -15,6 +15,7 @@ import { tooltipContentClassName } from "./Tooltip.styles";
  */
 export function Tooltip(props: TooltipProps) {
   const { content, children, side = "top", delayMs = 0 } = props;
+  const child = children as React.ReactElement<React.HTMLAttributes<Element>>;
   const id = React.useId();
   const [open, setOpen] = React.useState(false);
   const [pos, setPos] = React.useState<{ top: number; left: number }>({
@@ -50,22 +51,22 @@ export function Tooltip(props: TooltipProps) {
 
   const childProps = {
     "aria-describedby": open ? id : undefined,
-    onMouseEnter: (e: React.MouseEvent) => {
-      children.props.onMouseEnter?.(e);
+    onMouseEnter: (e: React.MouseEvent<Element>) => {
+      child.props.onMouseEnter?.(e);
       if (e.defaultPrevented) return;
       scheduleOpen(e.currentTarget as HTMLElement);
     },
-    onMouseLeave: (e: React.MouseEvent) => {
-      children.props.onMouseLeave?.(e);
+    onMouseLeave: (e: React.MouseEvent<Element>) => {
+      child.props.onMouseLeave?.(e);
       close();
     },
-    onFocus: (e: React.FocusEvent) => {
-      children.props.onFocus?.(e);
+    onFocus: (e: React.FocusEvent<Element>) => {
+      child.props.onFocus?.(e);
       if (e.defaultPrevented) return;
       scheduleOpen(e.currentTarget as HTMLElement);
     },
-    onBlur: (e: React.FocusEvent) => {
-      children.props.onBlur?.(e);
+    onBlur: (e: React.FocusEvent<Element>) => {
+      child.props.onBlur?.(e);
       close();
     },
   } satisfies Partial<React.ComponentProps<"span">>;
@@ -73,7 +74,7 @@ export function Tooltip(props: TooltipProps) {
   return (
     <>
       {/* eslint-disable-next-line react-hooks/refs */}
-      {React.cloneElement(children, childProps)}
+      {React.cloneElement(child, childProps)}
       {open ? (
         <Portal>
           <div
