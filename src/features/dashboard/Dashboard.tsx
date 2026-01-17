@@ -4,55 +4,32 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Combobox,
   Container,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Heading,
   IconButton,
   Inline,
   Input,
   Modal,
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
   Stack,
   Text,
 } from "@components";
-import {
-  ChartLine,
-  ChevronDown,
-  Folder,
-  HelpCircle,
-  Home,
-  Moon,
-  Newspaper,
-  Plus,
-  Search,
-  Sun,
-  Users,
-  Wallet,
-} from "lucide-react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronDown, Moon, Plus, Search, Sun } from "lucide-react";
 import { cn } from "@/utils/cn";
-import type { ComboboxItem } from "@components";
 import type { SortKey, SortDir, HoldingRow } from "@/types/dashboard";
 import { clampNumber } from "@utils/clampNumber";
 import { compareStrings } from "@utils/compareStrings";
 import { useDashboardData } from "./hooks/useDashboardData";
-import { useSymbolSearch } from "@/hooks/useSymbolSearch";
-import { useCryptoSearch } from "@/hooks/useCryptoSearch";
 import {
+  AddAssetModal,
   AssetSummaryCard,
   DashboardHeader,
+  DashboardSidebar,
   PerformanceChart,
   AllocationChart,
   HoldingsTable,
@@ -61,29 +38,10 @@ import {
 } from "./components";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  addHolding,
   removeHolding,
   updatePreferences,
 } from "@/features/portfolio/portfolioSlice";
-import type { AssetType } from "@/types/portfolio";
-import OrionLogoLight from "@assets/orion_logo_light.svg";
-
-const addAssetSchema = z.object({
-  assetSelection: z.string().min(1, "Select an asset from search"),
-  assetType: z.enum(["stock", "crypto"]),
-  symbol: z.string().min(1, "Select an asset from search"),
-  quantity: z.number().positive("Quantity must be greater than 0"),
-  purchasePrice: z.number().positive("Purchase price must be greater than 0"),
-  purchaseDate: z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: "Purchase date is required",
-  }),
-});
-
-type AddAssetFormValues = z.infer<typeof addAssetSchema>;
-
-function generateHoldingId(): string {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
+import type { DashboardNav } from "./components/DashboardSidebar";
 
 export function Dashboard() {
   const dispatch = useAppDispatch();
@@ -92,117 +50,12 @@ export function Dashboard() {
   const [holdingsQuery, setHoldingsQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
-  const [activeNav, setActiveNav] = useState<
-    "Overview" | "Portfolio" | "Wallet" | "Market" | "Community" | "News"
-  >("Overview");
+  const [activeNav, setActiveNav] = useState<DashboardNav>("Overview");
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
-  const [assetQuery, setAssetQuery] = useState("");
-  const [selectedAssetLabel, setSelectedAssetLabel] = useState("");
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
-  const today = useMemo(() => new Date().toISOString().split("T")[0], []);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-    setValue,
-    control,
-  } = useForm<AddAssetFormValues>({
-    resolver: zodResolver(addAssetSchema),
-    defaultValues: {
-      assetSelection: "",
-      assetType: "stock",
-      symbol: "",
-      quantity: 0,
-      purchasePrice: 0,
-      purchaseDate: today,
-    },
-  });
-
-  const selectedAssetValue = useWatch({
-    control,
-    name: "assetSelection",
-  });
-
-  const handleAssetQueryChange = useCallback(
-    (nextQuery: string) => {
-      if (selectedAssetLabel && nextQuery === selectedAssetLabel) return;
-      const trimmed = nextQuery.trim();
-      setAssetQuery(trimmed.length >= 2 ? trimmed : "");
-    },
-    [selectedAssetLabel]
-  );
-
-  const { data: stockSearch, isFetching: isStockSearchLoading } =
-    useSymbolSearch(assetQuery);
-  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } =
-    useCryptoSearch(assetQuery);
-
-  const assetOptions: ComboboxItem[] = useMemo(() => {
-    const stockItems = (stockSearch?.result ?? [])
-      .filter((result) => result.symbol)
-      .slice(0, 6)
-      .map((result) => ({
-        value: `stock:${result.symbol.toUpperCase()}`,
-        label: `Stock · ${result.displaySymbol} — ${result.description}`,
-      }));
-    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map((coin) => ({
-      value: `crypto:${coin.id.toLowerCase()}`,
-      label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
-    }));
-    const merged = [...stockItems, ...cryptoItems];
-    if (
-      selectedAssetValue &&
-      selectedAssetLabel &&
-      !merged.some((item) => item.value === selectedAssetValue)
-    ) {
-      return [
-        { value: selectedAssetValue, label: selectedAssetLabel },
-        ...merged,
-      ];
-    }
-    return merged;
-  }, [
-    stockSearch,
-    cryptoSearch,
-    selectedAssetLabel,
-    selectedAssetValue,
-  ]);
-
-  const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
-
-  const onSubmitAddAsset = useCallback(
-    (values: AddAssetFormValues) => {
-      const assetType = values.assetType as AssetType;
-      const normalizedSymbol =
-        assetType === "stock"
-          ? values.symbol.trim().toUpperCase()
-          : values.symbol.trim().toLowerCase();
-
-      dispatch(
-        addHolding({
-          id: generateHoldingId(),
-          symbol: normalizedSymbol,
-          assetType,
-          quantity: values.quantity,
-          purchasePrice: values.purchasePrice,
-          purchaseDate: values.purchaseDate,
-        })
-      );
-      reset({
-        assetSelection: "",
-        assetType: values.assetType,
-        symbol: "",
-        quantity: 0,
-        purchasePrice: 0,
-        purchaseDate: today,
-      });
-      setIsAddAssetOpen(false);
-    },
-    [dispatch, reset, today]
-  );
+  const handleLogout = useCallback(() => undefined, []);
 
   // Get dashboard data
   const {
@@ -312,103 +165,10 @@ export function Dashboard() {
       >
         {/* App shell */}
         <div className="mx-auto flex h-full w-full gap-6 p-6">
-          <Sidebar
-            collapsible="icon"
-            width={260}
-            className={cn("rounded-2xl overflow-hidden", "h-full")}
-          >
-            <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
-              <Inline align="center" className="gap-3 px-1">
-                <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
-                  <img
-                    src={OrionLogoLight}
-                    alt="Orion"
-                    className="h-7 w-auto"
-                  />
-                  <Text as="div" className="truncate font-semibold text-white">
-                    Orion Wealth
-                  </Text>
-                  <Text as="div" size="sm" className="text-white/70">
-                    Wealth Management Platform
-                  </Text>
-                </div>
-              </Inline>
-            </SidebarHeader>
-
-            <SidebarContent>
-              <SidebarGroup>
-                <SidebarGroupContent>
-                  <SidebarMenu aria-label="Primary">
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "Overview"}
-                        onClick={() => setActiveNav("Overview")}
-                      >
-                        <Home />
-                        <span data-slot="label">Overview</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "Portfolio"}
-                        onClick={() => setActiveNav("Portfolio")}
-                      >
-                        <Folder />
-                        <span data-slot="label">Portfolio</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "Wallet"}
-                        onClick={() => setActiveNav("Wallet")}
-                      >
-                        <Wallet />
-                        <span data-slot="label">Wallet</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "Market"}
-                        onClick={() => setActiveNav("Market")}
-                      >
-                        <ChartLine />
-                        <span data-slot="label">Market</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "Community"}
-                        onClick={() => setActiveNav("Community")}
-                      >
-                        <Users />
-                        <span data-slot="label">Community</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeNav === "News"}
-                        onClick={() => setActiveNav("News")}
-                      >
-                        <Newspaper />
-                        <span data-slot="label">News</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            </SidebarContent>
-
-            <SidebarFooter>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => undefined}>
-                    <HelpCircle />
-                    <span data-slot="label">Help &amp; Support</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarFooter>
-          </Sidebar>
+          <DashboardSidebar
+            activeNav={activeNav}
+            onNavChange={setActiveNav}
+          />
 
           {/* Main content */}
           <main className="min-w-0 min-h-0 flex-1 overflow-y-auto">
@@ -450,31 +210,46 @@ export function Dashboard() {
                         icon={theme === "dark" ? <Sun /> : <Moon />}
                       />
 
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="md"
-                        className="h-auto rounded-2xl px-3 py-2"
-                        aria-label="Open profile menu"
-                        rightIcon={<ChevronDown />}
-                        leftIcon={
-                          <span
-                            aria-hidden="true"
-                            className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="md"
+                            className="h-auto rounded-2xl px-3 py-2"
+                            aria-label="Open profile menu"
+                            rightIcon={<ChevronDown />}
+                            leftIcon={
+                              <span
+                                aria-hidden="true"
+                                className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
+                              >
+                                <span className="text-sm font-semibold">
+                                  BB
+                                </span>
+                              </span>
+                            }
                           >
-                            <span className="text-sm font-semibold">BB</span>
-                          </span>
-                        }
-                      >
-                        <span className="hidden text-left sm:block">
-                          <Text
-                            as="div"
-                            className="text-sm font-semibold leading-4"
-                          >
-                            Brock Balducci
-                          </Text>
-                        </span>
-                      </Button>
+                            <span className="hidden text-left sm:block">
+                              <Text
+                                as="div"
+                                className="text-sm font-semibold leading-4"
+                              >
+                                Brock Balducci
+                              </Text>
+                            </span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          className={cn(
+                            "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                          )}
+                        >
+                          <DropdownMenuItem onClick={handleLogout}>
+                            Logout
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </Inline>
                   </Inline>
                 </header>
@@ -634,170 +409,10 @@ export function Dashboard() {
           </Text>
         </Modal>
 
-        {/* Add asset dialog */}
-        <Modal
+        <AddAssetModal
           open={isAddAssetOpen}
-          onOpenChange={(open) => {
-            if (!open) {
-              setIsAddAssetOpen(false);
-              setAssetQuery("");
-              setSelectedAssetLabel("");
-              reset({
-                assetSelection: "",
-                assetType: "stock",
-                symbol: "",
-                quantity: 0,
-                purchasePrice: 0,
-                purchaseDate: today,
-              });
-            }
-          }}
-          title="Add asset"
-          description="Record a new position to update your portfolio totals."
-          footer={
-            <>
-              <Button
-                variant="secondary"
-                onClick={() => setIsAddAssetOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                form="add-asset-form"
-                disabled={isSubmitting}
-              >
-                Add Asset
-              </Button>
-            </>
-          }
-        >
-          <form
-            id="add-asset-form"
-            onSubmit={handleSubmit(onSubmitAddAsset)}
-            className="space-y-3"
-          >
-            <div>
-              <Text as="label" htmlFor="assetSearch" size="sm">
-                Search asset
-              </Text>
-              <Controller
-                control={control}
-                name="assetSelection"
-                render={({ field }) => (
-                  <Combobox
-                    id="assetSearch"
-                    placeholder="Search RBLX, Adobe, BTC, Ethereum..."
-                    items={assetOptions}
-                    value={field.value}
-                    onValueChange={(nextValue) => {
-                      field.onChange(nextValue);
-                      const selectedItem = assetOptions.find(
-                        (item) => item.value === nextValue
-                      );
-                      setSelectedAssetLabel(selectedItem?.label ?? "");
-                      const isStock = nextValue.startsWith("stock:");
-                      const rawSymbol = nextValue.replace(
-                        isStock ? "stock:" : "crypto:",
-                        ""
-                      );
-                      setValue("assetType", isStock ? "stock" : "crypto", {
-                        shouldValidate: true,
-                      });
-                      setValue(
-                        "symbol",
-                        isStock
-                          ? rawSymbol.toUpperCase()
-                          : rawSymbol.toLowerCase(),
-                        { shouldValidate: true }
-                      );
-                    }}
-                    onInputChange={() => {
-                      if (field.value) {
-                        field.onChange("");
-                        setSelectedAssetLabel("");
-                        setValue("assetType", "stock", {
-                          shouldValidate: true,
-                        });
-                        setValue("symbol", "", { shouldValidate: true });
-                      }
-                    }}
-                    onQueryChange={handleAssetQueryChange}
-                    loading={isAssetSearchLoading}
-                    minChars={2}
-                    inputClassName="mt-1"
-                  />
-                )}
-              />
-              <Text as="div" size="sm" tone="muted" className="mt-1">
-                Results include stocks and crypto. Pick one to continue.
-              </Text>
-              {errors.assetSelection ? (
-                <Text as="div" size="sm" className="mt-1 text-red-600">
-                  {errors.assetSelection.message}
-                </Text>
-              ) : null}
-            </div>
-
-            <input type="hidden" {...register("assetType")} />
-            <input type="hidden" {...register("symbol")} />
-
-            <Inline align="start" className="gap-3">
-              <div className="w-full">
-                <Text as="label" htmlFor="quantity" size="sm">
-                  Quantity
-                </Text>
-                <Input
-                  id="quantity"
-                  type="number"
-                  step="any"
-                  className="mt-1"
-                  {...register("quantity", { valueAsNumber: true })}
-                />
-                {errors.quantity ? (
-                  <Text as="div" size="sm" className="mt-1 text-red-600">
-                    {errors.quantity.message}
-                  </Text>
-                ) : null}
-              </div>
-              <div className="w-full">
-                <Text as="label" htmlFor="purchasePrice" size="sm">
-                  Purchase price (USD)
-                </Text>
-                <Input
-                  id="purchasePrice"
-                  type="number"
-                  step="any"
-                  className="mt-1"
-                  {...register("purchasePrice", { valueAsNumber: true })}
-                />
-                {errors.purchasePrice ? (
-                  <Text as="div" size="sm" className="mt-1 text-red-600">
-                    {errors.purchasePrice.message}
-                  </Text>
-                ) : null}
-              </div>
-            </Inline>
-
-            <div>
-              <Text as="label" htmlFor="purchaseDate" size="sm">
-                Purchase date
-              </Text>
-              <Input
-                id="purchaseDate"
-                type="date"
-                className="mt-1"
-                {...register("purchaseDate")}
-              />
-              {errors.purchaseDate ? (
-                <Text as="div" size="sm" className="mt-1 text-red-600">
-                  {errors.purchaseDate.message}
-                </Text>
-              ) : null}
-            </div>
-          </form>
-        </Modal>
+          onOpenChange={setIsAddAssetOpen}
+        />
       </div>
     </SidebarProvider>
   );

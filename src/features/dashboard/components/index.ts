@@ -1,5 +1,7 @@
 export { AssetSummaryCard } from "./AssetSummaryCard";
+export { AddAssetModal } from "./AddAssetModal";
 export { DashboardHeader } from "./DashboardHeader";
+export { DashboardSidebar } from "./DashboardSidebar";
 export { PerformanceChart } from "./PerformanceChart";
 export { AllocationChart } from "./AllocationChart";
 export { HoldingsTable } from "./HoldingsTable";
