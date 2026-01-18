@@ -1,16 +1,19 @@
 import { Heading, Inline, Skeleton, Text } from "@components";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatLastUpdated } from "@utils/formatLastUpdated";
+import { formatSignedPct } from "@utils/formatSignedPct";
 
 type DashboardHeaderProps = {
   userName: string;
   portfolioValue: number;
   lastUpdated: number;
+  dailyChangePct: number;
   loading?: boolean;
 };
 
 export function DashboardHeader(props: DashboardHeaderProps) {
-  const { userName, portfolioValue, lastUpdated, loading = false } = props;
+  const { userName, portfolioValue, lastUpdated, dailyChangePct, loading = false } =
+    props;
 
   return (
     <Inline align="center" justify="between" className="gap-3 py-4">
@@ -33,6 +36,9 @@ export function DashboardHeader(props: DashboardHeaderProps) {
             </Text>
             <Text as="div" size="sm" tone="muted" className="mt-1">
               Last updated {formatLastUpdated(lastUpdated)}
+            </Text>
+            <Text as="div" size="sm" tone="muted" className="mt-1">
+              Daily P/L {formatSignedPct(dailyChangePct)}
             </Text>
           </>
         )}

@@ -13,7 +13,7 @@ import {
 import type { ComboboxItem } from "@components";
 import { useSymbolSearch } from "@/hooks/useSymbolSearch";
 import { useCryptoSearch } from "@/hooks/useCryptoSearch";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addHolding } from "@/features/portfolio/portfolioSlice";
 import type { AssetType, Holding } from "@/types/portfolio";
 
@@ -43,6 +43,7 @@ function generateHoldingId(): string {
 export function AddAssetModal(props: AddAssetModalProps) {
   const { open, onOpenChange, onAdded } = props;
   const dispatch = useAppDispatch();
+  const holdings = useAppSelector((state) => state.portfolio.holdings);
   const [assetQuery, setAssetQuery] = useState("");
   const [selectedAssetLabel, setSelectedAssetLabel] = useState("");
 
@@ -71,6 +72,23 @@ export function AddAssetModal(props: AddAssetModalProps) {
     control,
     name: "assetSelection",
   });
+  const selectedSymbol = useWatch({
+    control,
+    name: "symbol",
+  });
+  const selectedAssetType = useWatch({
+    control,
+    name: "assetType",
+  });
+
+  const isDuplicateAsset = useMemo(() => {
+    if (!selectedSymbol) return false;
+    return holdings.some(
+      (holding) =>
+        holding.assetType === selectedAssetType &&
+        holding.symbol.toLowerCase() === selectedSymbol.toLowerCase()
+    );
+  }, [holdings, selectedAssetType, selectedSymbol]);
 
   const handleAssetQueryChange = useCallback(
     (nextQuery: string) => {
@@ -233,6 +251,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
                 onQueryChange={handleAssetQueryChange}
                 loading={isAssetSearchLoading}
                 minChars={2}
+                debounceMs={300}
                 inputClassName="mt-1"
               />
             )}
@@ -243,6 +262,11 @@ export function AddAssetModal(props: AddAssetModalProps) {
           {errors.assetSelection ? (
             <Text as="div" size="sm" className="mt-1 text-red-600">
               {errors.assetSelection.message}
+            </Text>
+          ) : null}
+          {isDuplicateAsset ? (
+            <Text as="div" size="sm" className="mt-1 text-amber-600">
+              You already have this asset in your portfolio.
             </Text>
           ) : null}
         </div>

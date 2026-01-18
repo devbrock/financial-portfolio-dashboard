@@ -23,6 +23,7 @@ export function useCryptoProfiles(coinIds: string[]) {
 
   const isLoading = queries.some((query) => query.isLoading);
   const isError = queries.some((query) => query.isError);
+  const error = queries.find((query) => query.error)?.error ?? null;
 
   const profileMap = new Map<string, CoinGeckoCoin>();
   queries.forEach((query, index) => {
@@ -36,5 +37,6 @@ export function useCryptoProfiles(coinIds: string[]) {
     isLoading,
     isError,
     queries,
+    error,
   };
 }

@@ -56,12 +56,14 @@ export function usePortfolioData() {
     isLoading: stocksLoading,
     isError: stocksError,
     dataUpdatedAt: stockDataUpdatedAt,
+    error: stocksErrorObj,
   } = useStockPrices(stockSymbols);
 
   const {
     profileMap,
     isLoading: profilesLoading,
     isError: profilesError,
+    error: profilesErrorObj,
   } = useStockProfiles(stockSymbols);
 
   // Fetch crypto prices
@@ -69,12 +71,14 @@ export function usePortfolioData() {
     priceMap: cryptoPriceMap,
     isLoading: cryptoLoading,
     isError: cryptoError,
+    error: cryptoErrorObj,
   } = useCryptoPrices(cryptoSymbols);
 
   const {
     profileMap: cryptoProfileMap,
     isLoading: cryptoProfilesLoading,
     isError: cryptoProfilesError,
+    error: cryptoProfilesErrorObj,
   } = useCryptoProfiles(cryptoSymbols);
 
   // Get the latest data update timestamp
@@ -128,6 +132,16 @@ export function usePortfolioData() {
     stocksLoading || profilesLoading || cryptoLoading || cryptoProfilesLoading;
   const isError =
     stocksError || profilesError || cryptoError || cryptoProfilesError;
+  const firstError =
+    stocksErrorObj ||
+    profilesErrorObj ||
+    cryptoErrorObj ||
+    cryptoProfilesErrorObj ||
+    null;
+  const errorMessage =
+    firstError instanceof Error
+      ? firstError.message
+      : "We couldn't load your latest market data.";
 
   return {
     holdings,
@@ -135,6 +149,7 @@ export function usePortfolioData() {
     metrics,
     isLoading,
     isError,
+    errorMessage,
     hasHoldings: holdings.length > 0,
     dataUpdatedAt,
   };

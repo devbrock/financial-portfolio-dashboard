@@ -13,15 +13,20 @@ type AllocationChartProps = {
   data: readonly AllocationSlice[];
   totalInvested: number;
   loading?: boolean;
+  flash?: boolean;
 };
 
 export function AllocationChart(props: AllocationChartProps) {
-  const { data, totalInvested, loading = false } = props;
+  const { data, totalInvested, loading = false, flash = false } = props;
 
   return (
     <ChartContainer
       title="Diversification"
       subtitle="Current allocation"
+      className={cn(
+        flash &&
+          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+      )}
       aria-busy={loading || undefined}
     >
       {loading ? (

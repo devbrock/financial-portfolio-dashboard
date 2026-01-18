@@ -21,13 +21,20 @@ import { formatSignedPct } from "@utils/formatSignedPct";
 type HoldingsMobileCardProps = {
   holding: HoldingRow;
   onRemove: (id: string) => void;
+  flash?: boolean;
 };
 
 export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
-  const { holding, onRemove } = props;
+  const { holding, onRemove, flash = false } = props;
 
   return (
-    <Card className="p-4">
+    <Card
+      className={cn(
+        "p-4",
+        flash &&
+          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+      )}
+    >
       <CardBody className="space-y-3">
         <Inline align="center" justify="between" className="gap-3">
           <Inline align="center" className="gap-3">

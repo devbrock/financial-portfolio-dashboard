@@ -13,7 +13,7 @@ export function useCryptoPrices(coinIds: string[]) {
     include_last_updated_at: true,
   };
 
-  const { data, isLoading, isError } = useCryptoPrice(params);
+  const { data, isLoading, isError, error } = useCryptoPrice(params);
 
   // Create map of coinId -> price
   const priceMap = new Map<string, number>();
@@ -28,5 +28,6 @@ export function useCryptoPrices(coinIds: string[]) {
     isLoading,
     isError,
     data,
+    error: error ?? null,
   };
 }

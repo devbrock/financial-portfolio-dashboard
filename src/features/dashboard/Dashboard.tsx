@@ -1,4 +1,5 @@
 import { useMemo, useEffect, useState, useCallback, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Card,
@@ -44,9 +45,10 @@ import {
 import type { DashboardNav } from "./components/DashboardSidebar";
 
 export function Dashboard() {
+  const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
   const theme = useAppSelector((state) => state.portfolio.preferences.theme);
-  const [range, setRange] = useState<"month" | "week" | "day">("month");
+  const [range, setRange] = useState<"7d" | "30d" | "90d" | "1y">("30d");
   const [holdingsQuery, setHoldingsQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -54,6 +56,7 @@ export function Dashboard() {
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [flashPrices, setFlashPrices] = useState(false);
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
   const handleLogout = useCallback(() => undefined, []);
   const dataUpdatedAtRef = useRef(0);
@@ -62,12 +65,16 @@ export function Dashboard() {
   // Get dashboard data
   const {
     assets,
-    perfDaily,
-    perfWeekly,
-    perfMonthly,
+    perf7d,
+    perf30d,
+    perf90d,
+    perf1y,
     allocation,
     holdings,
     metrics,
+    dailyPlPct,
+    isError,
+    errorMessage,
     dataUpdatedAt,
   } = useDashboardData();
 
@@ -87,14 +94,20 @@ export function Dashboard() {
 
   useEffect(() => {
     dataUpdatedAtRef.current = dataUpdatedAt;
+    if (dataUpdatedAt > 0) {
+      setFlashPrices(true);
+      const handle = window.setTimeout(() => setFlashPrices(false), 1200);
+      return () => window.clearTimeout(handle);
+    }
   }, [dataUpdatedAt]);
 
   // Select performance data based on range
   const perf = useMemo(() => {
-    if (range === "day") return perfDaily;
-    if (range === "week") return perfWeekly;
-    return perfMonthly;
-  }, [range, perfDaily, perfWeekly, perfMonthly]);
+    if (range === "7d") return perf7d;
+    if (range === "90d") return perf90d;
+    if (range === "1y") return perf1y;
+    return perf30d;
+  }, [range, perf7d, perf30d, perf90d, perf1y]);
 
   // Filter and sort holdings
   const visibleHoldings: readonly HoldingRow[] = useMemo(() => {
@@ -135,6 +148,10 @@ export function Dashboard() {
       updatePreferences({ theme: theme === "dark" ? "light" : "dark" })
     );
   }, [dispatch, theme]);
+
+  const handleRetry = useCallback(() => {
+    queryClient.invalidateQueries();
+  }, [queryClient]);
 
   useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
@@ -259,18 +276,50 @@ export function Dashboard() {
                   </Inline>
                 </header>
 
+                {isError ? (
+                  <Card className="border-amber-200 bg-amber-50/60">
+                    <CardBody>
+                      <Inline align="center" justify="between" className="gap-4">
+                        <div className="min-w-0">
+                          <Text
+                            as="div"
+                            className="font-semibold text-amber-900"
+                          >
+                            Market data is temporarily unavailable.
+                          </Text>
+                          <Text as="div" size="sm" className="text-amber-800">
+                            {errorMessage}
+                          </Text>
+                        </div>
+                        <Button
+                          variant="secondary"
+                          className="shrink-0"
+                          onClick={handleRetry}
+                        >
+                          Retry
+                        </Button>
+                      </Inline>
+                    </CardBody>
+                  </Card>
+                ) : null}
+
                 {/* Welcome + top actions */}
                 <DashboardHeader
                   userName="Brock"
                   portfolioValue={metrics.totalValue}
                   lastUpdated={lastUpdatedSeconds}
+                  dailyChangePct={dailyPlPct}
                 />
 
                 {/* Summary cards */}
                 <section aria-label="Asset summary">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                     {assets.map((a) => (
-                      <AssetSummaryCard key={a.id} asset={a} />
+                      <AssetSummaryCard
+                        key={a.id}
+                        asset={a}
+                        flash={flashPrices}
+                      />
                     ))}
                   </div>
                 </section>
@@ -284,10 +333,13 @@ export function Dashboard() {
                     data={perf}
                     range={range}
                     onRangeChange={setRange}
+                    isSimulated
+                    flash={flashPrices}
                   />
                   <AllocationChart
                     data={allocation}
                     totalInvested={metrics.totalCostBasis}
+                    flash={flashPrices}
                   />
                 </section>
 
@@ -350,6 +402,7 @@ export function Dashboard() {
                             sortKey={sortKey}
                             sortDir={sortDir}
                             onRemove={setConfirmRemoveId}
+                            flash={flashPrices}
                           />
                         )}
                       </div>
@@ -365,6 +418,7 @@ export function Dashboard() {
                                 key={h.id}
                                 holding={h}
                                 onRemove={setConfirmRemoveId}
+                                flash={flashPrices}
                               />
                             ))}
                           </div>

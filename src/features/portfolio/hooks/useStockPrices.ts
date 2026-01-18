@@ -13,6 +13,7 @@ export function useStockPrices(symbols: string[]) {
   // Extract data and loading states
   const isLoading = queries.some((query) => query.isLoading);
   const isError = queries.some((query) => query.isError);
+  const error = queries.find((query) => query.error)?.error ?? null;
 
   // Get latest data updated timestamp
   const dataUpdatedAt = Math.max(
@@ -34,5 +35,6 @@ export function useStockPrices(symbols: string[]) {
     isError,
     dataUpdatedAt,
     queries,
+    error,
   };
 }

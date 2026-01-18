@@ -20,8 +20,14 @@ function formatDate(isoDate: string): string {
 }
 
 export function useDashboardData() {
-  const { holdingsWithPrice, metrics, isLoading, isError, dataUpdatedAt } =
-    usePortfolioData();
+  const {
+    holdingsWithPrice,
+    metrics,
+    isLoading,
+    isError,
+    errorMessage,
+    dataUpdatedAt,
+  } = usePortfolioData();
 
   // Transform holdings into asset cards (top 4 by value)
   const assets: readonly AssetCardModel[] = useMemo(() => {
@@ -78,66 +84,57 @@ export function useDashboardData() {
     return slices;
   }, [metrics]);
 
-  // Mock performance data - will be replaced with historical transaction data
-  // Simulate realistic period-specific profits
-  const perfDaily: readonly PerformancePoint[] = useMemo(() => {
-    const currentPL = metrics.totalPL;
-    // Daily profit is estimated as ~3% of total P/L
-    const dailyProfit = currentPL * 0.03;
-    const base = dailyProfit / 5;
+  const buildSeries = useMemo(() => {
+    return (labels: string[], total: number) =>
+      labels.map((label, idx) => ({
+        month: label,
+        profitUsd: total * ((idx + 1) / labels.length),
+      }));
+  }, []);
 
-    return [
-      { month: "6am", profitUsd: base * 0.5 },
-      { month: "9am", profitUsd: base * 1.2 },
-      { month: "12pm", profitUsd: base * 2.1 },
-      { month: "3pm", profitUsd: base * 3.5 },
-      { month: "6pm", profitUsd: dailyProfit },
-    ];
-  }, [metrics.totalPL]);
+  // Simulated performance data - replace with historical transaction data.
+  const perf7d: readonly PerformancePoint[] = useMemo(() => {
+    const total = metrics.totalPL * 0.2;
+    return buildSeries(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], total);
+  }, [buildSeries, metrics.totalPL]);
 
-  const perfWeekly: readonly PerformancePoint[] = useMemo(() => {
-    const currentPL = metrics.totalPL;
-    // Weekly profit is estimated as ~20% of total P/L
-    const weeklyProfit = currentPL * 0.2;
-    const base = weeklyProfit / 7;
+  const perf30d: readonly PerformancePoint[] = useMemo(() => {
+    const total = metrics.totalPL * 0.45;
+    return buildSeries(["Wk1", "Wk2", "Wk3", "Wk4", "Wk5"], total);
+  }, [buildSeries, metrics.totalPL]);
 
-    return [
-      { month: "Mon", profitUsd: base * 0.8 },
-      { month: "Tue", profitUsd: base * 1.6 },
-      { month: "Wed", profitUsd: base * 2.2 },
-      { month: "Thu", profitUsd: base * 3.5 },
-      { month: "Fri", profitUsd: base * 5.2 },
-      { month: "Sat", profitUsd: base * 6.1 },
-      { month: "Sun", profitUsd: weeklyProfit },
-    ];
-  }, [metrics.totalPL]);
+  const perf90d: readonly PerformancePoint[] = useMemo(() => {
+    const total = metrics.totalPL * 0.75;
+    return buildSeries(["M1", "M2", "M3"], total);
+  }, [buildSeries, metrics.totalPL]);
 
-  const perfMonthly: readonly PerformancePoint[] = useMemo(() => {
-    const currentPL = metrics.totalPL;
-    // Monthly shows full current P/L accumulated over the year
-    return [
-      { month: "Jan", profitUsd: currentPL * 0.08 },
-      { month: "Feb", profitUsd: currentPL * 0.15 },
-      { month: "Mar", profitUsd: currentPL * 0.22 },
-      { month: "Apr", profitUsd: currentPL * 0.35 },
-      { month: "May", profitUsd: currentPL * 0.48 },
-      { month: "Jun", profitUsd: currentPL * 0.62 },
-      { month: "Jul", profitUsd: currentPL * 0.75 },
-      { month: "Aug", profitUsd: currentPL * 0.88 },
-      { month: "Sep", profitUsd: currentPL },
-    ];
-  }, [metrics.totalPL]);
+  const perf1y: readonly PerformancePoint[] = useMemo(() => {
+    const total = metrics.totalPL;
+    return buildSeries(
+      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+      total
+    );
+  }, [buildSeries, metrics.totalPL]);
+
+  const dailyPlPct = useMemo(() => {
+    if (metrics.totalCostBasis === 0) return 0;
+    const dailyPlUsd = metrics.totalPL * 0.03;
+    return (dailyPlUsd / metrics.totalCostBasis) * 100;
+  }, [metrics.totalCostBasis, metrics.totalPL]);
 
   return {
     assets,
-    perfDaily,
-    perfWeekly,
-    perfMonthly,
+    perf7d,
+    perf30d,
+    perf90d,
+    perf1y,
     allocation,
     holdings,
     isLoading,
     isError,
+    errorMessage,
     metrics, // Expose metrics for header (total value, P/L)
+    dailyPlPct,
     dataUpdatedAt, // Timestamp of last data update
   };
 }

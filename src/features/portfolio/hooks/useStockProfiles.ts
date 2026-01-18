@@ -13,6 +13,7 @@ export function useStockProfiles(symbols: string[]) {
   // Extract data and loading states
   const isLoading = queries.some((query) => query.isLoading);
   const isError = queries.some((query) => query.isError);
+  const error = queries.find((query) => query.error)?.error ?? null;
 
   // Create map of symbol -> profile data
   const profileMap = new Map<string, FinnhubCompanyProfile>();
@@ -27,5 +28,6 @@ export function useStockProfiles(symbols: string[]) {
     isLoading,
     isError,
     queries,
+    error,
   };
 }

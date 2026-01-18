@@ -16,10 +16,10 @@ describe("PerformanceChart", () => {
     const onRangeChange = vi.fn();
 
     renderWithProviders(
-      <PerformanceChart data={data} range="day" onRangeChange={onRangeChange} />
+      <PerformanceChart data={data} range="7d" onRangeChange={onRangeChange} />
     );
 
-    await user.click(screen.getByRole("button", { name: "Weekly" }));
-    expect(onRangeChange).toHaveBeenCalledWith("week");
+    await user.click(screen.getByRole("button", { name: "90D" }));
+    expect(onRangeChange).toHaveBeenCalledWith("90d");
   });
 });

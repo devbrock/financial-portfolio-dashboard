@@ -8,6 +8,7 @@ import {
   Skeleton,
   Text,
 } from "@components";
+import { cn } from "@/utils/cn";
 import type { PerformancePoint } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatCompact } from "@utils/formatCompact";
@@ -15,13 +16,22 @@ import { formatSignedPct } from "@utils/formatSignedPct";
 
 type PerformanceChartProps = {
   data: readonly PerformancePoint[];
-  range: "day" | "week" | "month";
-  onRangeChange: (range: "day" | "week" | "month") => void;
+  range: "7d" | "30d" | "90d" | "1y";
+  onRangeChange: (range: "7d" | "30d" | "90d" | "1y") => void;
   loading?: boolean;
+  isSimulated?: boolean;
+  flash?: boolean;
 };
 
 export function PerformanceChart(props: PerformanceChartProps) {
-  const { data, range, onRangeChange, loading = false } = props;
+  const {
+    data,
+    range,
+    onRangeChange,
+    loading = false,
+    isSimulated = false,
+    flash = false,
+  } = props;
 
   const { totalProfitUsd, profitPercentage } = useMemo(() => {
     if (data.length === 0) return { totalProfitUsd: 0, profitPercentage: 0 };
@@ -37,25 +47,30 @@ export function PerformanceChart(props: PerformanceChartProps) {
   return (
     <ChartContainer
       title="Profit status"
-      subtitle={
-        range === "day" ? "Daily" : range === "month" ? "Monthly" : "Weekly"
-      }
+      subtitle="Performance"
+      className={cn(
+        flash &&
+          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+      )}
       actions={
         <Inline align="center" className="gap-2">
-          <Chip selected={range === "day"} onClick={() => onRangeChange("day")}>
-            Daily
+          <Chip selected={range === "7d"} onClick={() => onRangeChange("7d")}>
+            7D
           </Chip>
           <Chip
-            selected={range === "week"}
-            onClick={() => onRangeChange("week")}
+            selected={range === "30d"}
+            onClick={() => onRangeChange("30d")}
           >
-            Weekly
+            30D
           </Chip>
           <Chip
-            selected={range === "month"}
-            onClick={() => onRangeChange("month")}
+            selected={range === "90d"}
+            onClick={() => onRangeChange("90d")}
           >
-            Monthly
+            90D
+          </Chip>
+          <Chip selected={range === "1y"} onClick={() => onRangeChange("1y")}>
+            1Y
           </Chip>
         </Inline>
       }
@@ -110,6 +125,11 @@ export function PerformanceChart(props: PerformanceChartProps) {
               typeof v === "number" ? `$${formatCompact(v)}` : String(v)
             }
           />
+          {isSimulated ? (
+            <Text as="div" size="xs" tone="muted" className="mt-3">
+              Simulated performance data.
+            </Text>
+          ) : null}
         </>
       )}
     </ChartContainer>

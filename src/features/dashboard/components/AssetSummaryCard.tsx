@@ -21,10 +21,11 @@ import { formatSignedPct } from "@utils/formatSignedPct";
 type AssetSummaryCardProps = {
   asset: AssetCardModel;
   loading?: boolean;
+  flash?: boolean;
 };
 
 export function AssetSummaryCard(props: AssetSummaryCardProps) {
-  const { asset, loading = false } = props;
+  const { asset, loading = false, flash = false } = props;
 
   const deltaTone =
     asset.weeklyDeltaPct > 0
@@ -46,7 +47,9 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
       className={cn(
         "p-5",
         "transition-shadow duration-200 motion-reduce:transition-none",
-        !loading && "hover:shadow-md hover:shadow-black/10"
+        !loading && "hover:shadow-md hover:shadow-black/10",
+        flash &&
+          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
       )}
     >
       <CardBody className="space-y-3">

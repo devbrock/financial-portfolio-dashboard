@@ -29,10 +29,11 @@ type HoldingsTableProps = {
   sortKey: SortKey;
   sortDir: SortDir;
   onRemove: (id: string) => void;
+  flash?: boolean;
 };
 
 export function HoldingsTable(props: HoldingsTableProps) {
-  const { holdings, onSort, sortKey, sortDir, onRemove } = props;
+  const { holdings, onSort, sortKey, sortDir, onRemove, flash = false } = props;
 
   return (
     <Table>
@@ -81,7 +82,13 @@ export function HoldingsTable(props: HoldingsTableProps) {
       </TableHead>
       <TableBody>
         {holdings.map((h) => (
-          <TableRow key={h.id} hover>
+          <TableRow
+            key={h.id}
+            hover
+            className={cn(
+              flash && "bg-emerald-50/60 transition-colors duration-700"
+            )}
+          >
             <TableCell>
               <Inline align="center" className="gap-3">
                 <span

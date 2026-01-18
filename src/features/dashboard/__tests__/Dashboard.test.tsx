@@ -40,9 +40,10 @@ const baseHoldings: HoldingRow[] = [
     status: "active",
   },
 ];
-const basePerfDaily: PerformancePoint[] = [{ month: "Today", profitUsd: 50 }];
-const basePerfWeekly: PerformancePoint[] = [{ month: "Week", profitUsd: 80 }];
-const basePerfMonthly: PerformancePoint[] = [{ month: "Jan", profitUsd: 200 }];
+const basePerf7d: PerformancePoint[] = [{ month: "Mon", profitUsd: 50 }];
+const basePerf30d: PerformancePoint[] = [{ month: "Wk1", profitUsd: 200 }];
+const basePerf90d: PerformancePoint[] = [{ month: "M1", profitUsd: 300 }];
+const basePerf1y: PerformancePoint[] = [{ month: "Jan", profitUsd: 400 }];
 const baseAllocation: AllocationSlice[] = [
   { name: "Stocks", value: 60, color: "red" },
 ];
@@ -55,9 +56,10 @@ vi.mock("../hooks/useDashboardData", () => ({
 
 const baseDashboardData = {
   assets: baseAssets,
-  perfDaily: basePerfDaily,
-  perfWeekly: basePerfWeekly,
-  perfMonthly: basePerfMonthly,
+  perf7d: basePerf7d,
+  perf30d: basePerf30d,
+  perf90d: basePerf90d,
+  perf1y: basePerf1y,
   allocation: baseAllocation,
   holdings: baseHoldings,
   metrics: {
@@ -70,8 +72,10 @@ const baseDashboardData = {
     stockPct: 100,
     cryptoPct: 0,
   },
+  dailyPlPct: 0.3,
   isLoading: false,
   isError: false,
+  errorMessage: "",
   dataUpdatedAt: 0,
 };
 
@@ -109,22 +113,22 @@ describe("Dashboard", () => {
     expect(updatedHeader).toHaveAttribute("aria-sort", "descending");
   });
 
-  it("switches to daily performance data", async () => {
+  it("switches to 7d performance data", async () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
     expect(screen.getByText("$200.00")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Daily" }));
+    await user.click(screen.getByRole("button", { name: "7D" }));
     expect(screen.getByText("$50.00")).toBeInTheDocument();
   });
 
-  it("switches to weekly performance data", async () => {
+  it("switches to 90d performance data", async () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
-    await user.click(screen.getByRole("button", { name: "Weekly" }));
-    expect(screen.getByText("$80.00")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "90D" }));
+    expect(screen.getByText("$300.00")).toBeInTheDocument();
   });
 
   it("updates sort key across multiple columns", async () => {
