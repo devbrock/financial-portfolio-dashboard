@@ -32,6 +32,12 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
           <QueryClientProvider client={queryClient}>
+            <div
+              id="toast-announcer"
+              aria-live="polite"
+              aria-atomic="true"
+              className="sr-only"
+            />
             <RouterProvider router={router} />
           </QueryClientProvider>
         </ErrorBoundary>

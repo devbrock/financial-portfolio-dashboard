@@ -73,10 +73,13 @@ export function Dashboard() {
     holdings,
     metrics,
     dailyPlPct,
+    isLoading,
     isError,
     errorMessage,
     dataUpdatedAt,
   } = useDashboardData();
+  const [liveMessage, setLiveMessage] = useState("");
+  const [errorAnnounce, setErrorAnnounce] = useState("");
 
   // Update "last updated" timer
   useEffect(() => {
@@ -96,10 +99,27 @@ export function Dashboard() {
     dataUpdatedAtRef.current = dataUpdatedAt;
     if (dataUpdatedAt > 0) {
       setFlashPrices(true);
+      setLiveMessage("Prices updated.");
       const handle = window.setTimeout(() => setFlashPrices(false), 1200);
       return () => window.clearTimeout(handle);
     }
   }, [dataUpdatedAt]);
+
+  useEffect(() => {
+    if (isLoading) {
+      setLiveMessage("Loading portfolio data.");
+      return;
+    }
+    setLiveMessage("Portfolio data loaded.");
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (isError) {
+      setErrorAnnounce(errorMessage || "Market data unavailable.");
+    } else {
+      setErrorAnnounce("");
+    }
+  }, [errorMessage, isError]);
 
   // Select performance data based on range
   const perf = useMemo(() => {
@@ -185,6 +205,18 @@ export function Dashboard() {
           theme === "dark" && "dark"
         )}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          {liveMessage}
+        </div>
+        <div aria-live="assertive" aria-atomic="true" className="sr-only">
+          {errorAnnounce}
+        </div>
         {/* App shell */}
         <div className="mx-auto flex h-full w-full gap-6 p-6">
           <DashboardSidebar
@@ -193,7 +225,10 @@ export function Dashboard() {
           />
 
           {/* Main content */}
-          <main className="min-w-0 min-h-0 flex-1 overflow-y-auto">
+          <main
+            id="main-content"
+            className="min-w-0 min-h-0 flex-1 overflow-y-auto"
+          >
             <Container className="max-w-none px-0">
               <Stack gap="lg">
                 {/* App header */}
