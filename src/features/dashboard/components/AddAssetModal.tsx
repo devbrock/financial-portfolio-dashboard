@@ -16,6 +16,7 @@ import { useCryptoSearch } from "@/hooks/useCryptoSearch";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addHolding } from "@/features/portfolio/portfolioSlice";
 import type { AssetType, Holding } from "@/types/portfolio";
+import { toast } from "sonner";
 
 const addAssetSchema = z.object({
   assetSelection: z.string().min(1, "Select an asset from search"),
@@ -171,12 +172,17 @@ export function AddAssetModal(props: AddAssetModalProps) {
       };
 
       dispatch(addHolding(holding));
+      toast.success("Asset added to your portfolio.");
       onAdded?.(holding);
       resetForm();
       onOpenChange(false);
     },
     [dispatch, onAdded, onOpenChange, resetForm]
   );
+
+  const handleInvalid = useCallback(() => {
+    toast.error("Please correct the form errors and try again.");
+  }, []);
 
   return (
     <Modal
@@ -202,7 +208,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
     >
       <form
         id="add-asset-form"
-        onSubmit={handleSubmit(onSubmitAddAsset)}
+        onSubmit={handleSubmit(onSubmitAddAsset, handleInvalid)}
         className="space-y-3"
       >
         <div>

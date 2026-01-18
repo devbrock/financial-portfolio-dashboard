@@ -25,6 +25,7 @@ import { cn } from "@/utils/cn";
 import type { SortKey, SortDir, HoldingRow } from "@/types/dashboard";
 import { clampNumber } from "@utils/clampNumber";
 import { compareStrings } from "@utils/compareStrings";
+import { toast } from "sonner";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
   AddAssetModal,
@@ -80,6 +81,7 @@ export function Dashboard() {
   } = useDashboardData();
   const [liveMessage, setLiveMessage] = useState("");
   const [errorAnnounce, setErrorAnnounce] = useState("");
+  const lastToastErrorRef = useRef<string | null>(null);
 
   // Update "last updated" timer
   useEffect(() => {
@@ -116,8 +118,13 @@ export function Dashboard() {
   useEffect(() => {
     if (isError) {
       setErrorAnnounce(errorMessage || "Market data unavailable.");
+      if (errorMessage && lastToastErrorRef.current !== errorMessage) {
+        toast.error(errorMessage);
+        lastToastErrorRef.current = errorMessage;
+      }
     } else {
       setErrorAnnounce("");
+      lastToastErrorRef.current = null;
     }
   }, [errorMessage, isError]);
 
@@ -164,9 +171,7 @@ export function Dashboard() {
   }, [holdings, holdingsQuery, sortDir, sortKey]);
 
   const toggleTheme = useCallback(() => {
-    dispatch(
-      updatePreferences({ theme: theme === "dark" ? "light" : "dark" })
-    );
+    dispatch(updatePreferences({ theme: theme === "dark" ? "light" : "dark" }));
   }, [dispatch, theme]);
 
   const handleRetry = useCallback(() => {
@@ -218,11 +223,8 @@ export function Dashboard() {
           {errorAnnounce}
         </div>
         {/* App shell */}
-        <div className="mx-auto flex h-full w-full gap-6 p-6">
-          <DashboardSidebar
-            activeNav={activeNav}
-            onNavChange={setActiveNav}
-          />
+        <div className="mx-auto flex h-full min-h-0 w-full gap-6 p-6">
+          <DashboardSidebar activeNav={activeNav} onNavChange={setActiveNav} />
 
           {/* Main content */}
           <main
@@ -314,7 +316,11 @@ export function Dashboard() {
                 {isError ? (
                   <Card className="border-amber-200 bg-amber-50/60">
                     <CardBody>
-                      <Inline align="center" justify="between" className="gap-4">
+                      <Inline
+                        align="center"
+                        justify="between"
+                        className="gap-4"
+                      >
                         <div className="min-w-0">
                           <Text
                             as="div"
@@ -488,6 +494,7 @@ export function Dashboard() {
                 onClick={() => {
                   if (confirmRemoveId) {
                     dispatch(removeHolding(confirmRemoveId));
+                    toast.success("Asset removed from your portfolio.");
                   }
                   setConfirmRemoveId(null);
                 }}
@@ -503,10 +510,7 @@ export function Dashboard() {
           </Text>
         </Modal>
 
-        <AddAssetModal
-          open={isAddAssetOpen}
-          onOpenChange={setIsAddAssetOpen}
-        />
+        <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
       </div>
     </SidebarProvider>
   );

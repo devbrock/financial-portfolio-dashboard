@@ -54,6 +54,13 @@
 
 * {
   @apply font-brand-secondary;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
 }
 
 h1,
