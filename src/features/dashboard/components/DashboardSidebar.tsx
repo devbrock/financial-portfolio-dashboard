@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   Inline,
   Text,
+  Divider,
 } from "@components";
 import {
   BotMessageSquare,
@@ -46,8 +47,15 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
       <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
         <Inline align="center" className="gap-3 px-1">
           <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
-            <img src={OrionLogoLight} alt="Orion" className="h-7 w-auto" />
-            <Text as="div" className="truncate font-semibold text-white">
+            <img
+              src={OrionLogoLight}
+              alt="Orion"
+              className="h-12 w-auto mx-auto mb-4"
+            />
+            <Text
+              as="div"
+              className="truncate font-semibold text-white font-brand! text-2xl"
+            >
               Orion Wealth
             </Text>
             <Text as="div" size="sm" className="text-white/70">

@@ -32,12 +32,13 @@ export class ErrorBoundary extends React.Component<
     console.error("Unhandled UI error", error, info);
   }
 
-  private handleRetry = () => {
-    this.setState({ hasError: false, error: null });
-  };
-
   private handleReload = () => {
     window.location.reload();
+  };
+
+  private handleContact = () => {
+    window.location.href =
+      "mailto:support@orionfcu.com?subject=Error%20in%20Orion%20Wealth%20Dashboard";
   };
 
   render() {
@@ -54,18 +55,19 @@ export class ErrorBoundary extends React.Component<
                 Something went wrong
               </p>
               <h1 className="mt-2 text-2xl font-semibold text-slate-900">
-                We hit a snag loading your dashboard.
+                We hit a snag loading this page.
               </h1>
               <p className="mt-3 text-sm text-slate-600">
-                Try again, or reload the page if the issue keeps happening.
+                Try reloading the page or contact us if the issue keeps
+                happening.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button variant="primary" onClick={this.handleRetry}>
-                Try again
-              </Button>
               <Button variant="secondary" onClick={this.handleReload}>
                 Reload page
+              </Button>
+              <Button variant="primary" onClick={this.handleContact}>
+                Contact us
               </Button>
             </div>
           </div>
