@@ -73,9 +73,13 @@ export const handlers = [
   http.get(`${COINGECKO_BASE}/simple/price`, ({ request }) => {
     const url = new URL(request.url);
     const ids = (url.searchParams.get("ids") ?? "").split(",");
-    const response: Record<string, { usd: number }> = {};
+    const response: Record<string, { usd: number; usd_24h_change: number }> =
+      {};
     ids.filter(Boolean).forEach((id) => {
-      response[id] = { usd: id === "bitcoin" ? 50000 : 100 };
+      response[id] = {
+        usd: id === "bitcoin" ? 50000 : 100,
+        usd_24h_change: id === "bitcoin" ? 2.5 : -1.2,
+      };
     });
     return HttpResponse.json(response);
   }),

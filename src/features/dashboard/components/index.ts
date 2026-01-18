@@ -1,5 +1,6 @@
 export { AssetSummaryCard } from "./AssetSummaryCard";
 export { AddAssetModal } from "./AddAssetModal";
+export { AddWatchlistModal } from "./AddWatchlistModal";
 export { DashboardHeader } from "./DashboardHeader";
 export { DashboardSidebar } from "./DashboardSidebar";
 export { PerformanceChart } from "./PerformanceChart";
@@ -7,3 +8,4 @@ export { AllocationChart } from "./AllocationChart";
 export { HoldingsTable } from "./HoldingsTable";
 export { HoldingsMobileCard } from "./HoldingsMobileCard";
 export { EmptyHoldings } from "./EmptyHoldings";
+export { WatchlistCard } from "./WatchlistCard";

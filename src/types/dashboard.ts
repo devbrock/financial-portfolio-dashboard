@@ -7,6 +7,15 @@ export type AssetCardModel = {
   logo?: string;
 };
 
+export type WatchlistCardModel = {
+  id: string;
+  name: string;
+  ticker: string;
+  priceUsd: number;
+  changePct: number;
+  logo?: string;
+};
+
 export type PerformancePoint = {
   month: string;
   profitUsd: number;

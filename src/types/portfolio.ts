@@ -10,6 +10,12 @@ export type Holding = {
   notes?: string;
 };
 
+export type WatchlistItem = {
+  id: string;
+  symbol: string; // "AAPL" for stocks, "bitcoin" for crypto
+  assetType: AssetType;
+};
+
 export type UserPreferences = {
   theme: "light" | "dark";
   currency: "USD";
@@ -27,6 +33,7 @@ export type UserSeed = {
 
 export type PortfolioState = {
   holdings: Holding[];
+  watchlist: WatchlistItem[];
   preferences: UserPreferences;
   userSeed: UserSeed;
 };
@@ -38,6 +45,13 @@ export type HoldingWithPrice = Holding & {
   plPct: number; // Profit/Loss percentage
   companyName?: string; // For stocks
   logo?: string; // For stocks
+};
+
+export type WatchlistItemWithPrice = WatchlistItem & {
+  currentPrice: number;
+  changePct: number;
+  companyName?: string;
+  logo?: string;
 };
 
 export type PortfolioMetrics = {

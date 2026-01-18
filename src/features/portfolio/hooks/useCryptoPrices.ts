@@ -17,14 +17,19 @@ export function useCryptoPrices(coinIds: string[]) {
 
   // Create map of coinId -> price
   const priceMap = new Map<string, number>();
+  const changePctMap = new Map<string, number>();
   if (data) {
     Object.entries(data).forEach(([coinId, priceData]) => {
       priceMap.set(coinId, priceData.usd);
+      if (typeof priceData.usd_24h_change === "number") {
+        changePctMap.set(coinId, priceData.usd_24h_change);
+      }
     });
   }
 
   return {
     priceMap,
+    changePctMap,
     isLoading,
     isError,
     data,

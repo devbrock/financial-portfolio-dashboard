@@ -3,15 +3,18 @@ import type {
   Holding,
   PortfolioState,
   UserPreferences,
+  WatchlistItem,
 } from "@/types/portfolio";
 import { generateSeed } from "@/utils/generateSeed";
 import { generateMockHoldings } from "@/utils/generateMockHoldings";
+import { generateMockWatchlist } from "@/utils/generateMockWatchlist";
 
 /**
  * Initial state for portfolio
  */
 const initialState: PortfolioState = {
   holdings: [],
+  watchlist: [],
   preferences: {
     theme: "light",
     currency: "USD",
@@ -41,12 +44,14 @@ const portfolioSlice = createSlice({
       if (!state.userSeed.initialized) {
         const seed = generateSeed();
         const mockHoldings = generateMockHoldings(seed);
+        const mockWatchlist = generateMockWatchlist(seed, mockHoldings);
 
         state.userSeed = {
           seed,
           initialized: true,
         };
         state.holdings = mockHoldings;
+        state.watchlist = mockWatchlist;
       }
     },
 
@@ -63,6 +68,22 @@ const portfolioSlice = createSlice({
     removeHolding: (state, action: PayloadAction<string>) => {
       state.holdings = state.holdings.filter(
         (holding) => holding.id !== action.payload
+      );
+    },
+
+    /**
+     * Add new watchlist item
+     */
+    addWatchlistItem: (state, action: PayloadAction<WatchlistItem>) => {
+      state.watchlist.push(action.payload);
+    },
+
+    /**
+     * Remove watchlist item by ID
+     */
+    removeWatchlistItem: (state, action: PayloadAction<string>) => {
+      state.watchlist = state.watchlist.filter(
+        (item) => item.id !== action.payload
       );
     },
 
@@ -102,6 +123,7 @@ const portfolioSlice = createSlice({
      */
     resetPortfolio: (state) => {
       state.holdings = [];
+      state.watchlist = [];
       state.userSeed = {
         seed: "",
         initialized: false,
@@ -114,6 +136,8 @@ export const {
   initializePortfolio,
   addHolding,
   removeHolding,
+  addWatchlistItem,
+  removeWatchlistItem,
   updateHolding,
   updatePreferences,
   resetPortfolio,

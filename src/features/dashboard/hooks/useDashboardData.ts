@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { usePortfolioData } from "@/features/portfolio/hooks/usePortfolioData";
 import type {
-  AssetCardModel,
   PerformancePoint,
   AllocationSlice,
   HoldingRow,
+  WatchlistCardModel,
 } from "@/types/dashboard";
 
 /**
@@ -22,6 +22,7 @@ function formatDate(isoDate: string): string {
 export function useDashboardData() {
   const {
     holdingsWithPrice,
+    watchlistWithPrice,
     metrics,
     isLoading,
     isError,
@@ -29,20 +30,19 @@ export function useDashboardData() {
     dataUpdatedAt,
   } = usePortfolioData();
 
-  // Transform holdings into asset cards (top 4 by value)
-  const assets: readonly AssetCardModel[] = useMemo(() => {
-    return [...holdingsWithPrice]
-      .sort((a, b) => b.currentValue - a.currentValue)
-      .slice(0, 4)
-      .map((holding) => ({
-        id: holding.id,
-        name: holding.companyName || holding.symbol,
-        ticker: holding.symbol.toUpperCase(),
-        valueUsd: holding.currentValue,
-        weeklyDeltaPct: holding.plPct, // Using total P/L% as weekly delta for now
-        logo: holding.logo,
-      }));
-  }, [holdingsWithPrice]);
+  const watchlist: readonly WatchlistCardModel[] = useMemo(() => {
+    return watchlistWithPrice.map((item) => ({
+      id: item.id,
+      name: item.companyName || item.symbol,
+      ticker:
+        item.assetType === "stock"
+          ? item.symbol.toUpperCase()
+          : item.symbol.toUpperCase(),
+      priceUsd: item.currentPrice,
+      changePct: item.changePct,
+      logo: item.logo,
+    }));
+  }, [watchlistWithPrice]);
 
   // Transform holdings into table rows
   const holdings: readonly HoldingRow[] = useMemo(() => {
@@ -123,7 +123,6 @@ export function useDashboardData() {
   }, [metrics.totalCostBasis, metrics.totalPL]);
 
   return {
-    assets,
     perf7d,
     perf30d,
     perf90d,
@@ -135,6 +134,7 @@ export function useDashboardData() {
     errorMessage,
     metrics, // Expose metrics for header (total value, P/L)
     dailyPlPct,
+    watchlist,
     dataUpdatedAt, // Timestamp of last data update
   };
 }

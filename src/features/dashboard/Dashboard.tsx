@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
   AddAssetModal,
-  AssetSummaryCard,
+  AddWatchlistModal,
   DashboardHeader,
   DashboardSidebar,
   PerformanceChart,
@@ -37,10 +37,12 @@ import {
   HoldingsTable,
   HoldingsMobileCard,
   EmptyHoldings,
+  WatchlistCard,
 } from "./components";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   removeHolding,
+  removeWatchlistItem,
   updatePreferences,
 } from "@/features/portfolio/portfolioSlice";
 import type { DashboardNav } from "./components/DashboardSidebar";
@@ -57,15 +59,20 @@ export function Dashboard() {
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [isAddWatchlistOpen, setIsAddWatchlistOpen] = useState(false);
   const [flashPrices, setFlashPrices] = useState(false);
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
+  const handleAddWatchlist = useCallback(
+    () => setIsAddWatchlistOpen(true),
+    []
+  );
   const handleLogout = useCallback(() => undefined, []);
   const dataUpdatedAtRef = useRef(0);
   const lastResetRef = useRef(0);
 
   // Get dashboard data
   const {
-    assets,
+    watchlist,
     perf7d,
     perf30d,
     perf90d,
@@ -352,17 +359,70 @@ export function Dashboard() {
                   dailyChangePct={dailyPlPct}
                 />
 
-                {/* Summary cards */}
-                <section aria-label="Asset summary">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    {assets.map((a) => (
-                      <AssetSummaryCard
-                        key={a.id}
-                        asset={a}
-                        flash={flashPrices}
-                      />
-                    ))}
-                  </div>
+                {/* Watchlist */}
+                <section aria-label="My watchlist">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <Inline
+                        align="center"
+                        justify="between"
+                        className="w-full gap-3"
+                      >
+                        <div className="min-w-0">
+                          <Heading as="h3" className="text-base">
+                            My Watchlist
+                          </Heading>
+                          <Text as="div" size="sm" tone="muted">
+                            Track live prices for assets you care about.
+                          </Text>
+                        </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={handleAddWatchlist}
+                        >
+                          Add to Watchlist
+                        </Button>
+                      </Inline>
+                    </CardHeader>
+                    <CardBody>
+                      {watchlist.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-(--ui-border) px-6 py-10 text-center">
+                          <Text as="div" className="text-sm font-semibold">
+                            Your watchlist is empty
+                          </Text>
+                          <Text as="div" size="sm" tone="muted">
+                            Add a stock or crypto to start tracking live
+                            prices.
+                          </Text>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={handleAddWatchlist}
+                          >
+                            Add your first asset
+                          </Button>
+                        </div>
+                      ) : (
+                        <div
+                          className="flex gap-3 overflow-x-auto pb-2"
+                          aria-label="Watchlist ticker list"
+                        >
+                          {watchlist.map((item) => (
+                            <WatchlistCard
+                              key={item.id}
+                              item={item}
+                              flash={flashPrices}
+                              onRemove={(id) => {
+                                dispatch(removeWatchlistItem(id));
+                                toast.success("Removed from your watchlist.");
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </CardBody>
+                  </Card>
                 </section>
 
                 {/* Charts */}
@@ -511,6 +571,10 @@ export function Dashboard() {
         </Modal>
 
         <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
+        <AddWatchlistModal
+          open={isAddWatchlistOpen}
+          onOpenChange={setIsAddWatchlistOpen}
+        />
       </div>
     </SidebarProvider>
   );

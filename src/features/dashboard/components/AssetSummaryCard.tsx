@@ -114,7 +114,6 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
               <DropdownMenuItem onClick={() => undefined}>
                 Add alert
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => undefined}>
                 Export
               </DropdownMenuItem>

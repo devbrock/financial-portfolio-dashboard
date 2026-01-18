@@ -31,6 +31,7 @@ describe("usePortfolioData", () => {
             purchaseDate: "2024-01-02",
           },
         ],
+        watchlist: [],
         preferences: {
           theme: "light",
           currency: "USD",

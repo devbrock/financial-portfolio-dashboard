@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { selectHoldings, selectPreferences, selectUserSeed } from "../selectors";
+import {
+  selectHoldings,
+  selectPreferences,
+  selectUserSeed,
+  selectWatchlist,
+} from "../selectors";
 import type { RootState } from "@/store/store";
 
 const state = {
@@ -12,6 +17,13 @@ const state = {
         quantity: 1,
         purchasePrice: 100,
         purchaseDate: "2024-01-01",
+      },
+    ],
+    watchlist: [
+      {
+        id: "w1",
+        symbol: "AAPL",
+        assetType: "stock",
       },
     ],
     preferences: {
@@ -35,5 +47,9 @@ describe("portfolio selectors", () => {
 
   it("selects user seed", () => {
     expect(selectUserSeed(state).initialized).toBe(true);
+  });
+
+  it("selects watchlist", () => {
+    expect(selectWatchlist(state)).toHaveLength(1);
   });
 });

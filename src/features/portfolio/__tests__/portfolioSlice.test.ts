@@ -1,13 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import reducer, {
   addHolding,
+  addWatchlistItem,
   initializePortfolio,
   removeHolding,
+  removeWatchlistItem,
   resetPortfolio,
   updateHolding,
   updatePreferences,
 } from "../portfolioSlice";
-import type { Holding, PortfolioState } from "@/types/portfolio";
+import type { Holding, PortfolioState, WatchlistItem } from "@/types/portfolio";
 
 vi.mock("@/utils/generateSeed", () => ({
   generateSeed: () => "seed-123",
@@ -21,6 +23,14 @@ const mockHoldings: Holding[] = [
     quantity: 10,
     purchasePrice: 120,
     purchaseDate: "2024-01-01",
+  },
+];
+
+const mockWatchlist: WatchlistItem[] = [
+  {
+    id: "w1",
+    symbol: "MSFT",
+    assetType: "stock",
   },
 ];
 
@@ -102,10 +112,29 @@ describe("portfolioSlice", () => {
     const state: PortfolioState = {
       ...baseState,
       holdings: mockHoldings,
+      watchlist: mockWatchlist,
       userSeed: { seed: "seed", initialized: true },
     };
     const next = reducer(state, resetPortfolio());
     expect(next.holdings).toHaveLength(0);
+    expect(next.watchlist).toHaveLength(0);
     expect(next.userSeed.initialized).toBe(false);
+  });
+
+  it("adds a watchlist item", () => {
+    const next = reducer(
+      baseState,
+      addWatchlistItem({ id: "w2", symbol: "BTC", assetType: "crypto" })
+    );
+    expect(next.watchlist).toHaveLength(1);
+  });
+
+  it("removes a watchlist item", () => {
+    const state: PortfolioState = {
+      ...baseState,
+      watchlist: mockWatchlist,
+    };
+    const next = reducer(state, removeWatchlistItem("w1"));
+    expect(next.watchlist).toHaveLength(0);
   });
 });

@@ -3,17 +3,22 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Dashboard } from "../Dashboard";
 import { renderWithProviders } from "@/test/test-utils";
-import type { AllocationSlice, AssetCardModel, HoldingRow, PerformancePoint } from "@/types/dashboard";
+import type {
+  AllocationSlice,
+  HoldingRow,
+  PerformancePoint,
+  WatchlistCardModel,
+} from "@/types/dashboard";
 import { createTestStore } from "@/test/test-utils";
 import { updatePreferences } from "@/features/portfolio/portfolioSlice";
 
-const baseAssets: AssetCardModel[] = [
+const baseWatchlist: WatchlistCardModel[] = [
   {
     id: "1",
-    name: "Core Holdings",
-    ticker: "CORE",
-    valueUsd: 1000,
-    weeklyDeltaPct: 1.2,
+    name: "Watchlist One",
+    ticker: "W1",
+    priceUsd: 100,
+    changePct: 1.2,
   },
 ];
 const baseHoldings: HoldingRow[] = [
@@ -55,7 +60,7 @@ vi.mock("../hooks/useDashboardData", () => ({
 }));
 
 const baseDashboardData = {
-  assets: baseAssets,
+  watchlist: baseWatchlist,
   perf7d: basePerf7d,
   perf30d: basePerf30d,
   perf90d: basePerf90d,
@@ -135,13 +140,7 @@ describe("Dashboard", () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
-    const headers = [
-      "Date",
-      "Volume",
-      "Change",
-      "Price/stock",
-      "Profit/Loss",
-    ];
+    const headers = ["Date", "Volume", "Change", "Price/stock", "Profit/Loss"];
 
     for (const label of headers) {
       const button = screen.getByRole("button", { name: label });

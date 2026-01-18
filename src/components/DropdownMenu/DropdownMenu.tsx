@@ -142,10 +142,13 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     top: number;
     left: number;
     width: number;
-  }>({ top: 0, left: 0, width: 0 });
+  } | null>(null);
 
   React.useLayoutEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setPos(null);
+      return;
+    }
     const trigger = triggerAnchorRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
@@ -180,6 +183,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
   }, [open]);
 
   if (!open) return null;
+  if (!pos) return null;
 
   return (
     <Portal>

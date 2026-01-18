@@ -54,7 +54,7 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
             />
             <Text
               as="div"
-              className="truncate font-semibold text-white font-brand! text-2xl"
+              className="truncate font-semibold text-white font-brand! text-2xl pt-2"
             >
               Orion Wealth
             </Text>

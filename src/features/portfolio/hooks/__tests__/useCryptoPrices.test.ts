@@ -16,5 +16,6 @@ describe("useCryptoPrices", () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.priceMap.get("bitcoin")).toBe(50000);
+    expect(result.current.changePctMap.get("bitcoin")).toBe(2.5);
   });
 });
