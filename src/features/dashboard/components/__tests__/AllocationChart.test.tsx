@@ -1,0 +1,18 @@
+import { describe, expect, it } from "vitest";
+import { screen } from "@testing-library/react";
+import { AllocationChart } from "../AllocationChart";
+import { renderWithProviders } from "@/test/test-utils";
+import type { AllocationSlice } from "@/types/dashboard";
+
+const data: AllocationSlice[] = [
+  { name: "Stocks", value: 60, color: "red" },
+  { name: "Crypto", value: 40, color: "blue" },
+];
+
+describe("AllocationChart", () => {
+  it("renders chart metadata", () => {
+    renderWithProviders(<AllocationChart data={data} totalInvested={1000} />);
+    expect(screen.getByText("Diversification")).toBeInTheDocument();
+    expect(screen.getByText("Total invested")).toBeInTheDocument();
+  });
+});

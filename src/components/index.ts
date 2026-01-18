@@ -13,6 +13,7 @@ export * from "./Container";
 export * from "./DeltaPill";
 export * from "./Divider";
 export * from "./DropdownMenu";
+export * from "./ErrorBoundary";
 export * from "./Heading";
 export * from "./IconButton";
 export * from "./Inline";

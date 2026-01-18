@@ -51,7 +51,7 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               Orion Wealth
             </Text>
             <Text as="div" size="sm" className="text-white/70">
-              Wealth Management Platform
+              Financial Portfolio Dashboard
             </Text>
           </div>
         </Inline>

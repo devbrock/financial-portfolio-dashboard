@@ -9,8 +9,8 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // localStorage
 import portfolioReducer from "@/features/portfolio/portfolioSlice";
+import { safeStorage } from "@/store/safeStorage";
 
 /**
  * Redux Persist configuration
@@ -18,7 +18,7 @@ import portfolioReducer from "@/features/portfolio/portfolioSlice";
 const persistConfig = {
   key: "root",
   version: 1,
-  storage,
+  storage: safeStorage,
   whitelist: ["portfolio"], // Only persist portfolio state
 };
 

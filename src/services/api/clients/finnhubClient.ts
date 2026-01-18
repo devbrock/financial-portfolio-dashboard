@@ -1,4 +1,5 @@
 import axios from "axios";
+import { applyApiErrorHandling } from "./withErrorHandling";
 
 const BASE_URL = "https://finnhub.io/api/v1";
 
@@ -9,3 +10,5 @@ export const finnhubClient = axios.create({
     token: import.meta.env.VITE_FINNHUB_API_KEY,
   },
 });
+
+applyApiErrorHandling(finnhubClient);

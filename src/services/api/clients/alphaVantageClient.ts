@@ -1,4 +1,5 @@
 import axios from "axios";
+import { applyApiErrorHandling } from "./withErrorHandling";
 
 const BASE_URL = "https://www.alphavantage.co/query";
 
@@ -9,3 +10,5 @@ export const alphaVantageClient = axios.create({
     apikey: import.meta.env.VITE_ALPHA_VANTAGE_API_KEY,
   },
 });
+
+applyApiErrorHandling(alphaVantageClient);
