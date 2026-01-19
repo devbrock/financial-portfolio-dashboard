@@ -1,73 +1,144 @@
-# React + TypeScript + Vite
+# Financial Portfolio Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive dashboard for tracking stock and crypto holdings with live prices,
+performance insights, and portfolio allocation breakdowns. Built with React,
+TypeScript, and Vite, it combines Redux for client state with React Query for
+API-backed market data.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Real-time portfolio tracking for stocks and cryptocurrencies
+- Interactive performance charts with multiple time ranges
+- Asset allocation visualization
+- Watchlist functionality
+- Dark/light mode
+- Fully responsive design
+- Accessible (WCAG AA compliant)
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework:** React 19 + TypeScript + Vite
+- **State Management:** Redux Toolkit + Redux Persist
+- **Server State:** TanStack React Query
+- **Styling:** TailwindCSS
+- **Charts:** Recharts
+- **Forms:** React Hook Form + Zod
+- **Testing:** Vitest + React Testing Library + MSW
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### API Keys
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+This application requires API keys from:
+
+1. **Finnhub** (required for stocks)
+   - Register at: https://finnhub.io/register
+   - Free tier: 60 calls/minute
+
+2. **Alpha Vantage** (optional, for historical data)
+   - Register at: https://www.alphavantage.co/support/#api-key
+   - Free tier: 25 calls/day
+
+3. **CoinGecko** (no key required)
+   - Free tier with rate limits
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone [repo-url]
+   cd financial-portfolio-dashboard
+   ```
+
+2. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+3. Create environment file
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Add your API keys to `.env`
+
+5. Start development server
+   ```bash
+   npm run dev
+   ```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run test` - Run tests
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run lint` - Run ESLint
+- `npm run storybook` - Start Storybook
+- `npm run build-storybook` - Build Storybook
+
+## Architecture
+
+### Project Structure
+
+```
+src/
+├── components/      # Shared UI components (design system)
+├── features/        # Feature modules
+│   ├── dashboard/   # Dashboard UI components
+│   └── portfolio/   # Portfolio state & hooks
+├── services/api/    # API clients
+├── hooks/           # Shared hooks
+├── queryOptions/    # React Query configurations
+├── store/           # Redux store & slices
+├── types/           # TypeScript definitions
+├── utils/           # Utility functions
+└── schemas/         # Zod validation schemas
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### State Management Strategy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Redux Toolkit:** Client state (holdings, preferences, watchlist)
+- **React Query:** Server state (live prices, company profiles)
+- **Redux Persist:** Persists Redux state to localStorage
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### API Integration
+
+- **Finnhub:** Stock quotes, profiles, and symbol search for equities.
+- **Alpha Vantage:** Daily historical stock data for performance charts.
+- **CoinGecko:** Crypto prices, profiles, search, and historical charts.
+
+## Testing
+
+```bash
+# Run all tests
+npm run test
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test file
+npm run test -- src/path/to/test.test.ts
 ```
+
+## Known Limitations
+
+- Alpha Vantage free tier limited to 25 requests/day and 1 request/second.
+- Historical data availability depends on third-party API rate limits.
+
+## Future Improvements
+
+- [ ] Currency conversion support
+- [ ] CSV/PDF export
+- [ ] Transaction history
+- [ ] Benchmark comparison (S&P 500)
+- [ ] Browser notifications for price alerts
