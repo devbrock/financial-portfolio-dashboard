@@ -3,6 +3,7 @@ import type {
   FinnhubCompanyProfile,
   FinnhubSymbolLookup,
   FinnhubEarningsCalendar,
+  FinnhubNewsItem,
 } from '@/types/finnhub';
 import { finnhubClient } from '@/services/api/clients/finnhubClient';
 
@@ -29,6 +30,18 @@ export const finnhubApi = {
   getEarningsCalendar: async (from: string, to: string) => {
     return finnhubClient.get<FinnhubEarningsCalendar>('/calendar/earnings', {
       params: { from, to },
+    });
+  },
+
+  getMarketNews: async (category: string) => {
+    return finnhubClient.get<FinnhubNewsItem[]>('/news', {
+      params: { category },
+    });
+  },
+
+  getCompanyNews: async (symbol: string, from: string, to: string) => {
+    return finnhubClient.get<FinnhubNewsItem[]>('/company-news', {
+      params: { symbol, from, to },
     });
   },
 };

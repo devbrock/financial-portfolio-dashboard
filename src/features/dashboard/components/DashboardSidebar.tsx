@@ -117,10 +117,16 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
             'group-data-[state=collapsed]/sidebar:flex-col group-data-[state=collapsed]/sidebar:items-stretch'
           )}
         >
-          <SidebarTrigger ariaLabel="Toggle sidebar" className={footerButtonClassName} />
+          <SidebarTrigger
+            ariaLabel="Toggle sidebar"
+            className={cn(
+              footerButtonClassName,
+              'h-9 w-9 rounded-xl border border-white/10 bg-white/10 text-white hover:bg-white/15'
+            )}
+          />
           <IconButton
             ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-            variant="ghost"
+            variant="inverse"
             size="sm"
             onClick={toggleTheme}
             icon={theme === 'dark' ? <Sun /> : <Moon />}
@@ -128,7 +134,7 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
           />
           <IconButton
             ariaLabel="Log out"
-            variant="ghost"
+            variant="inverse"
             size="sm"
             onClick={handleLogout}
             icon={<LogOut />}

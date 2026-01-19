@@ -17,7 +17,7 @@ export function DashboardHeader(props: DashboardHeaderProps) {
   return (
     <Inline align="center" justify="between" className="gap-3 py-4">
       <div className="min-w-0">
-        <Heading as="h2" className="text-xl">
+        <Heading as="h1" className="text-xl">
           Welcome back, {userName}!
         </Heading>
         <Text as="div" size="sm" tone="muted">

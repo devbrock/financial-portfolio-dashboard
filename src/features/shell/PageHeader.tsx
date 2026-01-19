@@ -13,7 +13,7 @@ export function PageHeader(props: PageHeaderProps) {
   return (
     <Inline align="center" justify="between" className="gap-3 py-4">
       <div className="min-w-0">
-        <Heading as="h2" className="text-xl">
+        <Heading as="h1" className="text-xl">
           {title}
         </Heading>
         {subtitle ? (
