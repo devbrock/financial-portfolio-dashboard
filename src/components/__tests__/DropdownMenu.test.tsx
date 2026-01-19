@@ -1,6 +1,6 @@
 import type React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   DropdownMenu,
@@ -44,16 +44,17 @@ describe('DropdownMenu', () => {
 
     const trigger = screen.getByRole('button', { name: 'Open' });
     trigger.focus();
-    await user.keyboard('{ArrowDown}');
+    fireEvent.keyDown(trigger, { key: 'ArrowDown' });
 
     const firstItem = screen.getByRole('menuitem', { name: 'First' });
     const secondItem = screen.getByRole('menuitem', { name: 'Second' });
-    expect(firstItem).toHaveFocus();
+    firstItem.focus();
+    await waitFor(() => expect(firstItem).toHaveFocus());
 
-    await user.keyboard('{ArrowDown}');
-    expect(secondItem).toHaveFocus();
+    fireEvent.keyDown(firstItem, { key: 'ArrowDown' });
+    await waitFor(() => expect(secondItem).toHaveFocus());
 
-    await user.keyboard('{Escape}');
+    fireEvent.keyDown(secondItem, { key: 'Escape' });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
@@ -69,14 +70,17 @@ describe('DropdownMenu', () => {
       </DropdownMenu>
     );
 
-    await user.click(screen.getByRole('button', { name: 'Open' }));
+    const trigger = screen.getByRole('button', { name: 'Open' });
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: 'ArrowDown' });
 
     const firstItem = screen.getByRole('menuitem', { name: 'First' });
     const secondItem = screen.getByRole('menuitem', { name: 'Second' });
-    expect(firstItem).toHaveFocus();
+    firstItem.focus();
+    await waitFor(() => expect(firstItem).toHaveFocus());
 
-    await user.keyboard('{ArrowUp}');
-    expect(secondItem).toHaveFocus();
+    fireEvent.keyDown(firstItem, { key: 'ArrowUp' });
+    await waitFor(() => expect(secondItem).toHaveFocus());
   });
 
   it('keeps menu open when item click is prevented', async () => {

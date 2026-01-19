@@ -96,7 +96,7 @@ describe('Dashboard', () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
-    const nameButton = screen.getByRole('button', { name: 'Name Stock' });
+    const nameButton = screen.getByRole('button', { name: 'Name' });
     const nameHeader = nameButton.closest('th');
     expect(nameHeader).toHaveAttribute('aria-sort', 'ascending');
 
@@ -109,7 +109,14 @@ describe('Dashboard', () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
-    const headers = ['Date', 'Volume', 'Change', 'Purchase price', 'Price/stock', 'Profit/Loss'];
+    const headers = [
+      'Purchase Date',
+      'Volume',
+      'Change',
+      'Purchase Price',
+      'Current Price',
+      'Profit/Loss',
+    ];
 
     for (const label of headers) {
       const button = screen.getByRole('button', { name: label });

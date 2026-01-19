@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 
 const FINNHUB_BASE = 'https://finnhub.io/api/v1';
 const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
+const ALPHAVANTAGE_BASE = 'https://www.alphavantage.co';
 
 export const handlers = [
   http.get(`${FINNHUB_BASE}/search`, ({ request }) => {
@@ -100,6 +101,35 @@ export const handlers = [
       prices: [[0, 1]],
       market_caps: [[0, 1]],
       total_volumes: [[0, 1]],
+    });
+  }),
+  http.get(`${ALPHAVANTAGE_BASE}/query`, ({ request }) => {
+    const url = new URL(request.url);
+    const symbol = (url.searchParams.get('symbol') ?? 'AAPL').toUpperCase();
+    return HttpResponse.json({
+      'Meta Data': {
+        '1. Information': 'Daily Prices',
+        '2. Symbol': symbol,
+        '3. Last Refreshed': '2024-01-05',
+        '4. Output Size': 'Compact',
+        '5. Time Zone': 'US/Eastern',
+      },
+      'Time Series (Daily)': {
+        '2024-01-05': {
+          '1. open': '190.00',
+          '2. high': '195.00',
+          '3. low': '188.00',
+          '4. close': '192.00',
+          '5. volume': '100000',
+        },
+        '2024-01-04': {
+          '1. open': '185.00',
+          '2. high': '191.00',
+          '3. low': '184.00',
+          '4. close': '188.00',
+          '5. volume': '90000',
+        },
+      },
     });
   }),
 ];
