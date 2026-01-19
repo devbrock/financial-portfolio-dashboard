@@ -11,4 +11,4 @@ export const alphaVantageClient = axios.create({
   },
 });
 
-applyApiErrorHandling(alphaVantageClient);
+applyApiErrorHandling(alphaVantageClient, "Alpha Vantage");

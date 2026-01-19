@@ -11,4 +11,4 @@ export const finnhubClient = axios.create({
   },
 });
 
-applyApiErrorHandling(finnhubClient);
+applyApiErrorHandling(finnhubClient, "Finnhub");

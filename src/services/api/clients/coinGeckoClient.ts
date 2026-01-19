@@ -8,4 +8,4 @@ export const coinGeckoClient = axios.create({
   baseURL: BASE_URL,
 });
 
-applyApiErrorHandling(coinGeckoClient);
+applyApiErrorHandling(coinGeckoClient, "CoinGecko");
