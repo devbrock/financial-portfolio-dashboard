@@ -63,12 +63,12 @@ export function PerformanceChart(props: PerformanceChartProps) {
       aria-busy={isLoading || undefined}
     >
       {isLoading ? (
-        <div className="space-y-3" aria-hidden="true">
+        <div className="flex flex-col gap-4 pt-2" aria-hidden="true">
           <Skeleton className="h-6 w-36" />
           <Skeleton className="h-[260px] w-full" />
         </div>
       ) : isError ? (
-        <div className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
+        <div className="mt-2! flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
           <Text as="div" className="text-sm font-semibold">
             Historical data is unavailable right now.
           </Text>

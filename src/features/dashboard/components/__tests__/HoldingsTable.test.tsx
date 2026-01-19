@@ -4,6 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { HoldingsTable } from '../HoldingsTable';
 import { renderWithProviders } from '@/test/test-utils';
 import type { HoldingRow, SortDir, SortKey } from '@/types/dashboard';
+import { axe, toHaveNoViolations } from 'jest-axe';
+
+expect.extend(toHaveNoViolations);
 
 const holdings: HoldingRow[] = [
   {
@@ -36,6 +39,55 @@ describe('HoldingsTable', () => {
 
     await user.click(screen.getByRole('button', { name: 'Profit/Loss' }));
     expect(onSort).toHaveBeenCalledWith('pnlUsd');
+  });
+
+  it('supports keyboard sorting', async () => {
+    const user = userEvent.setup();
+    const onSort = vi.fn();
+    renderWithProviders(
+      <HoldingsTable
+        holdings={holdings}
+        onSort={onSort}
+        sortKey={'name' as SortKey}
+        sortDir={'asc' as SortDir}
+        onRemove={() => undefined}
+      />
+    );
+
+    const nameButton = screen.getByRole('button', { name: 'Name' });
+    nameButton.focus();
+    expect(nameButton).toHaveFocus();
+    await user.keyboard('{Enter}');
+    expect(onSort).toHaveBeenCalledWith('name');
+  });
+
+  it('exposes an accessible table label', () => {
+    renderWithProviders(
+      <HoldingsTable
+        holdings={holdings}
+        onSort={() => undefined}
+        sortKey={'name' as SortKey}
+        sortDir={'asc' as SortDir}
+        onRemove={() => undefined}
+      />
+    );
+
+    expect(screen.getByRole('table', { name: 'Holdings table' })).toBeInTheDocument();
+  });
+
+  it('has no basic accessibility violations', async () => {
+    const { container } = renderWithProviders(
+      <HoldingsTable
+        holdings={holdings}
+        onSort={() => undefined}
+        sortKey={'name' as SortKey}
+        sortDir={'asc' as SortDir}
+        onRemove={() => undefined}
+      />
+    );
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 
   it('renders logo fallbacks and value formatting variants', () => {

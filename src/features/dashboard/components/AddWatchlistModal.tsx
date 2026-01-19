@@ -7,17 +7,14 @@ import type { ComboboxItem } from '@components';
 import { useSymbolSearch } from '@/hooks/useSymbolSearch';
 import { useCryptoSearch } from '@/hooks/useCryptoSearch';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addWatchlistItem } from '@/features/portfolio/portfolioSlice';
+import { addWatchlistItem, removeWatchlistItem } from '@/features/portfolio/portfolioSlice';
 import type { AssetType, WatchlistItem } from '@/types/portfolio';
 import { toast } from 'sonner';
+import { watchlistFormSchema } from '@/schemas/watchlistFormSchema';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addWatchlistItemToPortfolio } from '@/services/api/functions/portfolioApi';
 
-const watchlistSchema = z.object({
-  assetSelection: z.string().min(1, 'Select an asset from search'),
-  assetType: z.enum(['stock', 'crypto']),
-  symbol: z.string().min(1, 'Select an asset from search'),
-});
-
-type WatchlistFormValues = z.infer<typeof watchlistSchema>;
+type WatchlistFormValues = z.infer<typeof watchlistFormSchema>;
 
 type AddWatchlistModalProps = {
   open: boolean;
@@ -32,6 +29,7 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
   const { open, onOpenChange } = props;
   const dispatch = useAppDispatch();
   const watchlist = useAppSelector(state => state.portfolio.watchlist);
+  const queryClient = useQueryClient();
   const [assetQuery, setAssetQuery] = useState('');
   const [selectedAssetLabel, setSelectedAssetLabel] = useState('');
 
@@ -43,7 +41,7 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
     register,
     formState: { errors, isSubmitting },
   } = useForm<WatchlistFormValues>({
-    resolver: zodResolver(watchlistSchema),
+    resolver: zodResolver(watchlistFormSchema),
     defaultValues: {
       assetSelection: '',
       assetType: 'stock',
@@ -128,6 +126,26 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
     [onOpenChange, resetForm]
   );
 
+  const addWatchlistMutation = useMutation({
+    mutationFn: addWatchlistItemToPortfolio,
+    onMutate: async (newItem: WatchlistItem) => {
+      dispatch(addWatchlistItem(newItem));
+      return { item: newItem };
+    },
+    onError: (_error, newItem) => {
+      dispatch(removeWatchlistItem(newItem.id));
+      toast.error('Failed to add to your watchlist. Please try again.');
+    },
+    onSuccess: () => {
+      toast.success('Added to watchlist.');
+      resetForm();
+      onOpenChange(false);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
+    },
+  });
+
   const onSubmitAddWatchlist = useCallback(
     (values: WatchlistFormValues) => {
       const assetType = values.assetType as AssetType;
@@ -142,12 +160,9 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
         assetType,
       };
 
-      dispatch(addWatchlistItem(watchlistItem));
-      toast.success('Added to watchlist.');
-      resetForm();
-      onOpenChange(false);
+      addWatchlistMutation.mutate(watchlistItem);
     },
-    [dispatch, onOpenChange, resetForm]
+    [addWatchlistMutation]
   );
 
   const handleInvalid = useCallback(() => {
@@ -169,7 +184,7 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
             variant="primary"
             type="submit"
             form="add-watchlist-form"
-            disabled={isSubmitting || isDuplicateAsset}
+            disabled={isSubmitting || addWatchlistMutation.isPending || isDuplicateAsset}
           >
             Add to Watchlist
           </Button>

@@ -1,7 +1,7 @@
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
 const createNoopStorage = () => {
-  let store: Record<string, string> = {};
+  const store: Record<string, string> = {};
   return {
     getItem: async (key: string) => store[key] ?? null,
     setItem: async (key: string, value: string) => {
@@ -14,7 +14,7 @@ const createNoopStorage = () => {
   };
 };
 
-const canUseStorage = () => {
+export const isLocalStorageAvailable = () => {
   if (typeof window === 'undefined') {
     return false;
   }
@@ -28,7 +28,7 @@ const canUseStorage = () => {
   }
 };
 
-const baseStorage = canUseStorage() ? createWebStorage('local') : createNoopStorage();
+const baseStorage = isLocalStorageAvailable() ? createWebStorage('local') : createNoopStorage();
 
 const isQuotaError = (error: unknown) => {
   if (error instanceof DOMException) {
@@ -49,7 +49,6 @@ export const safeStorage = {
         return value;
       } catch {
         // Corrupted data: ignore and fall back to fresh state.
-        // eslint-disable-next-line no-console
         console.warn('Persisted state is corrupted. Resetting storage.');
         return null;
       }
@@ -62,7 +61,6 @@ export const safeStorage = {
       return await baseStorage.setItem(key, value);
     } catch (error) {
       if (isQuotaError(error)) {
-        // eslint-disable-next-line no-console
         console.warn('Storage quota exceeded. Skipping persistence.');
         return value;
       }

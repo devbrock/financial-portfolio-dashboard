@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState, useCallback, useRef } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -41,16 +41,24 @@ import {
 } from './components';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
+  addHolding,
+  addWatchlistItem,
   removeHolding,
   removeWatchlistItem,
   updatePreferences,
 } from '@/features/portfolio/portfolioSlice';
 import type { DashboardNav } from './components/DashboardSidebar';
+import {
+  removeHoldingFromPortfolio,
+  removeWatchlistItemFromPortfolio,
+} from '@/services/api/functions/portfolioApi';
 
 export function Dashboard() {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
   const theme = useAppSelector(state => state.portfolio.preferences.theme);
+  const rawHoldings = useAppSelector(state => state.portfolio.holdings);
+  const rawWatchlist = useAppSelector(state => state.portfolio.watchlist);
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [holdingsQuery, setHoldingsQuery] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('name');
@@ -67,6 +75,52 @@ export function Dashboard() {
   const dataUpdatedAtRef = useRef(0);
   const lastResetRef = useRef(0);
 
+  const removeHoldingMutation = useMutation({
+    mutationFn: removeHoldingFromPortfolio,
+    onMutate: async (holdingId: string) => {
+      const existing = rawHoldings.find(item => item.id === holdingId);
+      if (existing) {
+        dispatch(removeHolding(holdingId));
+      }
+      return { existing };
+    },
+    onError: (_error, _holdingId, context) => {
+      if (context?.existing) {
+        dispatch(addHolding(context.existing));
+      }
+      toast.error('Failed to remove the asset. Please try again.');
+    },
+    onSuccess: () => {
+      toast.success('Asset removed from your portfolio.');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
+    },
+  });
+
+  const removeWatchlistMutation = useMutation({
+    mutationFn: removeWatchlistItemFromPortfolio,
+    onMutate: async (watchlistId: string) => {
+      const existing = rawWatchlist.find(item => item.id === watchlistId);
+      if (existing) {
+        dispatch(removeWatchlistItem(watchlistId));
+      }
+      return { existing };
+    },
+    onError: (_error, _watchlistId, context) => {
+      if (context?.existing) {
+        dispatch(addWatchlistItem(context.existing));
+      }
+      toast.error('Failed to remove the watchlist item. Please try again.');
+    },
+    onSuccess: () => {
+      toast.success('Removed from your watchlist.');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
+    },
+  });
+
   // Get dashboard data
   const {
     watchlist,
@@ -79,8 +133,6 @@ export function Dashboard() {
     errorMessage,
     dataUpdatedAt,
   } = useDashboardData();
-  const [liveMessage, setLiveMessage] = useState('');
-  const [errorAnnounce, setErrorAnnounce] = useState('');
   const lastToastErrorRef = useRef<string | null>(null);
 
   // Update "last updated" timer
@@ -100,32 +152,35 @@ export function Dashboard() {
   useEffect(() => {
     dataUpdatedAtRef.current = dataUpdatedAt;
     if (dataUpdatedAt > 0) {
-      setFlashPrices(true);
-      setLiveMessage('Prices updated.');
-      const handle = window.setTimeout(() => setFlashPrices(false), 1200);
-      return () => window.clearTimeout(handle);
+      const start = window.setTimeout(() => setFlashPrices(true), 0);
+      const stop = window.setTimeout(() => setFlashPrices(false), 1200);
+      return () => {
+        window.clearTimeout(start);
+        window.clearTimeout(stop);
+      };
     }
   }, [dataUpdatedAt]);
 
   useEffect(() => {
-    if (isLoading) {
-      setLiveMessage('Loading portfolio data.');
-      return;
-    }
-    setLiveMessage('Portfolio data loaded.');
-  }, [isLoading]);
-
-  useEffect(() => {
     if (isError) {
-      setErrorAnnounce(errorMessage || 'Market data unavailable.');
       if (errorMessage && lastToastErrorRef.current !== errorMessage) {
         toast.error(errorMessage);
         lastToastErrorRef.current = errorMessage;
       }
     } else {
-      setErrorAnnounce('');
       lastToastErrorRef.current = null;
     }
+  }, [errorMessage, isError]);
+
+  const liveMessage = useMemo(() => {
+    if (isLoading) return 'Loading portfolio data.';
+    if (dataUpdatedAt > 0) return 'Prices updated.';
+    return 'Portfolio data loaded.';
+  }, [dataUpdatedAt, isLoading]);
+
+  const errorAnnounce = useMemo(() => {
+    if (!isError) return '';
+    return errorMessage || 'Market data unavailable.';
   }, [errorMessage, isError]);
 
   // Filter and sort holdings
@@ -354,8 +409,7 @@ export function Dashboard() {
                               item={item}
                               flash={flashPrices}
                               onRemove={id => {
-                                dispatch(removeWatchlistItem(id));
-                                toast.success('Removed from your watchlist.');
+                                removeWatchlistMutation.mutate(id);
                               }}
                             />
                           ))}
@@ -471,8 +525,7 @@ export function Dashboard() {
                 variant="destructive"
                 onClick={() => {
                   if (confirmRemoveId) {
-                    dispatch(removeHolding(confirmRemoveId));
-                    toast.success('Asset removed from your portfolio.');
+                    removeHoldingMutation.mutate(confirmRemoveId);
                   }
                   setConfirmRemoveId(null);
                 }}

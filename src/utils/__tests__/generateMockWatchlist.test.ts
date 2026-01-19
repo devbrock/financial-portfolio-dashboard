@@ -5,7 +5,12 @@ describe('generateMockWatchlist', () => {
   it('returns deterministic results for the same seed', () => {
     const watchlistA = generateMockWatchlist('seed');
     const watchlistB = generateMockWatchlist('seed');
-    const stripIds = (items: typeof watchlistA) => items.map(({ id, ...rest }) => rest);
+    const stripIds = (items: typeof watchlistA) =>
+      items.map(item => {
+        const { id, ...rest } = item;
+        void id;
+        return rest;
+      });
     expect(stripIds(watchlistA)).toEqual(stripIds(watchlistB));
   });
 

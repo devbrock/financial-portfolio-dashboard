@@ -35,12 +35,12 @@ describe('safeStorage', () => {
   });
 
   it('returns stored JSON values when valid', async () => {
-    mockStorage.getItem = vi.fn(async () => '{\"ok\":true}');
+    mockStorage.getItem = vi.fn(async () => '{"ok":true}');
 
     const { safeStorage } = await import('../safeStorage');
     const value = await safeStorage.getItem('persist:root');
 
-    expect(value).toBe('{\"ok\":true}');
+    expect(value).toBe('{"ok":true}');
   });
 
   it('returns null when storage throws', async () => {
@@ -85,9 +85,9 @@ describe('safeStorage', () => {
     vi.resetModules();
     const { safeStorage } = await import('../safeStorage');
 
-    await safeStorage.setItem('key', '\"value\"');
+    await safeStorage.setItem('key', '"value"');
     const value = await safeStorage.getItem('key');
-    expect(value).toBe('\"value\"');
+    expect(value).toBe('"value"');
 
     globalThis.window = originalWindow;
   });

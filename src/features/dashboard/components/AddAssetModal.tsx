@@ -7,22 +7,14 @@ import type { ComboboxItem } from '@components';
 import { useSymbolSearch } from '@/hooks/useSymbolSearch';
 import { useCryptoSearch } from '@/hooks/useCryptoSearch';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addHolding } from '@/features/portfolio/portfolioSlice';
+import { addHolding, removeHolding } from '@/features/portfolio/portfolioSlice';
 import type { AssetType, Holding } from '@/types/portfolio';
 import { toast } from 'sonner';
+import { addAssetFormSchema } from '@/schemas/addAssetFormSchema';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addHoldingToPortfolio } from '@/services/api/functions/portfolioApi';
 
-const addAssetSchema = z.object({
-  assetSelection: z.string().min(1, 'Select an asset from search'),
-  assetType: z.enum(['stock', 'crypto']),
-  symbol: z.string().min(1, 'Select an asset from search'),
-  quantity: z.number().positive('Quantity must be greater than 0'),
-  purchasePrice: z.number().positive('Purchase price must be greater than 0'),
-  purchaseDate: z.string().refine(value => !Number.isNaN(Date.parse(value)), {
-    message: 'Purchase date is required',
-  }),
-});
-
-type AddAssetFormValues = z.infer<typeof addAssetSchema>;
+type AddAssetFormValues = z.infer<typeof addAssetFormSchema>;
 
 type AddAssetModalProps = {
   open: boolean;
@@ -38,6 +30,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
   const { open, onOpenChange, onAdded } = props;
   const dispatch = useAppDispatch();
   const holdings = useAppSelector(state => state.portfolio.holdings);
+  const queryClient = useQueryClient();
   const [assetQuery, setAssetQuery] = useState('');
   const [selectedAssetLabel, setSelectedAssetLabel] = useState('');
 
@@ -51,7 +44,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
     setValue,
     control,
   } = useForm<AddAssetFormValues>({
-    resolver: zodResolver(addAssetSchema),
+    resolver: zodResolver(addAssetFormSchema),
     defaultValues: {
       assetSelection: '',
       assetType: 'stock',
@@ -142,6 +135,27 @@ export function AddAssetModal(props: AddAssetModalProps) {
     [onOpenChange, resetForm]
   );
 
+  const addHoldingMutation = useMutation({
+    mutationFn: addHoldingToPortfolio,
+    onMutate: async (newHolding: Holding) => {
+      dispatch(addHolding(newHolding));
+      return { holding: newHolding };
+    },
+    onError: (_error, newHolding) => {
+      dispatch(removeHolding(newHolding.id));
+      toast.error('Failed to add the asset. Please try again.');
+    },
+    onSuccess: holding => {
+      toast.success('Asset added to your portfolio.');
+      onAdded?.(holding);
+      resetForm();
+      onOpenChange(false);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio'] });
+    },
+  });
+
   const onSubmitAddAsset = useCallback(
     (values: AddAssetFormValues) => {
       const assetType = values.assetType as AssetType;
@@ -159,13 +173,9 @@ export function AddAssetModal(props: AddAssetModalProps) {
         purchaseDate: values.purchaseDate,
       };
 
-      dispatch(addHolding(holding));
-      toast.success('Asset added to your portfolio.');
-      onAdded?.(holding);
-      resetForm();
-      onOpenChange(false);
+      addHoldingMutation.mutate(holding);
     },
-    [dispatch, onAdded, onOpenChange, resetForm]
+    [addHoldingMutation]
   );
 
   const handleInvalid = useCallback(() => {
@@ -183,7 +193,12 @@ export function AddAssetModal(props: AddAssetModalProps) {
           <Button variant="secondary" onClick={() => handleClose(false)}>
             Cancel
           </Button>
-          <Button variant="primary" type="submit" form="add-asset-form" disabled={isSubmitting}>
+          <Button
+            variant="primary"
+            type="submit"
+            form="add-asset-form"
+            disabled={isSubmitting || addHoldingMutation.isPending || isDuplicateAsset}
+          >
             Add Asset
           </Button>
         </>

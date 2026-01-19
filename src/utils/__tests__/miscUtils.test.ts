@@ -10,6 +10,7 @@ describe('utility helpers', () => {
   });
 
   it('combines class names', () => {
-    expect(cn('a', false && 'b', 'c')).toBe('a c');
+    const isActive = Boolean(process.env['__TEST_FLAG__']);
+    expect(cn('a', isActive && 'b', 'c')).toBe('a c');
   });
 });

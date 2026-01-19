@@ -5,7 +5,12 @@ describe('generateMockHoldings', () => {
   it('returns deterministic results for the same seed', () => {
     const holdingsA = generateMockHoldings('seed');
     const holdingsB = generateMockHoldings('seed');
-    const stripIds = (holdings: typeof holdingsA) => holdings.map(({ id, ...rest }) => rest);
+    const stripIds = (holdings: typeof holdingsA) =>
+      holdings.map(item => {
+        const { id, ...rest } = item;
+        void id;
+        return rest;
+      });
     expect(stripIds(holdingsA)).toEqual(stripIds(holdingsB));
   });
 

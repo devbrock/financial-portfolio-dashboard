@@ -36,7 +36,7 @@ export function HoldingsTable(props: HoldingsTableProps) {
   const { holdings, onSort, sortKey, sortDir, onRemove, flash = false } = props;
 
   return (
-    <Table>
+    <Table tableProps={{ 'aria-label': 'Holdings table' }}>
       <TableHead>
         <TableRow>
           <SortableTh

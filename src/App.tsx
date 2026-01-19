@@ -1,11 +1,13 @@
+import { useEffect, useRef } from 'react';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { store, persistor } from './store/store';
 import { routeTree } from './routeTree.gen';
+import { isLocalStorageAvailable } from './store/safeStorage';
 
 const router = createRouter({ routeTree });
 
@@ -28,6 +30,21 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const hasWarnedRef = useRef(false);
+
+  useEffect(() => {
+    if (hasWarnedRef.current) {
+      return;
+    }
+    if (!isLocalStorageAvailable()) {
+      toast.warning(
+        'Local storage is disabled. Your portfolio will not be saved between sessions.',
+        { duration: 10000 }
+      );
+      hasWarnedRef.current = true;
+    }
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

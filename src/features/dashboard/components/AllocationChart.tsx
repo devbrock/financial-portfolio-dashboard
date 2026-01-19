@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ChartContainer, Inline, PieDonutChart, Skeleton, Text } from '@components';
 import { cn } from '@/utils/cn';
 import type { AllocationSlice } from '@/types/dashboard';
@@ -12,6 +13,11 @@ type AllocationChartProps = {
 
 export function AllocationChart(props: AllocationChartProps) {
   const { data, totalInvested, loading = false, flash = false } = props;
+  const chartColors = useMemo(() => data.map(slice => slice.color), [data]);
+  const legendItems = useMemo(
+    () => data.map(slice => ({ name: slice.name, color: slice.color })),
+    [data]
+  );
 
   return (
     <ChartContainer
@@ -34,7 +40,7 @@ export function AllocationChart(props: AllocationChartProps) {
             nameKey="name"
             valueKey="value"
             variant="donut"
-            colors={data.map(s => s.color)}
+            colors={chartColors}
             tooltipLabelFormatter={l => <span>{String(l)}</span>}
             tooltipValueFormatter={v => <span>{String(v)}%</span>}
           />
@@ -59,15 +65,15 @@ export function AllocationChart(props: AllocationChartProps) {
       {/* Legend */}
       {!loading ? (
         <Inline wrap gap="sm" className="mt-3">
-          {data.map(s => (
-            <Inline key={s.name} align="center" className="gap-2">
+          {legendItems.map(item => (
+            <Inline key={item.name} align="center" className="gap-2">
               <span
                 aria-hidden="true"
                 className="h-2.5 w-2.5 rounded-full"
-                style={{ background: s.color }}
+                style={{ background: item.color }}
               />
               <Text as="span" size="sm" tone="muted">
-                {s.name}
+                {item.name}
               </Text>
             </Inline>
           ))}

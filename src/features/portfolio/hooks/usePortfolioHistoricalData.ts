@@ -96,6 +96,8 @@ export function usePortfolioHistoricalData(range: Range) {
   );
 
   const cachedStockMeta = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity
+    const now = Date.now();
     const meta = new Map<
       string,
       { data: AlphaVantageTimeSeriesDaily; isFresh: boolean; fetchedAt: number }
@@ -103,7 +105,7 @@ export function usePortfolioHistoricalData(range: Range) {
     stockSymbols.forEach(symbol => {
       const entry = stockCache[symbol];
       if (!entry) return;
-      const age = Date.now() - entry.fetchedAt;
+      const age = now - entry.fetchedAt;
       const isFresh = age < STOCK_CACHE_TTL_MS;
       const canUseForRange = outputsize === 'compact' || entry.outputsize === 'full';
       if (canUseForRange) {
