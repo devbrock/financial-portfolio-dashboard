@@ -29,6 +29,7 @@ export function Combobox(props: ComboboxProps) {
     debounceMs = 250,
     onQueryChange,
     onInputChange,
+    inputTransform,
     minChars = 1,
     filterItems = true,
     closeOnSelect = true,
@@ -172,7 +173,8 @@ export function Combobox(props: ComboboxProps) {
         className={cn(inputClassName)}
         value={query}
         onChange={e => {
-          const next = e.currentTarget.value;
+          const nextRaw = e.currentTarget.value;
+          const next = inputTransform ? inputTransform(nextRaw) : nextRaw;
           setQuery(next);
           setActiveIndex(-1);
           openIfReady(next);

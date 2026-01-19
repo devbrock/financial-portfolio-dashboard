@@ -43,4 +43,14 @@ describe('AddAssetModal', () => {
 
     expect(await screen.findByText('Select an asset from search')).toBeInTheDocument();
   });
+
+  it('uppercases symbol input while typing', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<AddAssetModal open onOpenChange={() => undefined} />);
+
+    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
+    await user.type(searchInput, 'aapl');
+
+    expect(searchInput).toHaveValue('AAPL');
+  });
 });

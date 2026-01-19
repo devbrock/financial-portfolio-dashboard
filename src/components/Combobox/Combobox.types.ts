@@ -40,6 +40,10 @@ export type ComboboxProps = {
    */
   onInputChange?: (query: string) => void;
   /**
+   * Optional transformer for raw input before it is stored/displayed.
+   */
+  inputTransform?: (query: string) => string;
+  /**
    * Minimum characters before opening suggestions.
    */
   minChars?: number;

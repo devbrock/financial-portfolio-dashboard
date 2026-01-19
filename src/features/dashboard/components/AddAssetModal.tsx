@@ -231,6 +231,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
                   }
                 }}
                 onQueryChange={handleAssetQueryChange}
+                inputTransform={value => value.toUpperCase()}
                 loading={isAssetSearchLoading}
                 minChars={2}
                 debounceMs={300}
