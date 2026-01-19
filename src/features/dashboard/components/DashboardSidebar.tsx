@@ -11,11 +11,11 @@ import {
   Inline,
   Text,
 } from '@components';
-import { BotMessageSquare, ChartLine, Folder, HelpCircle, Home, Newspaper } from 'lucide-react';
+import { BotMessageSquare, ChartLine, HelpCircle, Home, Newspaper } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
 
-export type DashboardNav = 'Overview' | 'Portfolio' | 'Market' | 'News' | 'AI Assistant';
+export type DashboardNav = 'Overview' | 'Market' | 'News' | 'AI Assistant';
 
 type DashboardSidebarProps = {
   activeNav: DashboardNav;
@@ -52,15 +52,6 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
                 >
                   <Home />
                   <span data-slot="label">Overview</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive={activeNav === 'Portfolio'}
-                  onClick={() => onNavChange('Portfolio')}
-                >
-                  <Folder />
-                  <span data-slot="label">Portfolio</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
