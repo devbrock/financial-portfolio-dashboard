@@ -73,10 +73,6 @@ export function Dashboard() {
   // Get dashboard data
   const {
     watchlist,
-    perf7d,
-    perf30d,
-    perf90d,
-    perf1y,
     allocation,
     holdings,
     metrics,
@@ -134,14 +130,6 @@ export function Dashboard() {
       lastToastErrorRef.current = null;
     }
   }, [errorMessage, isError]);
-
-  // Select performance data based on range
-  const perf = useMemo(() => {
-    if (range === "7d") return perf7d;
-    if (range === "90d") return perf90d;
-    if (range === "1y") return perf1y;
-    return perf30d;
-  }, [range, perf7d, perf30d, perf90d, perf1y]);
 
   // Filter and sort holdings
   const visibleHoldings: readonly HoldingRow[] = useMemo(() => {
@@ -431,10 +419,8 @@ export function Dashboard() {
                   className="grid grid-cols-1 gap-4 lg:grid-cols-2"
                 >
                   <PerformanceChart
-                    data={perf}
                     range={range}
                     onRangeChange={setRange}
-                    isSimulated
                     flash={flashPrices}
                   />
                   <AllocationChart

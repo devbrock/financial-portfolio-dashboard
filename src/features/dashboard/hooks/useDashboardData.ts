@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { usePortfolioData } from "@/features/portfolio/hooks/usePortfolioData";
 import type {
-  PerformancePoint,
   AllocationSlice,
   HoldingRow,
   WatchlistCardModel,
@@ -84,38 +83,6 @@ export function useDashboardData() {
     return slices;
   }, [metrics]);
 
-  const buildSeries = useMemo(() => {
-    return (labels: string[], total: number) =>
-      labels.map((label, idx) => ({
-        month: label,
-        profitUsd: total * ((idx + 1) / labels.length),
-      }));
-  }, []);
-
-  // Simulated performance data - replace with historical transaction data.
-  const perf7d: readonly PerformancePoint[] = useMemo(() => {
-    const total = metrics.totalPL * 0.2;
-    return buildSeries(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], total);
-  }, [buildSeries, metrics.totalPL]);
-
-  const perf30d: readonly PerformancePoint[] = useMemo(() => {
-    const total = metrics.totalPL * 0.45;
-    return buildSeries(["Wk1", "Wk2", "Wk3", "Wk4", "Wk5"], total);
-  }, [buildSeries, metrics.totalPL]);
-
-  const perf90d: readonly PerformancePoint[] = useMemo(() => {
-    const total = metrics.totalPL * 0.75;
-    return buildSeries(["M1", "M2", "M3"], total);
-  }, [buildSeries, metrics.totalPL]);
-
-  const perf1y: readonly PerformancePoint[] = useMemo(() => {
-    const total = metrics.totalPL;
-    return buildSeries(
-      ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-      total
-    );
-  }, [buildSeries, metrics.totalPL]);
-
   const dailyPlPct = useMemo(() => {
     if (metrics.totalCostBasis === 0) return 0;
     const dailyPlUsd = metrics.totalPL * 0.03;
@@ -123,10 +90,6 @@ export function useDashboardData() {
   }, [metrics.totalCostBasis, metrics.totalPL]);
 
   return {
-    perf7d,
-    perf30d,
-    perf90d,
-    perf1y,
     allocation,
     holdings,
     isLoading,

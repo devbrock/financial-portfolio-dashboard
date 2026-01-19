@@ -17,8 +17,8 @@ export type WatchlistCardModel = {
 };
 
 export type PerformancePoint = {
-  month: string;
-  profitUsd: number;
+  date: string;
+  value: number;
 };
 
 export type AllocationSlice = {

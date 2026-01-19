@@ -6,7 +6,6 @@ import { renderWithProviders } from "@/test/test-utils";
 import type {
   AllocationSlice,
   HoldingRow,
-  PerformancePoint,
   WatchlistCardModel,
 } from "@/types/dashboard";
 import { createTestStore } from "@/test/test-utils";
@@ -45,10 +44,6 @@ const baseHoldings: HoldingRow[] = [
     status: "active",
   },
 ];
-const basePerf7d: PerformancePoint[] = [{ month: "Mon", profitUsd: 50 }];
-const basePerf30d: PerformancePoint[] = [{ month: "Wk1", profitUsd: 200 }];
-const basePerf90d: PerformancePoint[] = [{ month: "M1", profitUsd: 300 }];
-const basePerf1y: PerformancePoint[] = [{ month: "Jan", profitUsd: 400 }];
 const baseAllocation: AllocationSlice[] = [
   { name: "Stocks", value: 60, color: "red" },
 ];
@@ -61,10 +56,6 @@ vi.mock("../hooks/useDashboardData", () => ({
 
 const baseDashboardData = {
   watchlist: baseWatchlist,
-  perf7d: basePerf7d,
-  perf30d: basePerf30d,
-  perf90d: basePerf90d,
-  perf1y: basePerf1y,
   allocation: baseAllocation,
   holdings: baseHoldings,
   metrics: {
@@ -116,24 +107,6 @@ describe("Dashboard", () => {
     await user.click(nameButton);
     const updatedHeader = nameButton.closest("th");
     expect(updatedHeader).toHaveAttribute("aria-sort", "descending");
-  });
-
-  it("switches to 7d performance data", async () => {
-    const user = userEvent.setup();
-    renderWithProviders(<Dashboard />);
-
-    expect(screen.getByText("$200.00")).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "7D" }));
-    expect(screen.getByText("$50.00")).toBeInTheDocument();
-  });
-
-  it("switches to 90d performance data", async () => {
-    const user = userEvent.setup();
-    renderWithProviders(<Dashboard />);
-
-    await user.click(screen.getByRole("button", { name: "90D" }));
-    expect(screen.getByText("$300.00")).toBeInTheDocument();
   });
 
   it("updates sort key across multiple columns", async () => {

@@ -7,46 +7,40 @@ import {
   Inline,
   Skeleton,
   Text,
+  Button,
 } from "@components";
 import { cn } from "@/utils/cn";
 import type { PerformancePoint } from "@/types/dashboard";
 import { formatMoneyUsd } from "@utils/formatMoneyUsd";
 import { formatCompact } from "@utils/formatCompact";
 import { formatSignedPct } from "@utils/formatSignedPct";
+import { usePortfolioHistoricalData } from "@/features/portfolio/hooks/usePortfolioHistoricalData";
 
 type PerformanceChartProps = {
-  data: readonly PerformancePoint[];
   range: "7d" | "30d" | "90d" | "1y";
   onRangeChange: (range: "7d" | "30d" | "90d" | "1y") => void;
-  loading?: boolean;
-  isSimulated?: boolean;
   flash?: boolean;
 };
 
 export function PerformanceChart(props: PerformanceChartProps) {
-  const {
-    data,
-    range,
-    onRangeChange,
-    loading = false,
-    isSimulated = false,
-    flash = false,
-  } = props;
+  const { range, onRangeChange, flash = false } = props;
+  const { data, isLoading, isError, error, refetch } =
+    usePortfolioHistoricalData(range);
 
-  const { totalProfitUsd, profitPercentage } = useMemo(() => {
-    if (data.length === 0) return { totalProfitUsd: 0, profitPercentage: 0 };
+  const { totalValue, changePct } = useMemo(() => {
+    if (data.length === 0) return { totalValue: 0, changePct: 0 };
 
-    const total = data[data.length - 1].profitUsd;
-    const initial = data[0].profitUsd;
-    const change = total - initial;
-    const percentage = initial !== 0 ? (change / initial) * 100 : 0;
+    const firstValue = data[0].value;
+    const lastValue = data[data.length - 1].value;
+    const change = lastValue - firstValue;
+    const percentage = firstValue !== 0 ? (change / firstValue) * 100 : 0;
 
-    return { totalProfitUsd: total, profitPercentage: percentage };
+    return { totalValue: lastValue, changePct: percentage };
   }, [data]);
 
   return (
     <ChartContainer
-      title="Profit status"
+      title="Portfolio value"
       subtitle="Performance"
       className={cn(
         flash &&
@@ -74,50 +68,75 @@ export function PerformanceChart(props: PerformanceChartProps) {
           </Chip>
         </Inline>
       }
-      aria-busy={loading || undefined}
+      aria-busy={isLoading || undefined}
     >
-      {loading ? (
+      {isLoading ? (
         <div className="space-y-3" aria-hidden="true">
           <Skeleton className="h-6 w-36" />
           <Skeleton className="h-[260px] w-full" />
+        </div>
+      ) : isError ? (
+        <div className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
+          <Text as="div" className="text-sm font-semibold">
+            Historical data is unavailable right now.
+          </Text>
+          <Text as="div" size="sm" tone="muted">
+            {error instanceof Error
+              ? error.message
+              : "Please try again in a moment."}
+          </Text>
+          <div>
+            <Button variant="secondary" size="sm" onClick={refetch}>
+              Retry
+            </Button>
+          </div>
+        </div>
+      ) : data.length === 0 ? (
+        <div className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
+          <Text as="div" className="text-sm font-semibold">
+            No historical data yet.
+          </Text>
+          <Text as="div" size="sm" tone="muted">
+            Add holdings to see portfolio performance over time.
+          </Text>
         </div>
       ) : (
         <>
           <Inline align="end" justify="between" className="mb-3 gap-3">
             <div>
               <Text as="div" className="text-2xl font-semibold">
-                {formatMoneyUsd(totalProfitUsd)}
+                {formatMoneyUsd(totalValue)}
               </Text>
               <Text as="div" size="sm" tone="muted">
-                Total profit
+                Portfolio value
               </Text>
             </div>
             <DeltaPill
               direction={
-                profitPercentage > 0
+                changePct > 0
                   ? "up"
-                  : profitPercentage < 0
+                  : changePct < 0
                     ? "down"
                     : "flat"
               }
               tone={
-                profitPercentage > 0
+                changePct > 0
                   ? "success"
-                  : profitPercentage < 0
+                  : changePct < 0
                     ? "danger"
                     : "neutral"
               }
             >
-              {formatSignedPct(profitPercentage)}
+              {formatSignedPct(changePct)}
             </DeltaPill>
           </Inline>
           <AreaChart<PerformancePoint>
             data={data}
-            xKey="month"
+            xKey="date"
             series={[
               {
-                key: "profitUsd",
-                name: "Profit",
+                key: "value",
+                name: "Portfolio value",
                 color: "var(--ui-primary)",
               },
             ]}
@@ -125,11 +144,6 @@ export function PerformanceChart(props: PerformanceChartProps) {
               typeof v === "number" ? `$${formatCompact(v)}` : String(v)
             }
           />
-          {isSimulated ? (
-            <Text as="div" size="xs" tone="muted" className="mt-3">
-              Simulated performance data.
-            </Text>
-          ) : null}
         </>
       )}
     </ChartContainer>

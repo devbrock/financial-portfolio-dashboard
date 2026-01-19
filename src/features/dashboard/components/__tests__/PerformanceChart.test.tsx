@@ -6,17 +6,31 @@ import { renderWithProviders } from "@/test/test-utils";
 import type { PerformancePoint } from "@/types/dashboard";
 
 const data: PerformancePoint[] = [
-  { month: "Jan", profitUsd: 100 },
-  { month: "Feb", profitUsd: 120 },
+  { date: "2024-01-01", value: 100 },
+  { date: "2024-01-02", value: 120 },
 ];
+
+const mockUsePortfolioHistoricalData = vi.fn();
+
+vi.mock("@/features/portfolio/hooks/usePortfolioHistoricalData", () => ({
+  usePortfolioHistoricalData: () => mockUsePortfolioHistoricalData(),
+}));
 
 describe("PerformanceChart", () => {
   it("changes range when clicking chips", async () => {
     const user = userEvent.setup();
     const onRangeChange = vi.fn();
 
+    mockUsePortfolioHistoricalData.mockReturnValue({
+      data,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+
     renderWithProviders(
-      <PerformanceChart data={data} range="7d" onRangeChange={onRangeChange} />
+      <PerformanceChart range="7d" onRangeChange={onRangeChange} />
     );
 
     await user.click(screen.getByRole("button", { name: "90D" }));
