@@ -1,5 +1,5 @@
-import type * as React from "react";
-import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from "../_internal/charts";
+import type * as React from 'react';
+import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from '../_internal/charts';
 
 export type AreaChartProps<TDatum extends Record<string, unknown>> = {
   data: readonly TDatum[];
@@ -14,5 +14,3 @@ export type AreaChartProps<TDatum extends Record<string, unknown>> = {
   tooltipValueFormatter?: (value: string | number) => React.ReactNode;
   className?: string;
 };
-
-

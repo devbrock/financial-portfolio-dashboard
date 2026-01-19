@@ -1,5 +1,5 @@
-import * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import * as React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Alert,
   AreaChart,
@@ -43,7 +43,7 @@ import {
   TableRow,
   Text,
   PieDonutChart,
-} from "@components";
+} from '@components';
 import {
   Bell,
   ChartLine,
@@ -60,12 +60,12 @@ import {
   Sun,
   Users,
   Wallet,
-} from "lucide-react";
-import { cn } from "@/utils/cn";
+} from 'lucide-react';
+import { cn } from '@/utils/cn';
 
-type DemoMode = "loaded" | "loading" | "error-empty";
+type DemoMode = 'loaded' | 'loading' | 'error-empty';
 
-type ThemeMode = "light" | "dark";
+type ThemeMode = 'light' | 'dark';
 
 type AssetCardModel = {
   id: string;
@@ -81,12 +81,12 @@ type PerformancePoint = {
 };
 
 type AllocationSlice = {
-  name: "ETFs" | "Stocks" | "Bonds" | "Crypto";
+  name: 'ETFs' | 'Stocks' | 'Bonds' | 'Crypto';
   value: number;
   color: string;
 };
 
-type HoldingStatus = "active" | "pending";
+type HoldingStatus = 'active' | 'pending';
 
 type HoldingRow = {
   id: string;
@@ -102,26 +102,26 @@ type HoldingRow = {
 };
 
 type SortKey =
-  | "name"
-  | "date"
-  | "volume"
-  | "changePct"
-  | "purchasePrice"
-  | "priceUsd"
-  | "pnlUsd"
-  | "status";
+  | 'name'
+  | 'date'
+  | 'volume'
+  | 'changePct'
+  | 'purchasePrice'
+  | 'priceUsd'
+  | 'pnlUsd'
+  | 'status';
 
-type SortDir = "asc" | "desc";
+type SortDir = 'asc' | 'desc';
 
 type DashboardDemoProps = {
   mode: DemoMode;
 };
 
 const meta: Meta<typeof DashboardDemo> = {
-  title: "Screens/Financial Portfolio Dashboard",
+  title: 'Screens/Financial Portfolio Dashboard',
   component: DashboardDemo,
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 export default meta;
@@ -129,15 +129,15 @@ export default meta;
 type Story = StoryObj<typeof DashboardDemo>;
 
 export const Default: Story = {
-  args: { mode: "loaded" },
+  args: { mode: 'loaded' },
 };
 
 export const LoadingAndRefreshing: Story = {
-  args: { mode: "loading" },
+  args: { mode: 'loading' },
 };
 
 export const ErrorAndEmptyStates: Story = {
-  args: { mode: "error-empty" },
+  args: { mode: 'error-empty' },
 };
 
 /**
@@ -148,22 +148,22 @@ export const ErrorAndEmptyStates: Story = {
 // }
 
 function formatMoneyUsd(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
     maximumFractionDigits: value >= 1000 ? 0 : 2,
   }).format(value);
 }
 
 function formatCompact(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
     maximumFractionDigits: 2,
   }).format(value);
 }
 
 function formatSignedPct(pct: number): string {
-  const sign = pct > 0 ? "+" : "";
+  const sign = pct > 0 ? '+' : '';
   return `${sign}${pct.toFixed(1)}%`;
 }
 
@@ -184,25 +184,25 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
 
   const deltaTone =
     asset.weeklyDeltaPct > 0
-      ? ("success" as const)
+      ? ('success' as const)
       : asset.weeklyDeltaPct < 0
-      ? ("danger" as const)
-      : ("neutral" as const);
+        ? ('danger' as const)
+        : ('neutral' as const);
 
   const deltaDir =
     asset.weeklyDeltaPct > 0
-      ? ("up" as const)
+      ? ('up' as const)
       : asset.weeklyDeltaPct < 0
-      ? ("down" as const)
-      : ("flat" as const);
+        ? ('down' as const)
+        : ('flat' as const);
 
   return (
     <Card
       elevation="sm"
       className={cn(
-        "p-5",
-        "transition-shadow duration-200 motion-reduce:transition-none",
-        !loading && "hover:shadow-md hover:shadow-black/10"
+        'p-5',
+        'transition-shadow duration-200 motion-reduce:transition-none',
+        !loading && 'hover:shadow-md hover:shadow-black/10'
       )}
     >
       <CardBody className="space-y-3">
@@ -210,14 +210,12 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
           <Inline align="center" className="min-w-0 gap-3">
             <div
               className={cn(
-                "grid h-10 w-10 place-items-center rounded-2xl",
-                "border border-(--ui-border) bg-(--ui-surface)"
+                'grid h-10 w-10 place-items-center rounded-2xl',
+                'border border-(--ui-border) bg-(--ui-surface)'
               )}
               aria-hidden="true"
             >
-              <span className="text-sm font-semibold">
-                {asset.name.slice(0, 1)}
-              </span>
+              <span className="text-sm font-semibold">{asset.name.slice(0, 1)}</span>
             </div>
             <div className="min-w-0">
               {loading ? (
@@ -242,19 +240,13 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
             <DropdownMenuTriggerIcon />
             <DropdownMenuContent
               className={cn(
-                "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
               )}
             >
-              <DropdownMenuItem onClick={() => undefined}>
-                View asset
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => undefined}>
-                Add alert
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>View asset</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>Add alert</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => undefined}>
-                Export
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>Export</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </Inline>
@@ -287,53 +279,44 @@ function AssetSummaryCard(props: { asset: AssetCardModel; loading?: boolean }) {
 }
 
 function DropdownMenuTriggerIcon(props: { ariaLabel?: string }) {
-  const { ariaLabel = "Open menu" } = props;
+  const { ariaLabel = 'Open menu' } = props;
   return (
     <DropdownMenuTrigger asChild>
-      <IconButton
-        ariaLabel={ariaLabel}
-        variant="ghost"
-        size="sm"
-        icon={<EllipsisVertical />}
-      />
+      <IconButton ariaLabel={ariaLabel} variant="ghost" size="sm" icon={<EllipsisVertical />} />
     </DropdownMenuTrigger>
   );
 }
 
-function ariasort(dir: SortDir | null): "ascending" | "descending" | "none" {
-  if (!dir) return "none";
-  return dir === "asc" ? "ascending" : "descending";
+function ariasort(dir: SortDir | null): 'ascending' | 'descending' | 'none' {
+  if (!dir) return 'none';
+  return dir === 'asc' ? 'ascending' : 'descending';
 }
 
 function compareStrings(a: string, b: string): number {
-  return a.localeCompare(b, "en", { sensitivity: "base" });
+  return a.localeCompare(b, 'en', { sensitivity: 'base' });
 }
 
 function DashboardDemo(props: DashboardDemoProps) {
   const { mode } = props;
 
-  const [theme, setTheme] = React.useState<ThemeMode>("light");
-  const [range, setRange] = React.useState<"month" | "week" | "day">("month");
-  const [holdingsQuery, setHoldingsQuery] = React.useState("");
-  const [sortKey, setSortKey] = React.useState<SortKey>("name");
-  const [sortDir, setSortDir] = React.useState<SortDir>("asc");
+  const [theme, setTheme] = React.useState<ThemeMode>('light');
+  const [range, setRange] = React.useState<'month' | 'week' | 'day'>('month');
+  const [holdingsQuery, setHoldingsQuery] = React.useState('');
+  const [sortKey, setSortKey] = React.useState<SortKey>('name');
+  const [sortDir, setSortDir] = React.useState<SortDir>('asc');
   const [activeNav, setActiveNav] = React.useState<
-    "Overview" | "Portfolio" | "Wallet" | "Market" | "Community" | "News"
-  >("Overview");
+    'Overview' | 'Portfolio' | 'Wallet' | 'Market' | 'Community' | 'News'
+  >('Overview');
 
-  const [confirmRemoveId, setConfirmRemoveId] = React.useState<string | null>(
-    null
-  );
-  const [recoveryOpen, setRecoveryOpen] = React.useState(
-    mode === "error-empty"
-  );
+  const [confirmRemoveId, setConfirmRemoveId] = React.useState<string | null>(null);
+  const [recoveryOpen, setRecoveryOpen] = React.useState(mode === 'error-empty');
 
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = React.useState(12);
 
   React.useEffect(() => {
-    if (mode === "error-empty") return;
+    if (mode === 'error-empty') return;
     const t = window.setInterval(() => {
-      setLastUpdatedSeconds((s) => clampNumber(s + 1, 0, 999));
+      setLastUpdatedSeconds(s => clampNumber(s + 1, 0, 999));
     }, 1000);
     return () => window.clearInterval(t);
   }, [mode]);
@@ -341,30 +324,30 @@ function DashboardDemo(props: DashboardDemoProps) {
   const assets: readonly AssetCardModel[] = React.useMemo(
     () => [
       {
-        id: "goog",
-        name: "Google",
-        ticker: "GOOG",
+        id: 'goog',
+        name: 'Google',
+        ticker: 'GOOG',
         valueUsd: 67859,
         weeklyDeltaPct: 8.2,
       },
       {
-        id: "aapl",
-        name: "Applagin",
-        ticker: "AAPL",
+        id: 'aapl',
+        name: 'Applagin',
+        ticker: 'AAPL',
         valueUsd: 85950,
         weeklyDeltaPct: -3.6,
       },
       {
-        id: "spot",
-        name: "Spotify",
-        ticker: "SPOT",
+        id: 'spot',
+        name: 'Spotify',
+        ticker: 'SPOT',
         valueUsd: 48785,
         weeklyDeltaPct: 4.8,
       },
       {
-        id: "dbx",
-        name: "Dropbox",
-        ticker: "DBX",
+        id: 'dbx',
+        name: 'Dropbox',
+        ticker: 'DBX',
         valueUsd: 56749,
         weeklyDeltaPct: 8.9,
       },
@@ -374,58 +357,58 @@ function DashboardDemo(props: DashboardDemoProps) {
 
   const perfDaily: readonly PerformancePoint[] = React.useMemo(
     () => [
-      { month: "6am", profitUsd: 120 },
-      { month: "9am", profitUsd: 280 },
-      { month: "12pm", profitUsd: 450 },
-      { month: "3pm", profitUsd: 520 },
-      { month: "6pm", profitUsd: 680 },
+      { month: '6am', profitUsd: 120 },
+      { month: '9am', profitUsd: 280 },
+      { month: '12pm', profitUsd: 450 },
+      { month: '3pm', profitUsd: 520 },
+      { month: '6pm', profitUsd: 680 },
     ],
     []
   );
 
   const perfWeekly: readonly PerformancePoint[] = React.useMemo(
     () => [
-      { month: "Mon", profitUsd: 1200 },
-      { month: "Tue", profitUsd: 2100 },
-      { month: "Wed", profitUsd: 1800 },
-      { month: "Thu", profitUsd: 2800 },
-      { month: "Fri", profitUsd: 3200 },
-      { month: "Sat", profitUsd: 2900 },
-      { month: "Sun", profitUsd: 3400 },
+      { month: 'Mon', profitUsd: 1200 },
+      { month: 'Tue', profitUsd: 2100 },
+      { month: 'Wed', profitUsd: 1800 },
+      { month: 'Thu', profitUsd: 2800 },
+      { month: 'Fri', profitUsd: 3200 },
+      { month: 'Sat', profitUsd: 2900 },
+      { month: 'Sun', profitUsd: 3400 },
     ],
     []
   );
 
   const perfMonthly: readonly PerformancePoint[] = React.useMemo(
     () => [
-      { month: "Jan", profitUsd: 4000 },
-      { month: "Feb", profitUsd: 8200 },
-      { month: "Mar", profitUsd: 7500 },
-      { month: "Apr", profitUsd: 12200 },
-      { month: "May", profitUsd: 15100 },
-      { month: "Jun", profitUsd: 18800 },
-      { month: "Jul", profitUsd: 21000 },
-      { month: "Aug", profitUsd: 34500 },
-      { month: "Sep", profitUsd: 38500 },
+      { month: 'Jan', profitUsd: 4000 },
+      { month: 'Feb', profitUsd: 8200 },
+      { month: 'Mar', profitUsd: 7500 },
+      { month: 'Apr', profitUsd: 12200 },
+      { month: 'May', profitUsd: 15100 },
+      { month: 'Jun', profitUsd: 18800 },
+      { month: 'Jul', profitUsd: 21000 },
+      { month: 'Aug', profitUsd: 34500 },
+      { month: 'Sep', profitUsd: 38500 },
     ],
     []
   );
 
   const perf = React.useMemo(() => {
-    if (range === "day") return perfDaily;
-    if (range === "week") return perfWeekly;
+    if (range === 'day') return perfDaily;
+    if (range === 'week') return perfWeekly;
     return perfMonthly;
   }, [range, perfDaily, perfWeekly, perfMonthly]);
 
   const allocation: readonly AllocationSlice[] = React.useMemo(
     () => [
-      { name: "ETFs", value: 48, color: "var(--ui-inverse-bg)" },
-      { name: "Stocks", value: 28, color: "var(--ui-primary)" },
-      { name: "Bonds", value: 20, color: "var(--ui-accent)" },
+      { name: 'ETFs', value: 48, color: 'var(--ui-inverse-bg)' },
+      { name: 'Stocks', value: 28, color: 'var(--ui-primary)' },
+      { name: 'Bonds', value: 20, color: 'var(--ui-accent)' },
       {
-        name: "Crypto",
+        name: 'Crypto',
         value: 16,
-        color: "color-mix(in oklab, var(--ui-accent) 45%, white 55%)",
+        color: 'color-mix(in oklab, var(--ui-accent) 45%, white 55%)',
       },
     ],
     []
@@ -434,75 +417,71 @@ function DashboardDemo(props: DashboardDemoProps) {
   const holdings: readonly HoldingRow[] = React.useMemo(
     () => [
       {
-        id: "h1",
-        name: "Applagin",
-        ticker: "AAPL",
-        date: "22 June 2024",
+        id: 'h1',
+        name: 'Applagin',
+        ticker: 'AAPL',
+        date: '22 June 2024',
         volume: 8.2e9,
         changePct: 4.1,
         purchasePrice: 84200,
         priceUsd: 87580,
         pnlUsd: 24.05,
-        status: "active",
+        status: 'active',
       },
       {
-        id: "h2",
-        name: "Spotify",
-        ticker: "SPOT",
-        date: "24 June 2024",
+        id: 'h2',
+        name: 'Spotify',
+        ticker: 'SPOT',
+        date: '24 June 2024',
         volume: 9.16e9,
         changePct: -3.6,
         purchasePrice: 102300,
         priceUsd: 98478,
         pnlUsd: -32.05,
-        status: "pending",
+        status: 'pending',
       },
       {
-        id: "h3",
-        name: "Dropbox",
-        ticker: "DBX",
-        date: "26 June 2024",
+        id: 'h3',
+        name: 'Dropbox',
+        ticker: 'DBX',
+        date: '26 June 2024',
         volume: 3.06e9,
         changePct: 2.2,
         purchasePrice: 54300,
         priceUsd: 56749,
         pnlUsd: 18.7,
-        status: "active",
+        status: 'active',
       },
     ],
     []
   );
 
   const visibleHoldings: readonly HoldingRow[] = React.useMemo(() => {
-    if (mode === "error-empty") return [];
+    if (mode === 'error-empty') return [];
 
     const q = holdingsQuery.trim().toLowerCase();
     const filtered = q
-      ? holdings.filter(
-          (h) =>
-            h.name.toLowerCase().includes(q) ||
-            h.ticker.toLowerCase().includes(q)
-        )
+      ? holdings.filter(h => h.name.toLowerCase().includes(q) || h.ticker.toLowerCase().includes(q))
       : holdings;
 
-    const dir = sortDir === "asc" ? 1 : -1;
+    const dir = sortDir === 'asc' ? 1 : -1;
     const sorted = [...filtered].sort((a, b) => {
       switch (sortKey) {
-        case "name":
+        case 'name':
           return dir * compareStrings(a.name, b.name);
-        case "date":
+        case 'date':
           return dir * compareStrings(a.date, b.date);
-        case "status":
+        case 'status':
           return dir * compareStrings(a.status, b.status);
-        case "volume":
+        case 'volume':
           return dir * (a.volume - b.volume);
-        case "changePct":
+        case 'changePct':
           return dir * (a.changePct - b.changePct);
-        case "purchasePrice":
+        case 'purchasePrice':
           return dir * (a.purchasePrice - b.purchasePrice);
-        case "priceUsd":
+        case 'priceUsd':
           return dir * (a.priceUsd - b.priceUsd);
-        case "pnlUsd":
+        case 'pnlUsd':
           return dir * (a.pnlUsd - b.pnlUsd);
       }
     });
@@ -530,29 +509,29 @@ function DashboardDemo(props: DashboardDemoProps) {
     return { totalProfitUsd: total, profitPercentage: percentage };
   }, [perf]);
 
-  const showLoading = mode === "loading";
-  const showError = mode === "error-empty";
+  const showLoading = mode === 'loading';
+  const showError = mode === 'error-empty';
 
   const toggleTheme = React.useCallback(() => {
-    setTheme((t) => (t === "dark" ? "light" : "dark"));
+    setTheme(t => (t === 'dark' ? 'light' : 'dark'));
   }, []);
 
   React.useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
     const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
+    root.classList.toggle('dark', theme === 'dark');
     return () => {
-      root.classList.remove("dark");
+      root.classList.remove('dark');
     };
   }, [theme]);
 
   const triggerSort = (key: SortKey) => {
-    setSortKey((prev) => {
+    setSortKey(prev => {
       if (prev !== key) {
-        setSortDir("asc");
+        setSortDir('asc');
         return key;
       }
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+      setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
       return prev;
     });
   };
@@ -562,11 +541,11 @@ function DashboardDemo(props: DashboardDemoProps) {
       <div
         className={cn(
           // Fixed app shell: sidebar stays pinned; main content scrolls.
-          "h-screen overflow-hidden",
+          'h-screen overflow-hidden',
           // In dark mode `--ui-surface` is intentionally translucent; use a solid base
           // so the page doesn't look "washed out" when the canvas/body behind is light.
-          theme === "dark" ? "bg-(--ui-bg)" : "bg-(--ui-surface)",
-          theme === "dark" && "dark"
+          theme === 'dark' ? 'bg-(--ui-bg)' : 'bg-(--ui-surface)',
+          theme === 'dark' && 'dark'
         )}
       >
         {/* App shell */}
@@ -574,7 +553,7 @@ function DashboardDemo(props: DashboardDemoProps) {
           <Sidebar
             collapsible="icon"
             width={260}
-            className={cn("rounded-2xl overflow-hidden", "h-full")}
+            className={cn('overflow-hidden rounded-2xl', 'h-full')}
           >
             <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
               <Inline align="center" className="gap-3 px-1">
@@ -595,8 +574,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                   <SidebarMenu aria-label="Primary">
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "Overview"}
-                        onClick={() => setActiveNav("Overview")}
+                        isActive={activeNav === 'Overview'}
+                        onClick={() => setActiveNav('Overview')}
                       >
                         <Home />
                         <span data-slot="label">Overview</span>
@@ -604,8 +583,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "Portfolio"}
-                        onClick={() => setActiveNav("Portfolio")}
+                        isActive={activeNav === 'Portfolio'}
+                        onClick={() => setActiveNav('Portfolio')}
                       >
                         <Folder />
                         <span data-slot="label">Portfolio</span>
@@ -613,8 +592,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "Wallet"}
-                        onClick={() => setActiveNav("Wallet")}
+                        isActive={activeNav === 'Wallet'}
+                        onClick={() => setActiveNav('Wallet')}
                       >
                         <Wallet />
                         <span data-slot="label">Wallet</span>
@@ -622,8 +601,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "Market"}
-                        onClick={() => setActiveNav("Market")}
+                        isActive={activeNav === 'Market'}
+                        onClick={() => setActiveNav('Market')}
                       >
                         <ChartLine />
                         <span data-slot="label">Market</span>
@@ -631,8 +610,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "Community"}
-                        onClick={() => setActiveNav("Community")}
+                        isActive={activeNav === 'Community'}
+                        onClick={() => setActiveNav('Community')}
                       >
                         <Users />
                         <span data-slot="label">Community</span>
@@ -640,8 +619,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                       <SidebarMenuButton
-                        isActive={activeNav === "News"}
-                        onClick={() => setActiveNav("News")}
+                        isActive={activeNav === 'News'}
+                        onClick={() => setActiveNav('News')}
                       >
                         <Newspaper />
                         <span data-slot="label">News</span>
@@ -665,43 +644,34 @@ function DashboardDemo(props: DashboardDemoProps) {
           </Sidebar>
 
           {/* Main content */}
-          <main className="min-w-0 min-h-0 flex-1 overflow-y-auto">
+          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
             <Container className="max-w-none px-0">
               <Stack gap="lg">
                 {/* App header */}
                 <header
                   className={cn(
-                    "rounded-2xl border border-(--ui-border) bg-(--ui-bg)",
-                    "px-4 py-3 shadow-sm shadow-black/5"
+                    'rounded-2xl border border-(--ui-border) bg-(--ui-bg)',
+                    'px-4 py-3 shadow-sm shadow-black/5'
                   )}
                 >
                   <Inline align="center" justify="between" className="gap-3">
                     <SidebarTrigger ariaLabel="Toggle sidebar" />
-                    <Inline
-                      align="center"
-                      className="w-full max-w-[420px] gap-2"
-                    >
+                    <Inline align="center" className="w-full max-w-[420px] gap-2">
                       <div className="relative w-full">
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
+                        <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
                           <Search />
                         </span>
-                        <Input
-                          aria-label="Search"
-                          placeholder="Search..."
-                          className="pl-9"
-                        />
+                        <Input aria-label="Search" placeholder="Search..." className="pl-9" />
                       </div>
                     </Inline>
 
                     <Inline align="center" className="shrink-0 gap-2">
                       <IconButton
-                        ariaLabel={`Switch to ${
-                          theme === "dark" ? "light" : "dark"
-                        } theme`}
+                        ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                         variant="ghost"
                         size="md"
                         onClick={toggleTheme}
-                        icon={theme === "dark" ? <Sun /> : <Moon />}
+                        icon={theme === 'dark' ? <Sun /> : <Moon />}
                       />
                       <div className="relative">
                         <IconButton
@@ -713,8 +683,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                         <span
                           aria-hidden="true"
                           className={cn(
-                            "absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full",
-                            "bg-red-600 px-1 text-[10px] font-semibold text-white"
+                            'absolute -top-0.5 -right-0.5 grid h-5 min-w-5 place-items-center rounded-full',
+                            'bg-red-600 px-1 text-[10px] font-semibold text-white'
                           )}
                         >
                           3
@@ -735,17 +705,12 @@ function DashboardDemo(props: DashboardDemoProps) {
                                 aria-hidden="true"
                                 className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
                               >
-                                <span className="text-sm font-semibold">
-                                  BB
-                                </span>
+                                <span className="text-sm font-semibold">BB</span>
                               </span>
                             }
                           >
                             <span className="hidden text-left sm:block">
-                              <Text
-                                as="div"
-                                className="text-sm font-semibold leading-4"
-                              >
+                              <Text as="div" className="text-sm leading-4 font-semibold">
                                 Brock Balducci
                               </Text>
                             </span>
@@ -753,16 +718,10 @@ function DashboardDemo(props: DashboardDemoProps) {
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent minWidth={240}>
-                          <DropdownMenuItem onClick={() => undefined}>
-                            Profile
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => undefined}>
-                            Settings
-                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => undefined}>Profile</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => undefined}>Settings</DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => undefined}>
-                            Sign out
-                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => undefined}>Sign out</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </Inline>
@@ -801,17 +760,13 @@ function DashboardDemo(props: DashboardDemoProps) {
 
                 {/* Rate limit banner (error story) */}
                 {showError ? (
-                  <Alert
-                    tone="danger"
-                    className="flex items-center justify-between gap-4"
-                  >
+                  <Alert tone="danger" className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
                       <Text as="div" className="font-semibold">
                         You’re rate limited.
                       </Text>
                       <Text as="div" size="sm" tone="muted">
-                        We couldn’t refresh holdings right now. Try again in a
-                        moment.
+                        We couldn’t refresh holdings right now. Try again in a moment.
                       </Text>
                     </div>
                     <Button
@@ -826,7 +781,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                 ) : null}
 
                 {/* Loading/refresh status row */}
-                {mode === "loading" ? (
+                {mode === 'loading' ? (
                   <Inline
                     align="center"
                     justify="between"
@@ -837,8 +792,8 @@ function DashboardDemo(props: DashboardDemoProps) {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "h-2.5 w-2.5 rounded-full bg-(--ui-primary)",
-                          "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                          'h-2.5 w-2.5 rounded-full bg-(--ui-primary)',
+                          'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                         )}
                       />
                       <Text as="div" size="sm">
@@ -852,54 +807,29 @@ function DashboardDemo(props: DashboardDemoProps) {
                 ) : null}
 
                 {/* Summary cards */}
-                <section
-                  aria-label="Asset summary"
-                  aria-busy={showLoading || undefined}
-                >
+                <section aria-label="Asset summary" aria-busy={showLoading || undefined}>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    {assets.map((a) => (
-                      <AssetSummaryCard
-                        key={a.id}
-                        asset={a}
-                        loading={showLoading}
-                      />
+                    {assets.map(a => (
+                      <AssetSummaryCard key={a.id} asset={a} loading={showLoading} />
                     ))}
                   </div>
                 </section>
 
                 {/* Charts */}
-                <section
-                  aria-label="Charts"
-                  className="grid grid-cols-1 gap-4 lg:grid-cols-2"
-                >
+                <section aria-label="Charts" className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {/* Profit status */}
                   <ChartContainer
                     title="Profit status"
-                    subtitle={
-                      range === "day"
-                        ? "Daily"
-                        : range === "month"
-                        ? "Monthly"
-                        : "Weekly"
-                    }
+                    subtitle={range === 'day' ? 'Daily' : range === 'month' ? 'Monthly' : 'Weekly'}
                     actions={
                       <Inline align="center" className="gap-2">
-                        <Chip
-                          selected={range === "day"}
-                          onClick={() => setRange("day")}
-                        >
+                        <Chip selected={range === 'day'} onClick={() => setRange('day')}>
                           Daily
                         </Chip>
-                        <Chip
-                          selected={range === "week"}
-                          onClick={() => setRange("week")}
-                        >
+                        <Chip selected={range === 'week'} onClick={() => setRange('week')}>
                           Weekly
                         </Chip>
-                        <Chip
-                          selected={range === "month"}
-                          onClick={() => setRange("month")}
-                        >
+                        <Chip selected={range === 'month'} onClick={() => setRange('month')}>
                           Monthly
                         </Chip>
                       </Inline>
@@ -913,11 +843,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                       </div>
                     ) : (
                       <>
-                        <Inline
-                          align="end"
-                          justify="between"
-                          className="mb-3 gap-3"
-                        >
+                        <Inline align="end" justify="between" className="mb-3 gap-3">
                           <div>
                             <Text as="div" className="text-2xl font-semibold">
                               {formatMoneyUsd(totalProfitUsd)}
@@ -928,18 +854,14 @@ function DashboardDemo(props: DashboardDemoProps) {
                           </div>
                           <DeltaPill
                             direction={
-                              profitPercentage > 0
-                                ? "up"
-                                : profitPercentage < 0
-                                ? "down"
-                                : "flat"
+                              profitPercentage > 0 ? 'up' : profitPercentage < 0 ? 'down' : 'flat'
                             }
                             tone={
                               profitPercentage > 0
-                                ? "success"
+                                ? 'success'
                                 : profitPercentage < 0
-                                ? "danger"
-                                : "neutral"
+                                  ? 'danger'
+                                  : 'neutral'
                             }
                           >
                             {formatSignedPct(profitPercentage)}
@@ -950,15 +872,13 @@ function DashboardDemo(props: DashboardDemoProps) {
                           xKey="month"
                           series={[
                             {
-                              key: "profitUsd",
-                              name: "Profit",
-                              color: "var(--ui-primary)",
+                              key: 'profitUsd',
+                              name: 'Profit',
+                              color: 'var(--ui-primary)',
                             },
                           ]}
-                          yTickFormatter={(v) =>
-                            typeof v === "number"
-                              ? `$${formatCompact(v)}`
-                              : String(v)
+                          yTickFormatter={v =>
+                            typeof v === 'number' ? `$${formatCompact(v)}` : String(v)
                           }
                         />
                       </>
@@ -983,20 +903,16 @@ function DashboardDemo(props: DashboardDemoProps) {
                           nameKey="name"
                           valueKey="value"
                           variant="donut"
-                          colors={allocation.map((s) => s.color)}
-                          tooltipLabelFormatter={(l) => (
-                            <span>{String(l)}</span>
-                          )}
-                          tooltipValueFormatter={(v) => (
-                            <span>{String(v)}%</span>
-                          )}
+                          colors={allocation.map(s => s.color)}
+                          tooltipLabelFormatter={l => <span>{String(l)}</span>}
+                          tooltipValueFormatter={v => <span>{String(v)}%</span>}
                         />
 
                         {/* Center label */}
                         <div
                           className={cn(
-                            "pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-                            "text-center"
+                            'pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+                            'text-center'
                           )}
                         >
                           <Text as="div" className="text-lg font-semibold">
@@ -1012,7 +928,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                     {/* Legend */}
                     {!showLoading ? (
                       <Inline wrap gap="sm" className="mt-3">
-                        {allocation.map((s) => (
+                        {allocation.map(s => (
                           <Inline key={s.name} align="center" className="gap-2">
                             <span
                               aria-hidden="true"
@@ -1030,17 +946,10 @@ function DashboardDemo(props: DashboardDemoProps) {
                 </section>
 
                 {/* Holdings */}
-                <section
-                  aria-label="Holdings"
-                  aria-busy={showLoading || undefined}
-                >
+                <section aria-label="Holdings" aria-busy={showLoading || undefined}>
                   <Card>
                     <CardHeader className="pb-3">
-                      <Inline
-                        align="center"
-                        justify="between"
-                        className="w-full gap-3"
-                      >
+                      <Inline align="center" justify="between" className="w-full gap-3">
                         <div>
                           <Heading as="h3" className="text-base">
                             My Stocks
@@ -1051,16 +960,14 @@ function DashboardDemo(props: DashboardDemoProps) {
                         </div>
 
                         <div className="relative w-full max-w-[280px]">
-                          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
+                          <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
                             <Search />
                           </span>
                           <Input
                             aria-label="Search holdings"
                             placeholder="Search..."
                             value={holdingsQuery}
-                            onChange={(e) =>
-                              setHoldingsQuery(e.currentTarget.value)
-                            }
+                            onChange={e => setHoldingsQuery(e.currentTarget.value)}
                             className="pl-9"
                           />
                         </div>
@@ -1087,45 +994,45 @@ function DashboardDemo(props: DashboardDemoProps) {
                               <TableRow>
                                 <SortableTh
                                   label="Name Stock"
-                                  active={sortKey === "name"}
-                                  dir={sortKey === "name" ? sortDir : null}
-                                  onClick={() => triggerSort("name")}
+                                  active={sortKey === 'name'}
+                                  dir={sortKey === 'name' ? sortDir : null}
+                                  onClick={() => triggerSort('name')}
                                 />
                                 <SortableTh
                                   label="Date"
-                                  active={sortKey === "date"}
-                                  dir={sortKey === "date" ? sortDir : null}
-                                  onClick={() => triggerSort("date")}
+                                  active={sortKey === 'date'}
+                                  dir={sortKey === 'date' ? sortDir : null}
+                                  onClick={() => triggerSort('date')}
                                 />
                                 <SortableTh
                                   label="Volume"
-                                  active={sortKey === "volume"}
-                                  dir={sortKey === "volume" ? sortDir : null}
-                                  onClick={() => triggerSort("volume")}
+                                  active={sortKey === 'volume'}
+                                  dir={sortKey === 'volume' ? sortDir : null}
+                                  onClick={() => triggerSort('volume')}
                                 />
                                 <SortableTh
                                   label="Change"
-                                  active={sortKey === "changePct"}
-                                  dir={sortKey === "changePct" ? sortDir : null}
-                                  onClick={() => triggerSort("changePct")}
+                                  active={sortKey === 'changePct'}
+                                  dir={sortKey === 'changePct' ? sortDir : null}
+                                  onClick={() => triggerSort('changePct')}
                                 />
                                 <SortableTh
                                   label="Price/stock"
-                                  active={sortKey === "priceUsd"}
-                                  dir={sortKey === "priceUsd" ? sortDir : null}
-                                  onClick={() => triggerSort("priceUsd")}
+                                  active={sortKey === 'priceUsd'}
+                                  dir={sortKey === 'priceUsd' ? sortDir : null}
+                                  onClick={() => triggerSort('priceUsd')}
                                 />
                                 <SortableTh
                                   label="Number of lost"
-                                  active={sortKey === "pnlUsd"}
-                                  dir={sortKey === "pnlUsd" ? sortDir : null}
-                                  onClick={() => triggerSort("pnlUsd")}
+                                  active={sortKey === 'pnlUsd'}
+                                  dir={sortKey === 'pnlUsd' ? sortDir : null}
+                                  onClick={() => triggerSort('pnlUsd')}
                                 />
                                 <SortableTh
                                   label="Status"
-                                  active={sortKey === "status"}
-                                  dir={sortKey === "status" ? sortDir : null}
-                                  onClick={() => triggerSort("status")}
+                                  active={sortKey === 'status'}
+                                  dir={sortKey === 'status' ? sortDir : null}
+                                  onClick={() => triggerSort('status')}
                                 />
                                 <TableHeadCell className="w-12">
                                   <span className="sr-only">Actions</span>
@@ -1133,7 +1040,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {visibleHoldings.map((h) => (
+                              {visibleHoldings.map(h => (
                                 <TableRow key={h.id} hover>
                                   <TableCell>
                                     <Inline align="center" className="gap-3">
@@ -1146,10 +1053,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                         </span>
                                       </span>
                                       <div className="min-w-0">
-                                        <Text
-                                          as="div"
-                                          className="truncate font-semibold"
-                                        >
+                                        <Text as="div" className="truncate font-semibold">
                                           {h.name}
                                         </Text>
                                         <Text as="div" size="sm" tone="muted">
@@ -1159,57 +1063,39 @@ function DashboardDemo(props: DashboardDemoProps) {
                                     </Inline>
                                   </TableCell>
                                   <TableCell>{h.date}</TableCell>
-                                  <TableCell>
-                                    {formatCompact(h.volume)}
-                                  </TableCell>
+                                  <TableCell>{formatCompact(h.volume)}</TableCell>
                                   <TableCell>
                                     <DeltaPill
                                       direction={
-                                        h.changePct > 0
-                                          ? "up"
-                                          : h.changePct < 0
-                                          ? "down"
-                                          : "flat"
+                                        h.changePct > 0 ? 'up' : h.changePct < 0 ? 'down' : 'flat'
                                       }
                                       tone={
                                         h.changePct > 0
-                                          ? "success"
+                                          ? 'success'
                                           : h.changePct < 0
-                                          ? "danger"
-                                          : "neutral"
+                                            ? 'danger'
+                                            : 'neutral'
                                       }
                                     >
                                       {formatSignedPct(h.changePct)}
                                     </DeltaPill>
                                   </TableCell>
-                                  <TableCell>
-                                    {formatMoneyUsd(h.priceUsd)}
-                                  </TableCell>
+                                  <TableCell>{formatMoneyUsd(h.priceUsd)}</TableCell>
                                   <TableCell>
                                     <Text
                                       as="span"
                                       className={cn(
-                                        "font-semibold",
-                                        h.pnlUsd >= 0
-                                          ? "text-emerald-700"
-                                          : "text-red-700"
+                                        'font-semibold',
+                                        h.pnlUsd >= 0 ? 'text-emerald-700' : 'text-red-700'
                                       )}
                                     >
-                                      {h.pnlUsd >= 0 ? "+" : ""}
+                                      {h.pnlUsd >= 0 ? '+' : ''}
                                       {formatMoneyUsd(h.pnlUsd)}
                                     </Text>
                                   </TableCell>
                                   <TableCell>
-                                    <Badge
-                                      tone={
-                                        h.status === "active"
-                                          ? "success"
-                                          : "warning"
-                                      }
-                                    >
-                                      {h.status === "active"
-                                        ? "Active"
-                                        : "Pending"}
+                                    <Badge tone={h.status === 'active' ? 'success' : 'warning'}>
+                                      {h.status === 'active' ? 'Active' : 'Pending'}
                                     </Badge>
                                   </TableCell>
                                   <TableCell className="text-right">
@@ -1219,20 +1105,14 @@ function DashboardDemo(props: DashboardDemoProps) {
                                       />
                                       <DropdownMenuContent
                                         className={cn(
-                                          "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                                          'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                                         )}
                                       >
-                                        <DropdownMenuItem
-                                          onClick={() => undefined}
-                                        >
+                                        <DropdownMenuItem onClick={() => undefined}>
                                           View details
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            setConfirmRemoveId(h.id)
-                                          }
-                                        >
+                                        <DropdownMenuItem onClick={() => setConfirmRemoveId(h.id)}>
                                           Remove…
                                         </DropdownMenuItem>
                                       </DropdownMenuContent>
@@ -1259,14 +1139,10 @@ function DashboardDemo(props: DashboardDemoProps) {
                           />
                         ) : (
                           <div className="space-y-3">
-                            {visibleHoldings.map((h) => (
+                            {visibleHoldings.map(h => (
                               <Card key={h.id} className="p-4">
                                 <CardBody className="space-y-3">
-                                  <Inline
-                                    align="center"
-                                    justify="between"
-                                    className="gap-3"
-                                  >
+                                  <Inline align="center" justify="between" className="gap-3">
                                     <Inline align="center" className="gap-3">
                                       <span
                                         aria-hidden="true"
@@ -1277,10 +1153,7 @@ function DashboardDemo(props: DashboardDemoProps) {
                                         </span>
                                       </span>
                                       <div className="min-w-0">
-                                        <Text
-                                          as="div"
-                                          className="truncate font-semibold"
-                                        >
+                                        <Text as="div" className="truncate font-semibold">
                                           {h.name}
                                         </Text>
                                         <Text as="div" size="sm" tone="muted">
@@ -1295,20 +1168,14 @@ function DashboardDemo(props: DashboardDemoProps) {
                                       />
                                       <DropdownMenuContent
                                         className={cn(
-                                          "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                                          'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                                         )}
                                       >
-                                        <DropdownMenuItem
-                                          onClick={() => undefined}
-                                        >
+                                        <DropdownMenuItem onClick={() => undefined}>
                                           View details
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            setConfirmRemoveId(h.id)
-                                          }
-                                        >
+                                        <DropdownMenuItem onClick={() => setConfirmRemoveId(h.id)}>
                                           Remove…
                                         </DropdownMenuItem>
                                       </DropdownMenuContent>
@@ -1316,42 +1183,26 @@ function DashboardDemo(props: DashboardDemoProps) {
                                   </Inline>
 
                                   <Inline wrap gap="sm" className="gap-2">
-                                    <Badge
-                                      tone={
-                                        h.status === "active"
-                                          ? "success"
-                                          : "warning"
-                                      }
-                                    >
-                                      {h.status === "active"
-                                        ? "Active"
-                                        : "Pending"}
+                                    <Badge tone={h.status === 'active' ? 'success' : 'warning'}>
+                                      {h.status === 'active' ? 'Active' : 'Pending'}
                                     </Badge>
                                     <DeltaPill
                                       direction={
-                                        h.changePct > 0
-                                          ? "up"
-                                          : h.changePct < 0
-                                          ? "down"
-                                          : "flat"
+                                        h.changePct > 0 ? 'up' : h.changePct < 0 ? 'down' : 'flat'
                                       }
                                       tone={
                                         h.changePct > 0
-                                          ? "success"
+                                          ? 'success'
                                           : h.changePct < 0
-                                          ? "danger"
-                                          : "neutral"
+                                            ? 'danger'
+                                            : 'neutral'
                                       }
                                     >
                                       {formatSignedPct(h.changePct)}
                                     </DeltaPill>
                                   </Inline>
 
-                                  <Inline
-                                    align="center"
-                                    justify="between"
-                                    className="gap-3"
-                                  >
+                                  <Inline align="center" justify="between" className="gap-3">
                                     <Text as="div" size="sm" tone="muted">
                                       Price
                                     </Text>
@@ -1359,24 +1210,18 @@ function DashboardDemo(props: DashboardDemoProps) {
                                       {formatMoneyUsd(h.priceUsd)}
                                     </Text>
                                   </Inline>
-                                  <Inline
-                                    align="center"
-                                    justify="between"
-                                    className="gap-3"
-                                  >
+                                  <Inline align="center" justify="between" className="gap-3">
                                     <Text as="div" size="sm" tone="muted">
                                       P/L
                                     </Text>
                                     <Text
                                       as="div"
                                       className={cn(
-                                        "font-semibold",
-                                        h.pnlUsd >= 0
-                                          ? "text-emerald-700"
-                                          : "text-red-700"
+                                        'font-semibold',
+                                        h.pnlUsd >= 0 ? 'text-emerald-700' : 'text-red-700'
                                       )}
                                     >
-                                      {h.pnlUsd >= 0 ? "+" : ""}
+                                      {h.pnlUsd >= 0 ? '+' : ''}
                                       {formatMoneyUsd(h.pnlUsd)}
                                     </Text>
                                   </Inline>
@@ -1397,17 +1242,14 @@ function DashboardDemo(props: DashboardDemoProps) {
         {/* Confirm remove dialog */}
         <Modal
           open={confirmRemoveId !== null}
-          onOpenChange={(open) => {
+          onOpenChange={open => {
             if (!open) setConfirmRemoveId(null);
           }}
           title="Remove holding?"
           description="This will remove the position from your dashboard. You can add it again later."
           footer={
             <>
-              <Button
-                variant="secondary"
-                onClick={() => setConfirmRemoveId(null)}
-              >
+              <Button variant="secondary" onClick={() => setConfirmRemoveId(null)}>
                 Cancel
               </Button>
               <Button
@@ -1422,8 +1264,8 @@ function DashboardDemo(props: DashboardDemoProps) {
           }
         >
           <Text as="p" size="sm" tone="muted">
-            Think of this like removing a sticky note from your desk: it doesn’t
-            change the company, it just clears your view.
+            Think of this like removing a sticky note from your desk: it doesn’t change the company,
+            it just clears your view.
           </Text>
         </Modal>
 
@@ -1435,18 +1277,15 @@ function DashboardDemo(props: DashboardDemoProps) {
           description="We detected corrupted local storage. Resetting will restore defaults for this demo."
           footer={
             <>
-              <Button
-                variant="secondary"
-                onClick={() => setRecoveryOpen(false)}
-              >
+              <Button variant="secondary" onClick={() => setRecoveryOpen(false)}>
                 Not now
               </Button>
               <Button
                 variant="primary"
                 onClick={() => {
-                  setHoldingsQuery("");
-                  setSortKey("name");
-                  setSortDir("asc");
+                  setHoldingsQuery('');
+                  setSortKey('name');
+                  setSortDir('asc');
                   setRecoveryOpen(false);
                 }}
               >
@@ -1456,8 +1295,7 @@ function DashboardDemo(props: DashboardDemoProps) {
           }
         >
           <Text as="p" size="sm" tone="muted">
-            We’ll clear only the demo’s saved state and reload the default mock
-            portfolio.
+            We’ll clear only the demo’s saved state and reload the default mock portfolio.
           </Text>
         </Modal>
       </div>
@@ -1478,17 +1316,14 @@ function SortableTh(props: {
         type="button"
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2",
-          "rounded-lg px-2 py-1",
-          "hover:bg-(--ui-surface)",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg)"
+          'inline-flex items-center gap-2',
+          'rounded-lg px-2 py-1',
+          'hover:bg-(--ui-surface)',
+          'focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg) focus-visible:outline-none'
         )}
       >
         <span>{label}</span>
-        <span
-          aria-hidden="true"
-          className={cn("inline-flex", !active && "opacity-40")}
-        >
+        <span aria-hidden="true" className={cn('inline-flex', !active && 'opacity-40')}>
           <ChevronUp />
         </span>
       </button>
@@ -1496,10 +1331,7 @@ function SortableTh(props: {
   );
 }
 
-function EmptyHoldings(props: {
-  onRecover: () => void;
-  showRecovery: boolean;
-}) {
+function EmptyHoldings(props: { onRecover: () => void; showRecovery: boolean }) {
   const { onRecover, showRecovery } = props;
   return (
     <div className="rounded-2xl border border-(--ui-border) bg-(--ui-surface) p-6">

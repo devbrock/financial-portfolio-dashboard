@@ -1,6 +1,6 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { inlineStyles } from "./Inline.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { inlineStyles } from './Inline.styles';
 
 export type InlineVariants = VariantProps<typeof inlineStyles>;
 
@@ -12,5 +12,3 @@ export type InlineProps = React.HTMLAttributes<HTMLDivElement> &
      */
     asChild?: boolean;
   };
-
-

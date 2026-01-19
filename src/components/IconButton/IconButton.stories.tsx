@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { IconButton } from "./IconButton";
+import type { Meta, StoryObj } from '@storybook/react';
+import { IconButton } from './IconButton';
 
 function DotsIcon() {
   return (
@@ -12,7 +12,7 @@ function DotsIcon() {
 }
 
 const meta: Meta<typeof IconButton> = {
-  title: "Controls/IconButton",
+  title: 'Controls/IconButton',
   component: IconButton,
 };
 export default meta;
@@ -23,16 +23,10 @@ export const Variants: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
       <IconButton ariaLabel="More options" icon={<DotsIcon />} variant="ghost" />
-      <IconButton
-        ariaLabel="More options"
-        icon={<DotsIcon />}
-        variant="secondary"
-      />
+      <IconButton ariaLabel="More options" icon={<DotsIcon />} variant="secondary" />
       <div className="rounded-2xl bg-(--ui-inverse-bg) p-3">
         <IconButton ariaLabel="More options" icon={<DotsIcon />} variant="inverse" />
       </div>
     </div>
   ),
 };
-
-

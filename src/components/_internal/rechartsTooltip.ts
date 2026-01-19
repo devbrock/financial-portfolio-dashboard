@@ -1,4 +1,4 @@
-import type { ChartTooltipItem } from "../ChartTooltip/ChartTooltip.types";
+import type { ChartTooltipItem } from '../ChartTooltip/ChartTooltip.types';
 
 type RechartsPayloadEntry = {
   name?: unknown;
@@ -13,32 +13,30 @@ type RechartsPayloadEntry = {
  */
 export function rechartsPayloadToItems(
   payload: readonly unknown[],
-  fallbackSeriesName = "Series"
+  fallbackSeriesName = 'Series'
 ): ChartTooltipItem[] {
   const items: ChartTooltipItem[] = [];
 
   for (const entry of payload) {
-    if (typeof entry !== "object" || entry === null) continue;
+    if (typeof entry !== 'object' || entry === null) continue;
     const e = entry as RechartsPayloadEntry;
 
     const name =
-      typeof e.name === "string"
+      typeof e.name === 'string'
         ? e.name
-        : typeof e.dataKey === "string"
+        : typeof e.dataKey === 'string'
           ? e.dataKey
           : fallbackSeriesName;
 
     const value = e.value;
-    if (typeof value !== "number" && typeof value !== "string") continue;
+    if (typeof value !== 'number' && typeof value !== 'string') continue;
 
     items.push({
       name,
       value,
-      color: typeof e.color === "string" ? e.color : undefined,
+      color: typeof e.color === 'string' ? e.color : undefined,
     });
   }
 
   return items;
 }
-
-

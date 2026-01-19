@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Carousel } from "./Carousel";
-import { Card, CardBody } from "../Card/Card";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Carousel } from './Carousel';
+import { Card, CardBody } from '../Card/Card';
 
 const meta: Meta<typeof Carousel> = {
-  title: "Navigation/Carousel",
+  title: 'Navigation/Carousel',
   component: Carousel,
   argTypes: {
     size: {
-      control: "select",
-      options: ["sm", "md", "lg"],
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
     },
-    showArrows: { control: "boolean" },
-    showDots: { control: "boolean" },
-    autoplay: { control: "number" },
-    pauseOnHover: { control: "boolean" },
-    loop: { control: "boolean" },
-    initialSlide: { control: "number" },
+    showArrows: { control: 'boolean' },
+    showDots: { control: 'boolean' },
+    autoplay: { control: 'number' },
+    pauseOnHover: { control: 'boolean' },
+    loop: { control: 'boolean' },
+    initialSlide: { control: 'number' },
   },
   args: {
-    size: "md",
+    size: 'md',
     showArrows: true,
     showDots: true,
     loop: true,
@@ -29,13 +29,7 @@ export default meta;
 
 type Story = StoryObj<typeof Carousel>;
 
-function DemoSlide({
-  color,
-  label,
-}: {
-  color: string;
-  label: string;
-}) {
+function DemoSlide({ color, label }: { color: string; label: string }) {
   return (
     <div
       className="flex h-64 items-center justify-center rounded-xl text-2xl font-semibold text-white"
@@ -47,7 +41,7 @@ function DemoSlide({
 }
 
 export const Default: Story = {
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="Slide 1" />
       <DemoSlide color="#00aeef" label="Slide 2" />
@@ -58,34 +52,24 @@ export const Default: Story = {
 };
 
 export const WithCards: Story = {
-  render: (args) => (
+  render: args => (
     <Carousel {...args} size="lg">
       <Card tone="inverse" className="h-full">
         <CardBody className="flex h-96 flex-col items-center justify-center text-center">
           <div className="text-3xl font-semibold">Welcome</div>
-          <div className="mt-2 text-(--ui-inverse-text)/80">
-            Your executive dashboard awaits
-          </div>
+          <div className="mt-2 text-(--ui-inverse-text)/80">Your executive dashboard awaits</div>
         </CardBody>
       </Card>
       <Card tone="soft" className="h-full">
         <CardBody className="flex h-96 flex-col items-center justify-center text-center">
-          <div className="text-3xl font-semibold text-(--ui-text)">
-            Analytics
-          </div>
-          <div className="mt-2 text-(--ui-text-muted)">
-            Track your key metrics
-          </div>
+          <div className="text-3xl font-semibold text-(--ui-text)">Analytics</div>
+          <div className="mt-2 text-(--ui-text-muted)">Track your key metrics</div>
         </CardBody>
       </Card>
       <Card className="h-full">
         <CardBody className="flex h-96 flex-col items-center justify-center text-center">
-          <div className="text-3xl font-semibold text-(--ui-text)">
-            Reports
-          </div>
-          <div className="mt-2 text-(--ui-text-muted)">
-            Generate insights on demand
-          </div>
+          <div className="text-3xl font-semibold text-(--ui-text)">Reports</div>
+          <div className="mt-2 text-(--ui-text-muted)">Generate insights on demand</div>
         </CardBody>
       </Card>
     </Carousel>
@@ -96,7 +80,7 @@ export const Autoplay: Story = {
   args: {
     autoplay: 3000,
   },
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="Auto 1" />
       <DemoSlide color="#00aeef" label="Auto 2" />
@@ -109,7 +93,7 @@ export const NoLoop: Story = {
   args: {
     loop: false,
   },
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="First" />
       <DemoSlide color="#00aeef" label="Middle" />
@@ -123,7 +107,7 @@ export const DotsOnly: Story = {
     showArrows: false,
     showDots: true,
   },
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="Slide 1" />
       <DemoSlide color="#00aeef" label="Slide 2" />
@@ -137,7 +121,7 @@ export const ArrowsOnly: Story = {
     showArrows: true,
     showDots: false,
   },
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="Slide 1" />
       <DemoSlide color="#00aeef" label="Slide 2" />
@@ -150,27 +134,21 @@ export const Sizes: Story = {
   render: () => (
     <div className="space-y-8">
       <div>
-        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">
-          Small
-        </div>
+        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">Small</div>
         <Carousel size="sm">
           <DemoSlide color="#081639" label="Small" />
           <DemoSlide color="#00aeef" label="Carousel" />
         </Carousel>
       </div>
       <div>
-        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">
-          Medium (default)
-        </div>
+        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">Medium (default)</div>
         <Carousel size="md">
           <DemoSlide color="#081639" label="Medium" />
           <DemoSlide color="#00aeef" label="Carousel" />
         </Carousel>
       </div>
       <div>
-        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">
-          Large
-        </div>
+        <div className="mb-2 text-sm font-semibold text-(--ui-text-muted)">Large</div>
         <Carousel size="lg">
           <DemoSlide color="#081639" label="Large" />
           <DemoSlide color="#00aeef" label="Carousel" />
@@ -181,7 +159,7 @@ export const Sizes: Story = {
 };
 
 export const SingleSlide: Story = {
-  render: (args) => (
+  render: args => (
     <Carousel {...args}>
       <DemoSlide color="#081639" label="Only One Slide" />
     </Carousel>

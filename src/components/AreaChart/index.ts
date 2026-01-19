@@ -1,4 +1,2 @@
-export * from "./AreaChart";
-export type * from "./AreaChart.types";
-
-
+export * from './AreaChart';
+export type * from './AreaChart.types';

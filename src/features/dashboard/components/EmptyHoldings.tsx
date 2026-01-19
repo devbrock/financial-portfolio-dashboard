@@ -1,5 +1,5 @@
-import { Button, Stack, Text } from "@components";
-import { cn } from "@/utils/cn";
+import { Button, Stack, Text } from '@components';
+import { cn } from '@/utils/cn';
 
 type EmptyHoldingsProps = {
   onAddHolding: () => void;
@@ -9,11 +9,7 @@ export function EmptyHoldings(props: EmptyHoldingsProps) {
   const { onAddHolding } = props;
 
   return (
-    <div
-      className={cn(
-        "rounded-2xl border border-(--ui-border) bg-(--ui-surface) p-6"
-      )}
-    >
+    <div className={cn('rounded-2xl border border-(--ui-border) bg-(--ui-surface) p-6')}>
       <Stack gap="md">
         <div>
           <Text as="div" className="font-semibold">

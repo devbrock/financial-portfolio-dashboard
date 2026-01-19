@@ -1,6 +1,6 @@
-import { cn } from "@utils/cn";
-import type { BadgeProps } from "./Badge.types";
-import { badgeStyles } from "./Badge.styles";
+import { cn } from '@utils/cn';
+import type { BadgeProps } from './Badge.types';
+import { badgeStyles } from './Badge.styles';
 
 /**
  * Badge

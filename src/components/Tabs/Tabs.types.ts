@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type TabsProps = {
   /**
@@ -23,7 +23,7 @@ export type TabsListProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type TabsTriggerProps = Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "value" | "type"
+  'value' | 'type'
 > & {
   value: string;
   disabled?: boolean;
@@ -32,5 +32,3 @@ export type TabsTriggerProps = Omit<
 export type TabsContentProps = React.HTMLAttributes<HTMLDivElement> & {
   value: string;
 };
-
-

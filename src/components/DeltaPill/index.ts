@@ -1,4 +1,2 @@
-export * from "./DeltaPill";
-export type * from "./DeltaPill.types";
-
-
+export * from './DeltaPill';
+export type * from './DeltaPill.types';

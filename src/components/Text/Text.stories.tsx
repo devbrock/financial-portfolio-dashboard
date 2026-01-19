@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Text } from "./Text";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Text } from './Text';
 
 const meta: Meta<typeof Text> = {
-  title: "Primitives/Text",
+  title: 'Primitives/Text',
   component: Text,
 };
 export default meta;
@@ -31,5 +31,3 @@ export const Tones: Story = {
     </div>
   ),
 };
-
-

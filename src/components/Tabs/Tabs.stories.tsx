@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
-import { Card, CardBody } from "../Card/Card";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
+import { Card, CardBody } from '../Card/Card';
 
 const meta: Meta<typeof Tabs> = {
-  title: "Navigation/Tabs",
+  title: 'Navigation/Tabs',
   component: Tabs,
 };
 export default meta;
@@ -39,5 +39,3 @@ export const Default: Story = {
     </div>
   ),
 };
-
-

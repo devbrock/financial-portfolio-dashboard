@@ -1,7 +1,7 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@utils/cn";
-import type { ContainerProps } from "./Container.types";
-import { containerStyles } from "./Container.styles";
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@utils/cn';
+import type { ContainerProps } from './Container.types';
+import { containerStyles } from './Container.styles';
 
 /**
  * Container
@@ -9,7 +9,7 @@ import { containerStyles } from "./Container.styles";
  */
 export function Container(props: ContainerProps) {
   const { asChild, className, ...rest } = props;
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot : 'div';
 
   return <Comp className={cn(containerStyles(), className)} {...rest} />;
 }

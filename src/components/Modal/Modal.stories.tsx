@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import * as React from "react";
-import { Modal } from "./Modal";
-import { Button } from "../Button/Button";
+import type { Meta, StoryObj } from '@storybook/react';
+import * as React from 'react';
+import { Modal } from './Modal';
+import { Button } from '../Button/Button';
 
 const meta: Meta<typeof Modal> = {
-  title: "Navigation/Modal",
+  title: 'Navigation/Modal',
   component: Modal,
 };
 export default meta;
@@ -30,9 +30,7 @@ function DefaultExample() {
           </>
         }
       >
-        <div className="text-sm text-(--ui-text)">
-          Modal body content goes here.
-        </div>
+        <div className="text-sm text-(--ui-text)">Modal body content goes here.</div>
       </Modal>
     </div>
   );
@@ -41,5 +39,3 @@ function DefaultExample() {
 export const Default: Story = {
   render: () => <DefaultExample />,
 };
-
-

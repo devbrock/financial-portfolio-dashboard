@@ -1,6 +1,6 @@
-import type { AlphaVantageTimeSeriesDaily } from "./alphaVantage";
+import type { AlphaVantageTimeSeriesDaily } from './alphaVantage';
 
-export type AssetType = "stock" | "crypto";
+export type AssetType = 'stock' | 'crypto';
 
 export type Holding = {
   id: string;
@@ -19,12 +19,12 @@ export type WatchlistItem = {
 };
 
 export type UserPreferences = {
-  theme: "light" | "dark";
-  currency: "USD";
-  chartRange: "7d" | "30d" | "90d" | "1y";
+  theme: 'light' | 'dark';
+  currency: 'USD';
+  chartRange: '7d' | '30d' | '90d' | '1y';
   sortPreference: {
     key: string;
-    direction: "asc" | "desc";
+    direction: 'asc' | 'desc';
   };
 };
 
@@ -72,6 +72,6 @@ export type PortfolioMetrics = {
 
 export type HistoricalStockCacheEntry = {
   data: AlphaVantageTimeSeriesDaily;
-  outputsize: "compact" | "full";
+  outputsize: 'compact' | 'full';
   fetchedAt: number;
 };

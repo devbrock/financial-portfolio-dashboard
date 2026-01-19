@@ -22,12 +22,12 @@ export type PerformancePoint = {
 };
 
 export type AllocationSlice = {
-  name: "ETFs" | "Stocks" | "Bonds" | "Crypto";
+  name: 'ETFs' | 'Stocks' | 'Bonds' | 'Crypto';
   value: number;
   color: string;
 };
 
-export type HoldingStatus = "active" | "pending";
+export type HoldingStatus = 'active' | 'pending';
 
 export type HoldingRow = {
   id: string;
@@ -44,13 +44,13 @@ export type HoldingRow = {
 };
 
 export type SortKey =
-  | "name"
-  | "date"
-  | "volume"
-  | "changePct"
-  | "purchasePrice"
-  | "priceUsd"
-  | "pnlUsd"
-  | "status";
+  | 'name'
+  | 'date'
+  | 'volume'
+  | 'changePct'
+  | 'purchasePrice'
+  | 'priceUsd'
+  | 'pnlUsd'
+  | 'status';
 
-export type SortDir = "asc" | "desc";
+export type SortDir = 'asc' | 'desc';

@@ -1,4 +1,2 @@
-export * from "./Inline";
-export type * from "./Inline.types";
-
-
+export * from './Inline';
+export type * from './Inline.types';

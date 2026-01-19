@@ -1,4 +1,2 @@
-export * from "./RadarChart";
-export type * from "./RadarChart.types";
-
-
+export * from './RadarChart';
+export type * from './RadarChart.types';

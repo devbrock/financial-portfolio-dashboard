@@ -1,5 +1,3 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type SkeletonProps = React.HTMLAttributes<HTMLDivElement>;
-
-

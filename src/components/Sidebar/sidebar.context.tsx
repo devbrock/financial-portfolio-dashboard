@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import * as React from "react";
-import { useControllableState } from "../_internal/useControllableState";
-import type { SidebarProviderProps } from "./sidebar.types";
+import * as React from 'react';
+import { useControllableState } from '../_internal/useControllableState';
+import type { SidebarProviderProps } from './sidebar.types';
 
 type SidebarContextValue = {
   open: boolean;
@@ -14,7 +14,7 @@ const SidebarContext = React.createContext<SidebarContextValue | null>(null);
 export function useSidebar(): SidebarContextValue {
   const ctx = React.useContext(SidebarContext);
   if (!ctx) {
-    throw new Error("useSidebar must be used within a SidebarProvider.");
+    throw new Error('useSidebar must be used within a SidebarProvider.');
   }
   return ctx;
 }
@@ -41,5 +41,3 @@ export function SidebarProvider(props: SidebarProviderProps) {
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
 }
-
-

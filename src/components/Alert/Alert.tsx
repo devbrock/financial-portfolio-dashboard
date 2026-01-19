@@ -1,6 +1,6 @@
-import { cn } from "@utils/cn";
-import type { AlertProps } from "./Alert.types";
-import { alertStyles } from "./Alert.styles";
+import { cn } from '@utils/cn';
+import type { AlertProps } from './Alert.types';
+import { alertStyles } from './Alert.styles';
 
 /**
  * Alert
@@ -11,14 +11,8 @@ import { alertStyles } from "./Alert.styles";
  * - Use `role="alert"` for danger when immediate attention required.
  */
 export function Alert(props: AlertProps) {
-  const { tone = "info", className, ...rest } = props;
-  const role = tone === "danger" ? "alert" : "status";
+  const { tone = 'info', className, ...rest } = props;
+  const role = tone === 'danger' ? 'alert' : 'status';
 
-  return (
-    <div
-      role={role}
-      className={cn(alertStyles({ tone }), className)}
-      {...rest}
-    />
-  );
+  return <div role={role} className={cn(alertStyles({ tone }), className)} {...rest} />;
 }

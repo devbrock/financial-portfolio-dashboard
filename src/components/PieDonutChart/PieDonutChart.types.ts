@@ -1,5 +1,5 @@
-import type * as React from "react";
-import type { DatumKey } from "../_internal/charts";
+import type * as React from 'react';
+import type { DatumKey } from '../_internal/charts';
 
 export type PieDonutChartProps<TDatum extends Record<string, unknown>> = {
   /**
@@ -23,7 +23,7 @@ export type PieDonutChartProps<TDatum extends Record<string, unknown>> = {
    * Chart variant.
    * @defaultValue "donut"
    */
-  variant?: "pie" | "donut";
+  variant?: 'pie' | 'donut';
   /**
    * Inner radius (overrides default donut radius when variant="donut").
    */
@@ -43,5 +43,3 @@ export type PieDonutChartProps<TDatum extends Record<string, unknown>> = {
   tooltipValueFormatter?: (value: string | number) => React.ReactNode;
   className?: string;
 };
-
-

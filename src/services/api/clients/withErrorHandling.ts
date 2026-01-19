@@ -1,15 +1,11 @@
-import type {
-  AxiosError,
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-} from "axios";
-import { ApiError, getUserFacingMessage } from "./apiError";
-import { toast } from "sonner";
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { ApiError, getUserFacingMessage } from './apiError';
+import { toast } from 'sonner';
 import {
   calculateBackoffDelay,
   defaultRateLimitConfig,
   isRateLimitError,
-} from "@/utils/rateLimitHandler";
+} from '@/utils/rateLimitHandler';
 
 type RetryConfig = InternalAxiosRequestConfig & { __retryCount?: number };
 
@@ -18,7 +14,7 @@ const BASE_DELAY_MS = 500;
 const RATE_LIMIT_TOAST_COOLDOWN_MS = 10000;
 let lastRateLimitToastAt = 0;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const parseRetryAfter = (value: string | undefined) => {
   if (!value) return null;
@@ -33,8 +29,7 @@ const parseRetryAfter = (value: string | undefined) => {
   return null;
 };
 
-const isNetworkError = (error: AxiosError) =>
-  !error.response && error.code !== "ECONNABORTED";
+const isNetworkError = (error: AxiosError) => !error.response && error.code !== 'ECONNABORTED';
 
 const shouldRetry = (error: AxiosError) => {
   const status = error.response?.status;
@@ -44,9 +39,7 @@ const shouldRetry = (error: AxiosError) => {
 };
 
 const getRetryDelay = (error: AxiosError, retryCount: number) => {
-  const retryAfter = parseRetryAfter(
-    error.response?.headers?.["retry-after"]
-  );
+  const retryAfter = parseRetryAfter(error.response?.headers?.['retry-after']);
   if (retryAfter !== null) {
     return retryAfter;
   }
@@ -62,12 +55,9 @@ const toApiError = (error: AxiosError) => {
   return new ApiError(userMessage, status);
 };
 
-export const applyApiErrorHandling = (
-  client: AxiosInstance,
-  apiName?: string
-) => {
+export const applyApiErrorHandling = (client: AxiosInstance, apiName?: string) => {
   client.interceptors.response.use(
-    (response) => response,
+    response => response,
     async (error: AxiosError) => {
       const config = error.config as RetryConfig | undefined;
       if (!config || !shouldRetry(error)) {
@@ -85,10 +75,8 @@ export const applyApiErrorHandling = (
         const now = Date.now();
         if (now - lastRateLimitToastAt > RATE_LIMIT_TOAST_COOLDOWN_MS) {
           lastRateLimitToastAt = now;
-          if (typeof window !== "undefined") {
-            toast.warning(
-              `${apiName ?? "API"} rate limited. Retrying shortly...`
-            );
+          if (typeof window !== 'undefined') {
+            toast.warning(`${apiName ?? 'API'} rate limited. Retrying shortly...`);
           }
         }
       }

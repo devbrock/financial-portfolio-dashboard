@@ -11,12 +11,12 @@ import {
   IconButton,
   Inline,
   Text,
-} from "@components";
-import { EllipsisVertical } from "lucide-react";
-import { cn } from "@/utils/cn";
-import type { HoldingRow } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatSignedPct } from "@utils/formatSignedPct";
+} from '@components';
+import { EllipsisVertical } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import type { HoldingRow } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatSignedPct } from '@utils/formatSignedPct';
 
 type HoldingsMobileCardProps = {
   holding: HoldingRow;
@@ -30,9 +30,8 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
   return (
     <Card
       className={cn(
-        "p-4",
-        flash &&
-          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+        'p-4',
+        flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
     >
       <CardBody className="space-y-3">
@@ -41,20 +40,14 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
             <span
               aria-hidden="true"
               className={cn(
-                "grid h-10 w-10 place-items-center rounded-2xl bg-(--ui-surface-2)",
-                holding.logo && "overflow-hidden"
+                'grid h-10 w-10 place-items-center rounded-2xl bg-(--ui-surface-2)',
+                holding.logo && 'overflow-hidden'
               )}
             >
               {holding.logo ? (
-                <img
-                  src={holding.logo}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
+                <img src={holding.logo} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="text-sm font-semibold">
-                  {holding.name.slice(0, 1)}
-                </span>
+                <span className="text-sm font-semibold">{holding.name.slice(0, 1)}</span>
               )}
             </span>
             <div className="min-w-0">
@@ -78,39 +71,23 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className={cn(
-                "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
               )}
             >
-              <DropdownMenuItem onClick={() => undefined}>
-                View details
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>View details</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onRemove(holding.id)}>
-                Remove…
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onRemove(holding.id)}>Remove…</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </Inline>
 
         <Inline wrap gap="sm" className="gap-2">
-          <Badge tone={holding.status === "active" ? "success" : "warning"}>
-            {holding.status === "active" ? "Active" : "Pending"}
+          <Badge tone={holding.status === 'active' ? 'success' : 'warning'}>
+            {holding.status === 'active' ? 'Active' : 'Pending'}
           </Badge>
           <DeltaPill
-            direction={
-              holding.changePct > 0
-                ? "up"
-                : holding.changePct < 0
-                  ? "down"
-                  : "flat"
-            }
-            tone={
-              holding.changePct > 0
-                ? "success"
-                : holding.changePct < 0
-                  ? "danger"
-                  : "neutral"
-            }
+            direction={holding.changePct > 0 ? 'up' : holding.changePct < 0 ? 'down' : 'flat'}
+            tone={holding.changePct > 0 ? 'success' : holding.changePct < 0 ? 'danger' : 'neutral'}
           >
             {formatSignedPct(holding.changePct)}
           </DeltaPill>
@@ -139,11 +116,11 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
           <Text
             as="div"
             className={cn(
-              "font-semibold",
-              holding.pnlUsd >= 0 ? "text-emerald-700" : "text-red-700"
+              'font-semibold',
+              holding.pnlUsd >= 0 ? 'text-emerald-700' : 'text-red-700'
             )}
           >
-            {holding.pnlUsd >= 0 ? "+" : ""}
+            {holding.pnlUsd >= 0 ? '+' : ''}
             {formatMoneyUsd(holding.pnlUsd)}
           </Text>
         </Inline>

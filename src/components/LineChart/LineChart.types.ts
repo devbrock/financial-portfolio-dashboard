@@ -1,5 +1,5 @@
-import type * as React from "react";
-import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from "../_internal/charts";
+import type * as React from 'react';
+import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from '../_internal/charts';
 
 export type LineChartProps<TDatum extends Record<string, unknown>> = {
   /**
@@ -50,5 +50,3 @@ export type LineChartProps<TDatum extends Record<string, unknown>> = {
    */
   className?: string;
 };
-
-

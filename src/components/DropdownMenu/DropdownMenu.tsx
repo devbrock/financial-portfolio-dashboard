@@ -1,20 +1,20 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@utils/cn";
-import { Portal } from "../_internal/portal";
-import { getFocusableElements, isEventInside } from "../_internal/dom";
-import { useControllableState } from "../_internal/useControllableState";
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@utils/cn';
+import { Portal } from '../_internal/portal';
+import { getFocusableElements, isEventInside } from '../_internal/dom';
+import { useControllableState } from '../_internal/useControllableState';
 import type {
   DropdownMenuContentProps,
   DropdownMenuItemProps,
   DropdownMenuProps,
   DropdownMenuTriggerProps,
-} from "./DropdownMenu.types";
+} from './DropdownMenu.types';
 import {
   dropdownMenuContentClassName,
   dropdownMenuItemClassName,
   dropdownMenuSeparatorClassName,
-} from "./DropdownMenu.styles";
+} from './DropdownMenu.styles';
 
 type DropdownMenuContextValue = {
   open: boolean;
@@ -24,15 +24,11 @@ type DropdownMenuContextValue = {
   contentRef: React.RefObject<HTMLDivElement | null>;
 };
 
-const DropdownMenuContext =
-  React.createContext<DropdownMenuContextValue | null>(null);
+const DropdownMenuContext = React.createContext<DropdownMenuContextValue | null>(null);
 
 function useDropdownMenuContext() {
   const ctx = React.useContext(DropdownMenuContext);
-  if (!ctx)
-    throw new Error(
-      "DropdownMenu components must be used within <DropdownMenu>."
-    );
+  if (!ctx) throw new Error('DropdownMenu components must be used within <DropdownMenu>.');
   return ctx;
 }
 
@@ -64,13 +60,12 @@ export function DropdownMenu(props: DropdownMenuProps) {
       const trigger = triggerAnchorRef.current;
       const content = contentRef.current;
       if (!trigger || !content) return;
-      if (isEventInside(content, target) || isEventInside(trigger, target))
-        return;
+      if (isEventInside(content, target) || isEventInside(trigger, target)) return;
       setIsOpen(false);
     };
 
-    document.addEventListener("mousedown", onMouseDown);
-    return () => document.removeEventListener("mousedown", onMouseDown);
+    document.addEventListener('mousedown', onMouseDown);
+    return () => document.removeEventListener('mousedown', onMouseDown);
   }, [isOpen, setIsOpen]);
 
   React.useEffect(() => {
@@ -89,25 +84,21 @@ export function DropdownMenu(props: DropdownMenuProps) {
     [isOpen, setIsOpen]
   );
 
-  return (
-    <DropdownMenuContext.Provider value={ctx}>
-      {children}
-    </DropdownMenuContext.Provider>
-  );
+  return <DropdownMenuContext.Provider value={ctx}>{children}</DropdownMenuContext.Provider>;
 }
 
 export function DropdownMenuTrigger(props: DropdownMenuTriggerProps) {
   const { asChild, children } = props;
   const ctx = useDropdownMenuContext();
-  const Comp = asChild ? Slot : "button";
+  const Comp = asChild ? Slot : 'button';
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     // eslint-disable-next-line react-hooks/immutability
     ctx.triggerElRef.current = e.currentTarget as HTMLElement;
     switch (e.key) {
-      case "Enter":
-      case " ":
-      case "ArrowDown":
+      case 'Enter':
+      case ' ':
+      case 'ArrowDown':
         e.preventDefault();
         ctx.setOpen(true);
         break;
@@ -122,12 +113,7 @@ export function DropdownMenuTrigger(props: DropdownMenuTriggerProps) {
 
   return (
     <span ref={ctx.triggerAnchorRef} className="inline-flex">
-      <Comp
-        onKeyDown={onKeyDown}
-        onClick={onClick}
-        aria-haspopup="menu"
-        aria-expanded={ctx.open}
-      >
+      <Comp onKeyDown={onKeyDown} onClick={onClick} aria-haspopup="menu" aria-expanded={ctx.open}>
         {children}
       </Comp>
     </span>
@@ -164,11 +150,11 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
       const rect = trigger.getBoundingClientRect();
       setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width });
     };
-    window.addEventListener("scroll", onReflow, true);
-    window.addEventListener("resize", onReflow);
+    window.addEventListener('scroll', onReflow, true);
+    window.addEventListener('resize', onReflow);
     return () => {
-      window.removeEventListener("scroll", onReflow, true);
-      window.removeEventListener("resize", onReflow);
+      window.removeEventListener('scroll', onReflow, true);
+      window.removeEventListener('resize', onReflow);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -193,31 +179,31 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
         aria-orientation="vertical"
         className={cn(dropdownMenuContentClassName, className)}
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: pos.top,
           left: pos.left,
           minWidth: minWidth ?? undefined,
           ...style,
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") {
+        onKeyDown={e => {
+          if (e.key === 'Escape') {
             e.preventDefault();
             setOpen(false);
             return;
           }
-          if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+          if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
 
           e.preventDefault();
           const content = contentRef.current;
           if (!content) return;
           const focusables = getFocusableElements(content);
           const current = document.activeElement;
-          const idx = focusables.findIndex((el) => el === current);
+          const idx = focusables.findIndex(el => el === current);
           if (idx === -1) {
             focusables[0]?.focus();
             return;
           }
-          const dir = e.key === "ArrowDown" ? 1 : -1;
+          const dir = e.key === 'ArrowDown' ? 1 : -1;
           const next = (idx + dir + focusables.length) % focusables.length;
           focusables[next]?.focus();
         }}
@@ -235,8 +221,8 @@ export function DropdownMenuItem(props: DropdownMenuItemProps) {
     <button
       type="button"
       role="menuitem"
-      className={cn(dropdownMenuItemClassName, inset && "pl-8", className)}
-      onClick={(e) => {
+      className={cn(dropdownMenuItemClassName, inset && 'pl-8', className)}
+      onClick={e => {
         onClick?.(e);
         if (e.defaultPrevented) return;
         ctx.setOpen(false);
@@ -246,15 +232,9 @@ export function DropdownMenuItem(props: DropdownMenuItemProps) {
   );
 }
 
-export function DropdownMenuSeparator(
-  props: React.HTMLAttributes<HTMLDivElement>
-) {
+export function DropdownMenuSeparator(props: React.HTMLAttributes<HTMLDivElement>) {
   const { className, ...rest } = props;
   return (
-    <div
-      role="separator"
-      className={cn(dropdownMenuSeparatorClassName, className)}
-      {...rest}
-    />
+    <div role="separator" className={cn(dropdownMenuSeparatorClassName, className)} {...rest} />
   );
 }

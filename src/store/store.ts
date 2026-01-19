@@ -1,4 +1,4 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -8,18 +8,18 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
-import portfolioReducer from "@/features/portfolio/portfolioSlice";
-import { safeStorage } from "@/store/safeStorage";
+} from 'redux-persist';
+import portfolioReducer from '@/features/portfolio/portfolioSlice';
+import { safeStorage } from '@/store/safeStorage';
 
 /**
  * Redux Persist configuration
  */
 const persistConfig = {
-  key: "root",
+  key: 'root',
   version: 1,
   storage: safeStorage,
-  whitelist: ["portfolio"], // Only persist portfolio state
+  whitelist: ['portfolio'], // Only persist portfolio state
 };
 
 /**
@@ -39,7 +39,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
  */
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore Redux Persist actions

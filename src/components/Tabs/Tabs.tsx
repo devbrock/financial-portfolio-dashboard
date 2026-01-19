@@ -1,17 +1,8 @@
-import * as React from "react";
-import { cn } from "@utils/cn";
-import { useControllableState } from "../_internal/useControllableState";
-import type {
-  TabsContentProps,
-  TabsListProps,
-  TabsProps,
-  TabsTriggerProps,
-} from "./Tabs.types";
-import {
-  tabsListClassName,
-  tabsTriggerActiveClassName,
-  tabsTriggerClassName,
-} from "./Tabs.styles";
+import * as React from 'react';
+import { cn } from '@utils/cn';
+import { useControllableState } from '../_internal/useControllableState';
+import type { TabsContentProps, TabsListProps, TabsProps, TabsTriggerProps } from './Tabs.types';
+import { tabsListClassName, tabsTriggerActiveClassName, tabsTriggerClassName } from './Tabs.styles';
 
 type RegisteredTab = {
   value: string;
@@ -34,7 +25,7 @@ const TabsContext = React.createContext<TabsContextValue | null>(null);
 
 function useTabsContext() {
   const ctx = React.useContext(TabsContext);
-  if (!ctx) throw new Error("Tabs components must be used within <Tabs>.");
+  if (!ctx) throw new Error('Tabs components must be used within <Tabs>.');
   return ctx;
 }
 
@@ -53,7 +44,7 @@ export function Tabs(props: TabsProps) {
   const tabsRef = React.useRef<RegisteredTab[]>([]);
 
   const register = React.useCallback((tab: RegisteredTab) => {
-    const idx = tabsRef.current.findIndex((t) => t.value === tab.value);
+    const idx = tabsRef.current.findIndex(t => t.value === tab.value);
     if (idx === -1) {
       tabsRef.current = [...tabsRef.current, tab];
       return;
@@ -62,11 +53,11 @@ export function Tabs(props: TabsProps) {
   }, []);
 
   const unregister = React.useCallback((tabValue: string) => {
-    tabsRef.current = tabsRef.current.filter((t) => t.value !== tabValue);
+    tabsRef.current = tabsRef.current.filter(t => t.value !== tabValue);
   }, []);
 
   const getTab = React.useCallback(
-    (tabValue: string) => tabsRef.current.find((t) => t.value === tabValue),
+    (tabValue: string) => tabsRef.current.find(t => t.value === tabValue),
     []
   );
 
@@ -89,24 +80,11 @@ export function Tabs(props: TabsProps) {
 
 export function TabsList(props: TabsListProps) {
   const { className, ...rest } = props;
-  return (
-    <div
-      role="tablist"
-      className={cn(tabsListClassName, className)}
-      {...rest}
-    />
-  );
+  return <div role="tablist" className={cn(tabsListClassName, className)} {...rest} />;
 }
 
 export function TabsTrigger(props: TabsTriggerProps) {
-  const {
-    value,
-    className,
-    disabled = false,
-    onKeyDown,
-    onClick,
-    ...rest
-  } = props;
+  const { value, className, disabled = false, onKeyDown, onClick, ...rest } = props;
   const ctx = useTabsContext();
   const ref = React.useRef<HTMLButtonElement | null>(null);
   const reactId = React.useId();
@@ -122,9 +100,9 @@ export function TabsTrigger(props: TabsTriggerProps) {
   }, [ctx, disabled, id, panelId, value]);
 
   const focusNext = (dir: 1 | -1) => {
-    const tabs = ctx.getTabs().filter((t) => !t.disabled);
+    const tabs = ctx.getTabs().filter(t => !t.disabled);
 
-    const idx = tabs.findIndex((t) => t.value === value);
+    const idx = tabs.findIndex(t => t.value === value);
     if (idx === -1 || tabs.length === 0) return;
     const next = tabs[(idx + dir + tabs.length) % tabs.length];
     next?.ref.current?.focus();
@@ -135,18 +113,18 @@ export function TabsTrigger(props: TabsTriggerProps) {
     if (e.defaultPrevented) return;
 
     switch (e.key) {
-      case "ArrowRight":
-      case "ArrowDown":
+      case 'ArrowRight':
+      case 'ArrowDown':
         e.preventDefault();
         focusNext(1);
         break;
-      case "ArrowLeft":
-      case "ArrowUp":
+      case 'ArrowLeft':
+      case 'ArrowUp':
         e.preventDefault();
         focusNext(-1);
         break;
-      case "Enter":
-      case " ":
+      case 'Enter':
+      case ' ':
         e.preventDefault();
         if (!disabled) ctx.setValue(value);
         break;
@@ -169,11 +147,7 @@ export function TabsTrigger(props: TabsTriggerProps) {
       aria-controls={panelId}
       tabIndex={selected ? 0 : -1}
       disabled={disabled}
-      className={cn(
-        tabsTriggerClassName,
-        selected && tabsTriggerActiveClassName,
-        className
-      )}
+      className={cn(tabsTriggerClassName, selected && tabsTriggerActiveClassName, className)}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       {...rest}

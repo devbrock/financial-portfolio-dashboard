@@ -14,14 +14,14 @@ import {
   TableHeadCell,
   TableRow,
   Text,
-} from "@components";
-import { ChevronUp, EllipsisVertical } from "lucide-react";
-import { cn } from "@/utils/cn";
-import type { HoldingRow, SortKey, SortDir } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatCompact } from "@utils/formatCompact";
-import { formatSignedPct } from "@utils/formatSignedPct";
-import { ariasort } from "@utils/ariasort";
+} from '@components';
+import { ChevronUp, EllipsisVertical } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import type { HoldingRow, SortKey, SortDir } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatCompact } from '@utils/formatCompact';
+import { formatSignedPct } from '@utils/formatSignedPct';
+import { ariasort } from '@utils/ariasort';
 
 type HoldingsTableProps = {
   holdings: readonly HoldingRow[];
@@ -41,45 +41,45 @@ export function HoldingsTable(props: HoldingsTableProps) {
         <TableRow>
           <SortableTh
             label="Name"
-            active={sortKey === "name"}
-            dir={sortKey === "name" ? sortDir : null}
-            onClick={() => onSort("name")}
+            active={sortKey === 'name'}
+            dir={sortKey === 'name' ? sortDir : null}
+            onClick={() => onSort('name')}
           />
           <SortableTh
             label="Purchase Date"
-            active={sortKey === "date"}
-            dir={sortKey === "date" ? sortDir : null}
-            onClick={() => onSort("date")}
+            active={sortKey === 'date'}
+            dir={sortKey === 'date' ? sortDir : null}
+            onClick={() => onSort('date')}
           />
           <SortableTh
             label="Volume"
-            active={sortKey === "volume"}
-            dir={sortKey === "volume" ? sortDir : null}
-            onClick={() => onSort("volume")}
+            active={sortKey === 'volume'}
+            dir={sortKey === 'volume' ? sortDir : null}
+            onClick={() => onSort('volume')}
           />
           <SortableTh
             label="Change"
-            active={sortKey === "changePct"}
-            dir={sortKey === "changePct" ? sortDir : null}
-            onClick={() => onSort("changePct")}
+            active={sortKey === 'changePct'}
+            dir={sortKey === 'changePct' ? sortDir : null}
+            onClick={() => onSort('changePct')}
           />
           <SortableTh
             label="Purchase Price"
-            active={sortKey === "purchasePrice"}
-            dir={sortKey === "purchasePrice" ? sortDir : null}
-            onClick={() => onSort("purchasePrice")}
+            active={sortKey === 'purchasePrice'}
+            dir={sortKey === 'purchasePrice' ? sortDir : null}
+            onClick={() => onSort('purchasePrice')}
           />
           <SortableTh
             label="Current Price"
-            active={sortKey === "priceUsd"}
-            dir={sortKey === "priceUsd" ? sortDir : null}
-            onClick={() => onSort("priceUsd")}
+            active={sortKey === 'priceUsd'}
+            dir={sortKey === 'priceUsd' ? sortDir : null}
+            onClick={() => onSort('priceUsd')}
           />
           <SortableTh
             label="Profit/Loss"
-            active={sortKey === "pnlUsd"}
-            dir={sortKey === "pnlUsd" ? sortDir : null}
-            onClick={() => onSort("pnlUsd")}
+            active={sortKey === 'pnlUsd'}
+            dir={sortKey === 'pnlUsd' ? sortDir : null}
+            onClick={() => onSort('pnlUsd')}
           />
           <TableHeadCell className="w-12">
             <span className="sr-only">Actions</span>
@@ -87,33 +87,25 @@ export function HoldingsTable(props: HoldingsTableProps) {
         </TableRow>
       </TableHead>
       <TableBody>
-        {holdings.map((h) => (
+        {holdings.map(h => (
           <TableRow
             key={h.id}
             hover
-            className={cn(
-              flash && "bg-emerald-50/60 transition-colors duration-700"
-            )}
+            className={cn(flash && 'bg-emerald-50/60 transition-colors duration-700')}
           >
             <TableCell>
               <Inline align="center" className="gap-3">
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)",
-                    h.logo && "overflow-hidden"
+                    'grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)',
+                    h.logo && 'overflow-hidden'
                   )}
                 >
                   {h.logo ? (
-                    <img
-                      src={h.logo}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={h.logo} alt="" className="h-full w-full object-cover" />
                   ) : (
-                    <span className="text-sm font-semibold">
-                      {h.name.slice(0, 1)}
-                    </span>
+                    <span className="text-sm font-semibold">{h.name.slice(0, 1)}</span>
                   )}
                 </span>
                 <div className="min-w-0">
@@ -130,16 +122,8 @@ export function HoldingsTable(props: HoldingsTableProps) {
             <TableCell>{formatCompact(h.volume)}</TableCell>
             <TableCell>
               <DeltaPill
-                direction={
-                  h.changePct > 0 ? "up" : h.changePct < 0 ? "down" : "flat"
-                }
-                tone={
-                  h.changePct > 0
-                    ? "success"
-                    : h.changePct < 0
-                      ? "danger"
-                      : "neutral"
-                }
+                direction={h.changePct > 0 ? 'up' : h.changePct < 0 ? 'down' : 'flat'}
+                tone={h.changePct > 0 ? 'success' : h.changePct < 0 ? 'danger' : 'neutral'}
               >
                 {formatSignedPct(h.changePct)}
               </DeltaPill>
@@ -149,12 +133,9 @@ export function HoldingsTable(props: HoldingsTableProps) {
             <TableCell>
               <Text
                 as="span"
-                className={cn(
-                  "font-semibold",
-                  h.pnlUsd >= 0 ? "text-emerald-700" : "text-red-700"
-                )}
+                className={cn('font-semibold', h.pnlUsd >= 0 ? 'text-emerald-700' : 'text-red-700')}
               >
-                {h.pnlUsd >= 0 ? "+" : ""}
+                {h.pnlUsd >= 0 ? '+' : ''}
                 {formatMoneyUsd(h.pnlUsd)}
               </Text>
             </TableCell>
@@ -170,16 +151,12 @@ export function HoldingsTable(props: HoldingsTableProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   className={cn(
-                    "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                    'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                   )}
                 >
-                  <DropdownMenuItem onClick={() => undefined}>
-                    View details
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => undefined}>View details</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => onRemove(h.id)}>
-                    Remove…
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onRemove(h.id)}>Remove…</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
@@ -203,17 +180,14 @@ function SortableTh(props: {
         type="button"
         onClick={onClick}
         className={cn(
-          "inline-flex items-center gap-2",
-          "rounded-lg px-2 py-1",
-          "hover:bg-(--ui-surface)",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg)"
+          'inline-flex items-center gap-2',
+          'rounded-lg px-2 py-1',
+          'hover:bg-(--ui-surface)',
+          'focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg) focus-visible:outline-none'
         )}
       >
         <span>{label}</span>
-        <span
-          aria-hidden="true"
-          className={cn("inline-flex", !active && "opacity-40")}
-        >
+        <span aria-hidden="true" className={cn('inline-flex', !active && 'opacity-40')}>
           <ChevronUp />
         </span>
       </button>

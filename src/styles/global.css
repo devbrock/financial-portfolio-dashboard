@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
-@import "tailwindcss";
-@import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @theme {
   --color-brand-dark: #081639;
@@ -10,8 +10,8 @@
   --color-brand-gray: #8696a2;
   --color-brand-light-blue: #c1dcee;
 
-  --font-brand: "Bricolage Grotesque";
-  --font-brand-secondary: "Plus Jakarta Sans";
+  --font-brand: 'Bricolage Grotesque';
+  --font-brand-secondary: 'Plus Jakarta Sans';
 }
 
 /**

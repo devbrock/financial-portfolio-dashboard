@@ -1,4 +1,2 @@
-export * from "./Treemap";
-export type * from "./Treemap.types";
-
-
+export * from './Treemap';
+export type * from './Treemap.types';

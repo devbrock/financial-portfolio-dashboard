@@ -1,5 +1,5 @@
-import * as React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import * as React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Alert,
   Button,
@@ -13,19 +13,19 @@ import {
   Input,
   Stack,
   Text,
-} from "@components";
+} from '@components';
 
-type LoginMode = "default" | "loading" | "error";
+type LoginMode = 'default' | 'loading' | 'error';
 
 type LoginDemoProps = {
   mode: LoginMode;
 };
 
 const meta: Meta<typeof LoginDemo> = {
-  title: "Screens/Login",
+  title: 'Screens/Login',
   component: LoginDemo,
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 export default meta;
@@ -33,22 +33,22 @@ export default meta;
 type Story = StoryObj<typeof LoginDemo>;
 
 export const Default: Story = {
-  args: { mode: "default" },
+  args: { mode: 'default' },
 };
 
 export const Loading: Story = {
-  args: { mode: "loading" },
+  args: { mode: 'loading' },
 };
 
 export const ErrorState: Story = {
-  args: { mode: "error" },
+  args: { mode: 'error' },
 };
 
 /**
  * Join class names without `clsx` to keep this file self-contained (mirrors `Dashboard.stories.tsx`).
  */
 function cx(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(" ");
+  return parts.filter(Boolean).join(' ');
 }
 
 function LoginDemo(props: LoginDemoProps) {
@@ -60,18 +60,18 @@ function LoginDemo(props: LoginDemoProps) {
   const passwordHintId = React.useId();
   const passwordErrorId = React.useId();
 
-  const [email, setEmail] = React.useState("exec@orion.example");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState('exec@orion.example');
+  const [password, setPassword] = React.useState('');
 
-  const isSubmitting = mode === "loading";
-  const showError = mode === "error";
+  const isSubmitting = mode === 'loading';
+  const showError = mode === 'error';
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
   return (
-    <div className={cx("overflow-auto")}>
+    <div className={cx('overflow-auto')}>
       <Container className="relative h-full w-full sm:py-14">
         {/* Center content when there's room; gracefully scroll when there isn't */}
         <div className="flex h-full items-center">
@@ -80,11 +80,11 @@ function LoginDemo(props: LoginDemoProps) {
             <Card
               tone="inverse"
               elevation="md"
-              className={cx("relative overflow-hidden", "p-6 sm:p-4")}
+              className={cx('relative overflow-hidden', 'p-6 sm:p-4')}
             >
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-(--ui-primary) opacity-20 blur-3xl"
+                className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-(--ui-primary) opacity-20 blur-3xl"
               />
               <div
                 aria-hidden="true"
@@ -97,16 +97,12 @@ function LoginDemo(props: LoginDemoProps) {
                     Welcome back
                   </Heading>
                   <Text tone="inverse" className="text-white/80">
-                    Sign in with your organization’s credentials. Orion keeps
-                    your portfolio views calm, clean, and executive-ready—like a
-                    tidy desk where everything has a place.
+                    Sign in with your organization’s credentials. Orion keeps your portfolio views
+                    calm, clean, and executive-ready—like a tidy desk where everything has a place.
                   </Text>
                 </Stack>
 
-                <Stack
-                  gap="sm"
-                  className="rounded-2xl border border-white/10 bg-white/5 p-6"
-                >
+                <Stack gap="sm" className="rounded-2xl border border-white/10 bg-white/5 p-6">
                   <Text as="div" className="font-semibold text-white">
                     Security highlights
                   </Text>
@@ -116,11 +112,7 @@ function LoginDemo(props: LoginDemoProps) {
                         aria-hidden="true"
                         className="h-2.5 w-2.5 rounded-full bg-(--ui-primary)"
                       />
-                      <Text
-                        as="span"
-                        tone="inverse"
-                        className="text-sm text-white/85"
-                      >
+                      <Text as="span" tone="inverse" className="text-sm text-white/85">
                         SSO-ready (SAML/OIDC)
                       </Text>
                     </Inline>
@@ -129,11 +121,7 @@ function LoginDemo(props: LoginDemoProps) {
                         aria-hidden="true"
                         className="h-2.5 w-2.5 rounded-full bg-(--ui-primary)"
                       />
-                      <Text
-                        as="span"
-                        tone="inverse"
-                        className="text-sm text-white/85"
-                      >
+                      <Text as="span" tone="inverse" className="text-sm text-white/85">
                         Session protections + device checks
                       </Text>
                     </Inline>
@@ -142,11 +130,7 @@ function LoginDemo(props: LoginDemoProps) {
                         aria-hidden="true"
                         className="h-2.5 w-2.5 rounded-full bg-(--ui-primary)"
                       />
-                      <Text
-                        as="span"
-                        tone="inverse"
-                        className="text-sm text-white/85"
-                      >
+                      <Text as="span" tone="inverse" className="text-sm text-white/85">
                         Your data is encrypted and always private
                       </Text>
                     </Inline>
@@ -161,8 +145,7 @@ function LoginDemo(props: LoginDemoProps) {
                 <Stack gap="sm">
                   <Heading as="h2">Sign in</Heading>
                   <Text tone="muted">
-                    Use email + password, or continue with your organization’s
-                    SSO.
+                    Use email + password, or continue with your organization’s SSO.
                   </Text>
                 </Stack>
               </CardHeader>
@@ -183,8 +166,8 @@ function LoginDemo(props: LoginDemoProps) {
 
                 <Button
                   variant="secondary"
-                  className="w-full mb-4"
-                  onClick={(e) => e.preventDefault()}
+                  className="mb-4 w-full"
+                  onClick={e => e.preventDefault()}
                   disabled={isSubmitting}
                 >
                   Continue with SSO
@@ -194,11 +177,7 @@ function LoginDemo(props: LoginDemoProps) {
 
                 <form onSubmit={onSubmit} className="space-y-4">
                   <Stack gap="sm">
-                    <Text
-                      as="label"
-                      htmlFor={emailId}
-                      className="font-semibold"
-                    >
+                    <Text as="label" htmlFor={emailId} className="font-semibold">
                       Email
                     </Text>
                     <Input
@@ -208,7 +187,7 @@ function LoginDemo(props: LoginDemoProps) {
                       autoComplete="username"
                       placeholder="you@company.com"
                       value={email}
-                      onChange={(e) => setEmail(e.currentTarget.value)}
+                      onChange={e => setEmail(e.currentTarget.value)}
                       aria-describedby={emailHintId}
                       disabled={isSubmitting}
                     />
@@ -219,11 +198,7 @@ function LoginDemo(props: LoginDemoProps) {
 
                   <Stack gap="sm">
                     <Inline align="center" justify="between" className="gap-3">
-                      <Text
-                        as="label"
-                        htmlFor={passwordId}
-                        className="font-semibold"
-                      >
+                      <Text as="label" htmlFor={passwordId} className="font-semibold">
                         Password
                       </Text>
                       <Button
@@ -243,11 +218,8 @@ function LoginDemo(props: LoginDemoProps) {
                       autoComplete="current-password"
                       placeholder="••••••••"
                       value={password}
-                      onChange={(e) => setPassword(e.currentTarget.value)}
-                      aria-describedby={cx(
-                        passwordHintId,
-                        showError && passwordErrorId
-                      )}
+                      onChange={e => setPassword(e.currentTarget.value)}
+                      aria-describedby={cx(passwordHintId, showError && passwordErrorId)}
                       aria-invalid={showError || undefined}
                       disabled={isSubmitting}
                     />
@@ -267,11 +239,7 @@ function LoginDemo(props: LoginDemoProps) {
                     )}
                   </Stack>
 
-                  <Button
-                    className="w-full"
-                    loading={isSubmitting}
-                    type="submit"
-                  >
+                  <Button className="w-full" loading={isSubmitting} type="submit">
                     Sign in
                   </Button>
 

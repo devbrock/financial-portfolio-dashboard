@@ -1,20 +1,16 @@
-import { useMemo } from "react";
-import { usePortfolioData } from "@/features/portfolio/hooks/usePortfolioData";
-import type {
-  AllocationSlice,
-  HoldingRow,
-  WatchlistCardModel,
-} from "@/types/dashboard";
+import { useMemo } from 'react';
+import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
+import type { AllocationSlice, HoldingRow, WatchlistCardModel } from '@/types/dashboard';
 
 /**
  * Format date for display in holdings table
  */
 function formatDate(isoDate: string): string {
   const date = new Date(isoDate);
-  return new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   }).format(date);
 }
 
@@ -30,13 +26,10 @@ export function useDashboardData() {
   } = usePortfolioData();
 
   const watchlist: readonly WatchlistCardModel[] = useMemo(() => {
-    return watchlistWithPrice.map((item) => ({
+    return watchlistWithPrice.map(item => ({
       id: item.id,
       name: item.companyName || item.symbol,
-      ticker:
-        item.assetType === "stock"
-          ? item.symbol.toUpperCase()
-          : item.symbol.toUpperCase(),
+      ticker: item.assetType === 'stock' ? item.symbol.toUpperCase() : item.symbol.toUpperCase(),
       priceUsd: item.currentPrice,
       changePct: item.changePct,
       logo: item.logo,
@@ -45,7 +38,7 @@ export function useDashboardData() {
 
   // Transform holdings into table rows
   const holdings: readonly HoldingRow[] = useMemo(() => {
-    return holdingsWithPrice.map((holding) => ({
+    return holdingsWithPrice.map(holding => ({
       id: holding.id,
       name: holding.companyName || holding.symbol,
       ticker: holding.symbol.toUpperCase(),
@@ -55,7 +48,7 @@ export function useDashboardData() {
       purchasePrice: holding.purchasePrice,
       priceUsd: holding.currentPrice,
       pnlUsd: holding.plUsd,
-      status: "active" as const, // All holdings are active in this demo
+      status: 'active' as const, // All holdings are active in this demo
       logo: holding.logo,
     }));
   }, [holdingsWithPrice]);
@@ -67,17 +60,17 @@ export function useDashboardData() {
 
     if (metrics.stockPct > 0) {
       slices.push({
-        name: "Stocks",
+        name: 'Stocks',
         value: metrics.stockPct,
-        color: "var(--ui-primary)",
+        color: 'var(--ui-primary)',
       });
     }
 
     if (metrics.cryptoPct > 0) {
       slices.push({
-        name: "Crypto",
+        name: 'Crypto',
         value: metrics.cryptoPct,
-        color: "color-mix(in oklab, var(--ui-accent) 45%, white 55%)",
+        color: 'color-mix(in oklab, var(--ui-accent) 45%, white 55%)',
       });
     }
 

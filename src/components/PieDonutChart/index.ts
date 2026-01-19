@@ -1,4 +1,2 @@
-export * from "./PieDonutChart";
-export type * from "./PieDonutChart.types";
-
-
+export * from './PieDonutChart';
+export type * from './PieDonutChart.types';

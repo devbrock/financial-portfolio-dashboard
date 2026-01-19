@@ -1,26 +1,20 @@
-import { SeededRandom } from "./SeededRandom";
-import type { AssetType, Holding, WatchlistItem } from "@/types/portfolio";
+import { SeededRandom } from './SeededRandom';
+import type { AssetType, Holding, WatchlistItem } from '@/types/portfolio';
 
 const STOCK_POOL = [
-  "AAPL",
-  "MSFT",
-  "GOOGL",
-  "AMZN",
-  "TSLA",
-  "NVDA",
-  "META",
-  "JPM",
-  "V",
-  "WMT",
+  'AAPL',
+  'MSFT',
+  'GOOGL',
+  'AMZN',
+  'TSLA',
+  'NVDA',
+  'META',
+  'JPM',
+  'V',
+  'WMT',
 ] as const;
 
-const CRYPTO_POOL = [
-  "bitcoin",
-  "ethereum",
-  "cardano",
-  "solana",
-  "polkadot",
-] as const;
+const CRYPTO_POOL = ['bitcoin', 'ethereum', 'cardano', 'solana', 'polkadot'] as const;
 
 type PoolEntry = {
   symbol: string;
@@ -28,22 +22,17 @@ type PoolEntry = {
 };
 
 const WATCHLIST_POOL: PoolEntry[] = [
-  ...STOCK_POOL.map((symbol) => ({ symbol, assetType: "stock" as const })),
-  ...CRYPTO_POOL.map((symbol) => ({ symbol, assetType: "crypto" as const })),
+  ...STOCK_POOL.map(symbol => ({ symbol, assetType: 'stock' as const })),
+  ...CRYPTO_POOL.map(symbol => ({ symbol, assetType: 'crypto' as const })),
 ];
 
 function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-export function generateMockWatchlist(
-  seed: string,
-  holdings: Holding[] = []
-): WatchlistItem[] {
+export function generateMockWatchlist(seed: string, holdings: Holding[] = []): WatchlistItem[] {
   const rng = new SeededRandom(`${seed}-watchlist`);
-  const existing = new Set(
-    holdings.map((holding) => `${holding.assetType}:${holding.symbol}`)
-  );
+  const existing = new Set(holdings.map(holding => `${holding.assetType}:${holding.symbol}`));
   const shuffled = rng.shuffle([...WATCHLIST_POOL]);
   const count = rng.nextInt(3, 6);
   const items: WatchlistItem[] = [];

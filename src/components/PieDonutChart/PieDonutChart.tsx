@@ -1,22 +1,16 @@
-import { useMemo } from "react";
-import {
-  Cell,
-  Pie,
-  PieChart as RechartsPieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
-import { cn } from "@utils/cn";
-import { ChartTooltip } from "../ChartTooltip/ChartTooltip";
-import { rechartsPayloadToItems } from "../_internal/rechartsTooltip";
-import type { DatumKey } from "../_internal/charts";
-import type { PieDonutChartProps } from "./PieDonutChart.types";
+import { useMemo } from 'react';
+import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { cn } from '@utils/cn';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip';
+import { rechartsPayloadToItems } from '../_internal/rechartsTooltip';
+import type { DatumKey } from '../_internal/charts';
+import type { PieDonutChartProps } from './PieDonutChart.types';
 
 const DEFAULT_COLORS = [
-  "var(--ui-primary)",
-  "var(--ui-accent)",
-  "color-mix(in oklab, var(--ui-primary) 60%, white 40%)",
-  "color-mix(in oklab, var(--ui-accent) 60%, white 40%)",
+  'var(--ui-primary)',
+  'var(--ui-accent)',
+  'color-mix(in oklab, var(--ui-primary) 60%, white 40%)',
+  'color-mix(in oklab, var(--ui-accent) 60%, white 40%)',
 ] as const;
 
 /**
@@ -31,7 +25,7 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
     nameKey,
     valueKey,
     height = 260,
-    variant = "donut",
+    variant = 'donut',
     innerRadius,
     outerRadius,
     colors = DEFAULT_COLORS,
@@ -45,15 +39,14 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
   const chartData = useMemo(() => [...data], [data]);
 
   const derivedOuter = outerRadius ?? 90;
-  const derivedInner =
-    variant === "donut" ? innerRadius ?? Math.round(derivedOuter * 0.62) : 0;
+  const derivedInner = variant === 'donut' ? (innerRadius ?? Math.round(derivedOuter * 0.62)) : 0;
 
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
+    <div className={cn('w-full', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsPieChart>
           <Tooltip
-            content={(p) => (
+            content={p => (
               <ChartTooltip
                 active={p.active}
                 label={p.label}
@@ -73,10 +66,7 @@ export function PieDonutChart<TDatum extends Record<string, unknown>>(
             strokeWidth={2}
           >
             {chartData.map((_, idx) => (
-              <Cell
-                key={idx}
-                fill={colors[idx % colors.length] ?? "var(--ui-primary)"}
-              />
+              <Cell key={idx} fill={colors[idx % colors.length] ?? 'var(--ui-primary)'} />
             ))}
           </Pie>
         </RechartsPieChart>

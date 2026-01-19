@@ -1,4 +1,2 @@
-export * from "./Combobox";
-export type * from "./Combobox.types";
-
-
+export * from './Combobox';
+export type * from './Combobox.types';

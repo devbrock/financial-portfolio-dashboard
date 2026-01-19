@@ -1,31 +1,31 @@
-import { SeededRandom } from "./SeededRandom";
-import type { Holding } from "@/types/portfolio";
+import { SeededRandom } from './SeededRandom';
+import type { Holding } from '@/types/portfolio';
 
 /**
  * Stock pool with realistic price ranges for mock data
  */
 const STOCK_POOL = [
-  { symbol: "AAPL", priceRange: [150, 200] },
-  { symbol: "MSFT", priceRange: [350, 420] },
-  { symbol: "GOOGL", priceRange: [130, 160] },
-  { symbol: "AMZN", priceRange: [140, 180] },
-  { symbol: "TSLA", priceRange: [200, 350] },
-  { symbol: "NVDA", priceRange: [450, 700] },
-  { symbol: "META", priceRange: [350, 500] },
-  { symbol: "JPM", priceRange: [150, 200] },
-  { symbol: "V", priceRange: [240, 290] },
-  { symbol: "WMT", priceRange: [150, 180] },
+  { symbol: 'AAPL', priceRange: [150, 200] },
+  { symbol: 'MSFT', priceRange: [350, 420] },
+  { symbol: 'GOOGL', priceRange: [130, 160] },
+  { symbol: 'AMZN', priceRange: [140, 180] },
+  { symbol: 'TSLA', priceRange: [200, 350] },
+  { symbol: 'NVDA', priceRange: [450, 700] },
+  { symbol: 'META', priceRange: [350, 500] },
+  { symbol: 'JPM', priceRange: [150, 200] },
+  { symbol: 'V', priceRange: [240, 290] },
+  { symbol: 'WMT', priceRange: [150, 180] },
 ] as const;
 
 /**
  * Crypto pool with realistic price ranges
  */
 const CRYPTO_POOL = [
-  { symbol: "bitcoin", priceRange: [40000, 70000] },
-  { symbol: "ethereum", priceRange: [2000, 4000] },
-  { symbol: "cardano", priceRange: [0.3, 0.8] },
-  { symbol: "solana", priceRange: [20, 150] },
-  { symbol: "polkadot", priceRange: [5, 15] },
+  { symbol: 'bitcoin', priceRange: [40000, 70000] },
+  { symbol: 'ethereum', priceRange: [2000, 4000] },
+  { symbol: 'cardano', priceRange: [0.3, 0.8] },
+  { symbol: 'solana', priceRange: [20, 150] },
+  { symbol: 'polkadot', priceRange: [5, 15] },
 ] as const;
 
 /**
@@ -35,7 +35,7 @@ function generateRandomDate(rng: SeededRandom, daysAgo: number): string {
   const now = Date.now();
   const millisecondsAgo = daysAgo * 24 * 60 * 60 * 1000;
   const randomTime = now - rng.nextInt(0, millisecondsAgo);
-  return new Date(randomTime).toISOString().split("T")[0];
+  return new Date(randomTime).toISOString().split('T')[0];
 }
 
 /**
@@ -68,14 +68,12 @@ export function generateMockHoldings(seed: string): Holding[] {
 
     // Generate slightly older purchase price (usually lower than current)
     const priceFactor = rng.nextFloat(0.7, 0.95);
-    const purchasePrice = Math.round(
-      rng.nextFloat(minPrice, maxPrice) * priceFactor * 100
-    ) / 100;
+    const purchasePrice = Math.round(rng.nextFloat(minPrice, maxPrice) * priceFactor * 100) / 100;
 
     holdings.push({
       id: generateId(),
       symbol: stock.symbol,
-      assetType: "stock",
+      assetType: 'stock',
       quantity: rng.nextInt(5, 100),
       purchasePrice,
       purchaseDate: generateRandomDate(rng, 365), // Within last year
@@ -89,9 +87,7 @@ export function generateMockHoldings(seed: string): Holding[] {
 
     // Generate purchase price
     const priceFactor = rng.nextFloat(0.6, 1.1); // More volatility for crypto
-    const purchasePrice = Math.round(
-      rng.nextFloat(minPrice, maxPrice) * priceFactor * 100
-    ) / 100;
+    const purchasePrice = Math.round(rng.nextFloat(minPrice, maxPrice) * priceFactor * 100) / 100;
 
     // Crypto quantities are typically smaller
     const quantity = Math.round(rng.nextFloat(0.1, 10) * 1000) / 1000;
@@ -99,7 +95,7 @@ export function generateMockHoldings(seed: string): Holding[] {
     holdings.push({
       id: generateId(),
       symbol: crypto.symbol,
-      assetType: "crypto",
+      assetType: 'crypto',
       quantity,
       purchasePrice,
       purchaseDate: generateRandomDate(rng, 365),

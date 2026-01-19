@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "./Table";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from './Table';
 
 const meta: Meta<typeof Table> = {
-  title: "Data Display/Table",
+  title: 'Data Display/Table',
   component: Table,
 };
 export default meta;
@@ -34,5 +34,3 @@ export const Default: Story = {
     </Table>
   ),
 };
-
-

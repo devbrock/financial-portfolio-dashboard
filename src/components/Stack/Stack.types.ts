@@ -1,6 +1,6 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { stackStyles } from "./Stack.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { stackStyles } from './Stack.styles';
 
 export type StackVariants = VariantProps<typeof stackStyles>;
 
@@ -12,5 +12,3 @@ export type StackProps = React.HTMLAttributes<HTMLDivElement> &
      */
     asChild?: boolean;
   };
-
-

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
 /**
  * A small helper for controlled/uncontrolled React state.
@@ -28,5 +28,3 @@ export function useControllableState<T>(params: {
 
   return [state, setState];
 }
-
-

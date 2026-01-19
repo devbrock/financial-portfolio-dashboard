@@ -1,6 +1,6 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { textStyles } from "./Text.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { textStyles } from './Text.styles';
 
 export type TextVariants = VariantProps<typeof textStyles>;
 
@@ -19,7 +19,5 @@ type TextOwnProps<TAs extends React.ElementType> = TextVariants & {
  *
  * @template TAs - Element/component to render.
  */
-export type TextProps<TAs extends React.ElementType = "p"> = TextOwnProps<TAs> &
+export type TextProps<TAs extends React.ElementType = 'p'> = TextOwnProps<TAs> &
   Omit<React.ComponentPropsWithoutRef<TAs>, keyof TextOwnProps<TAs>>;
-
-

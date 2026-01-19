@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type ChartTooltipItem = {
   name: string;
@@ -32,5 +32,3 @@ export type ChartTooltipProps = {
    */
   className?: string;
 };
-
-

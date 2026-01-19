@@ -1,6 +1,6 @@
-import type * as React from "react";
+import type * as React from 'react';
 
-export type SidebarCollapsible = "offcanvas" | "icon";
+export type SidebarCollapsible = 'offcanvas' | 'icon';
 
 export type SidebarProviderProps = {
   children: React.ReactNode;
@@ -45,5 +45,3 @@ export type SidebarTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement> 
    */
   ariaLabel?: string;
 };
-
-

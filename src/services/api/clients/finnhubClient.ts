@@ -1,7 +1,7 @@
-import axios from "axios";
-import { applyApiErrorHandling } from "./withErrorHandling";
+import axios from 'axios';
+import { applyApiErrorHandling } from './withErrorHandling';
 
-const BASE_URL = "https://finnhub.io/api/v1";
+const BASE_URL = 'https://finnhub.io/api/v1';
 
 /* Axios client for the Finnhub API */
 export const finnhubClient = axios.create({
@@ -11,4 +11,4 @@ export const finnhubClient = axios.create({
   },
 });
 
-applyApiErrorHandling(finnhubClient, "Finnhub");
+applyApiErrorHandling(finnhubClient, 'Finnhub');

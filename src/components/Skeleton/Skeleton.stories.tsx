@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Skeleton } from "./Skeleton";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Skeleton } from './Skeleton';
 
 const meta: Meta<typeof Skeleton> = {
-  title: "Data Display/Skeleton",
+  title: 'Data Display/Skeleton',
   component: Skeleton,
 };
 export default meta;
@@ -18,5 +18,3 @@ export const Default: Story = {
     </div>
   ),
 };
-
-

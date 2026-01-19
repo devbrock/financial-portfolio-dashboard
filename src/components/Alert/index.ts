@@ -1,4 +1,2 @@
-export * from "./Alert";
-export type * from "./Alert.types";
-
-
+export * from './Alert';
+export type * from './Alert.types';

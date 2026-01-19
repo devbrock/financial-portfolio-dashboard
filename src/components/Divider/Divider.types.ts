@@ -1,10 +1,8 @@
-import type * as React from "react";
+import type * as React from 'react';
 
-export type DividerProps = Omit<React.HTMLAttributes<HTMLDivElement>, "role"> & {
+export type DividerProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> & {
   /**
    * Visual + ARIA orientation.
    */
-  orientation?: "horizontal" | "vertical";
+  orientation?: 'horizontal' | 'vertical';
 };
-
-

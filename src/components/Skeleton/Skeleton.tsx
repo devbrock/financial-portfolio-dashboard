@@ -1,6 +1,6 @@
-import { cn } from "@utils/cn";
-import type { SkeletonProps } from "./Skeleton.types";
-import { skeletonClassName } from "./Skeleton.styles";
+import { cn } from '@utils/cn';
+import type { SkeletonProps } from './Skeleton.types';
+import { skeletonClassName } from './Skeleton.styles';
 
 /**
  * Skeleton
@@ -12,11 +12,5 @@ import { skeletonClassName } from "./Skeleton.styles";
  */
 export function Skeleton(props: SkeletonProps) {
   const { className, ...rest } = props;
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(skeletonClassName, className)}
-      {...rest}
-    />
-  );
+  return <div aria-hidden="true" className={cn(skeletonClassName, className)} {...rest} />;
 }

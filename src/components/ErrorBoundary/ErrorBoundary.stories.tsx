@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ErrorBoundary } from "./ErrorBoundary";
+import type { Meta, StoryObj } from '@storybook/react';
+import { ErrorBoundary } from './ErrorBoundary';
 
 const meta: Meta<typeof ErrorBoundary> = {
-  title: "Feedback/ErrorBoundary",
+  title: 'Feedback/ErrorBoundary',
   component: ErrorBoundary,
 };
 
@@ -11,7 +11,7 @@ export default meta;
 type Story = StoryObj<typeof ErrorBoundary>;
 
 const ExplodingChild = () => {
-  throw new Error("Storybook test error");
+  throw new Error('Storybook test error');
 };
 
 export const HealthyTree: Story = {

@@ -6,13 +6,9 @@ import {
   useState,
   type FocusEvent,
   type KeyboardEvent,
-} from "react";
-import { cn } from "@utils/cn";
-import type {
-  CarouselProps,
-  CarouselSlideProps,
-  CarouselDotsProps,
-} from "./Carousel.types";
+} from 'react';
+import { cn } from '@utils/cn';
+import type { CarouselProps, CarouselSlideProps, CarouselDotsProps } from './Carousel.types';
 import {
   carouselStyles,
   carouselTrackStyles,
@@ -20,7 +16,7 @@ import {
   carouselArrowStyles,
   carouselDotsContainerStyles,
   carouselDotStyles,
-} from "./Carousel.styles";
+} from './Carousel.styles';
 
 function ChevronLeftIcon() {
   return (
@@ -190,11 +186,11 @@ export function Carousel(props: CarouselProps) {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
-        case "ArrowLeft":
+        case 'ArrowLeft':
           event.preventDefault();
           goPrev();
           break;
-        case "ArrowRight":
+        case 'ArrowRight':
           event.preventDefault();
           goNext();
           break;
@@ -262,7 +258,7 @@ export function Carousel(props: CarouselProps) {
       {showArrows && slideCount > 1 && (
         <button
           type="button"
-          className={carouselArrowStyles({ position: "left" })}
+          className={carouselArrowStyles({ position: 'left' })}
           onClick={goPrev}
           disabled={!canGoPrev}
           aria-label="Previous slide"
@@ -275,7 +271,7 @@ export function Carousel(props: CarouselProps) {
       {showArrows && slideCount > 1 && (
         <button
           type="button"
-          className={carouselArrowStyles({ position: "right" })}
+          className={carouselArrowStyles({ position: 'right' })}
           onClick={goNext}
           disabled={!canGoNext}
           aria-label="Next slide"
@@ -286,11 +282,7 @@ export function Carousel(props: CarouselProps) {
 
       {/* Dots */}
       {showDots && slideCount > 1 && (
-        <CarouselDots
-          total={slideCount}
-          current={currentIndex}
-          onSelect={goToSlide}
-        />
+        <CarouselDots total={slideCount} current={currentIndex} onSelect={goToSlide} />
       )}
     </div>
   );

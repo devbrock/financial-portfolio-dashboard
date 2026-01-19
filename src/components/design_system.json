@@ -520,9 +520,7 @@
           }
         },
         "a11y": {
-          "notes": [
-            "Badges are non-interactive by default. If clickable, use Chip."
-          ]
+          "notes": ["Badges are non-interactive by default. If clickable, use Chip."]
         }
       },
       "Chip": {
@@ -575,9 +573,7 @@
           "base": "w-full h-10 rounded-xl border border-[var(--ui-border)] bg-[var(--ui-bg)] px-3 text-sm text-[var(--ui-text)]"
         },
         "a11y": {
-          "rules": [
-            "Use native select unless requirements demand searchable combobox."
-          ]
+          "rules": ["Use native select unless requirements demand searchable combobox."]
         }
       },
       "Combobox": {
@@ -587,11 +583,7 @@
           "minChars": 1,
           "closeOnSelect": true,
           "closeOnBlur": true,
-          "keyboard": [
-            "ArrowDown/Up to navigate",
-            "Enter to select",
-            "Esc to close"
-          ]
+          "keyboard": ["ArrowDown/Up to navigate", "Enter to select", "Esc to close"]
         },
         "a11y": {
           "rules": [
@@ -663,10 +655,7 @@
           "content": "rounded-lg bg-[var(--ui-inverse-bg)] text-[var(--ui-inverse-text)] text-xs px-2 py-1 shadow-md shadow-black/20"
         },
         "a11y": {
-          "rules": [
-            "Must appear on focus as well as hover.",
-            "Do not contain interactive content."
-          ]
+          "rules": ["Must appear on focus as well as hover.", "Do not contain interactive content."]
         }
       }
     },

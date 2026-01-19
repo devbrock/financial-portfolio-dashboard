@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
@@ -7,5 +7,3 @@ export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
    */
   asChild?: boolean;
 };
-
-

@@ -1,6 +1,6 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { carouselStyles } from "./Carousel.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { carouselStyles } from './Carousel.styles';
 
 export type CarouselVariants = VariantProps<typeof carouselStyles>;
 
@@ -48,7 +48,7 @@ export type CarouselProps = React.HTMLAttributes<HTMLDivElement> &
     /**
      * Optional test id.
      */
-    "data-testid"?: string;
+    'data-testid'?: string;
   };
 
 export type CarouselSlideProps = React.HTMLAttributes<HTMLDivElement> & {

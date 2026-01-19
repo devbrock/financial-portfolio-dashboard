@@ -1,4 +1,2 @@
-export * from "./BarChart";
-export type * from "./BarChart.types";
-
-
+export * from './BarChart';
+export type * from './BarChart.types';

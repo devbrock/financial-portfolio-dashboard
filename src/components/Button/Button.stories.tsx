@@ -1,28 +1,28 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
-  title: "Controls/Button",
+  title: 'Controls/Button',
   component: Button,
   argTypes: {
     variant: {
-      control: "select",
-      options: ["primary", "secondary", "ghost", "destructive", "inverse"],
+      control: 'select',
+      options: ['primary', 'secondary', 'ghost', 'destructive', 'inverse'],
     },
     size: {
-      control: "select",
-      options: ["sm", "md", "lg"],
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
     },
-    loading: { control: "boolean" },
-    disabled: { control: "boolean" },
+    loading: { control: 'boolean' },
+    disabled: { control: 'boolean' },
     leftIcon: { control: false },
     rightIcon: { control: false },
-    onClick: { action: "clicked" },
+    onClick: { action: 'clicked' },
   },
   args: {
-    children: "Button",
-    variant: "primary",
-    size: "md",
+    children: 'Button',
+    variant: 'primary',
+    size: 'md',
     loading: false,
     disabled: false,
   },
@@ -102,7 +102,7 @@ export const Loading: Story = {
 
 export const WithIcons: Story = {
   args: {
-    children: "With icons",
+    children: 'With icons',
     leftIcon: <CircleIcon />,
     rightIcon: <ChevronRightIcon />,
   },

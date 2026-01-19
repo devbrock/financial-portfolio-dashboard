@@ -1,7 +1,7 @@
-import { Heading, Inline, Skeleton, Text } from "@components";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatLastUpdated } from "@utils/formatLastUpdated";
-import { formatSignedPct } from "@utils/formatSignedPct";
+import { Heading, Inline, Skeleton, Text } from '@components';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatLastUpdated } from '@utils/formatLastUpdated';
+import { formatSignedPct } from '@utils/formatSignedPct';
 
 type DashboardHeaderProps = {
   userName: string;
@@ -12,8 +12,7 @@ type DashboardHeaderProps = {
 };
 
 export function DashboardHeader(props: DashboardHeaderProps) {
-  const { userName, portfolioValue, lastUpdated, dailyChangePct, loading = false } =
-    props;
+  const { userName, portfolioValue, lastUpdated, dailyChangePct, loading = false } = props;
 
   return (
     <Inline align="center" justify="between" className="gap-3 py-4">

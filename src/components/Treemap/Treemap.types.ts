@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type TreemapNode = {
   name: string;
@@ -29,5 +29,3 @@ export type TreemapProps = {
   tooltipValueFormatter?: (value: string | number) => React.ReactNode;
   className?: string;
 };
-
-

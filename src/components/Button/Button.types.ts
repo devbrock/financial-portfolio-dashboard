@@ -1,13 +1,10 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { buttonStyles } from "./Button.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { buttonStyles } from './Button.styles';
 
 export type ButtonVariants = VariantProps<typeof buttonStyles>;
 
-export type ButtonProps = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "disabled"
-> &
+export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> &
   ButtonVariants & {
     /**
      * When true, show a spinner and mark the button `aria-busy`.
@@ -35,7 +32,5 @@ export type ButtonProps = Omit<
     /**
      * Optional test id.
      */
-    "data-testid"?: string;
+    'data-testid'?: string;
   };
-
-

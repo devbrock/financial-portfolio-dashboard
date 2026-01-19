@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type TableProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
@@ -17,5 +17,3 @@ export type TableRowProps = React.HTMLAttributes<HTMLTableRowElement> & {
 
 export type TableHeadCellProps = React.ThHTMLAttributes<HTMLTableCellElement>;
 export type TableCellProps = React.TdHTMLAttributes<HTMLTableCellElement>;
-
-

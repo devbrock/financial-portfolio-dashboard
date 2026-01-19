@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type ModalProps = {
   /**
@@ -34,5 +34,3 @@ export type ModalProps = {
    */
   closeOnOverlayClick?: boolean;
 };
-
-

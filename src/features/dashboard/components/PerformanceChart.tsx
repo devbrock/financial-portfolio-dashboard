@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   AreaChart,
   ChartContainer,
@@ -8,24 +8,23 @@ import {
   Skeleton,
   Text,
   Button,
-} from "@components";
-import { cn } from "@/utils/cn";
-import type { PerformancePoint } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatCompact } from "@utils/formatCompact";
-import { formatSignedPct } from "@utils/formatSignedPct";
-import { usePortfolioHistoricalData } from "@/features/portfolio/hooks/usePortfolioHistoricalData";
+} from '@components';
+import { cn } from '@/utils/cn';
+import type { PerformancePoint } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatCompact } from '@utils/formatCompact';
+import { formatSignedPct } from '@utils/formatSignedPct';
+import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
 
 type PerformanceChartProps = {
-  range: "7d" | "30d" | "90d" | "1y";
-  onRangeChange: (range: "7d" | "30d" | "90d" | "1y") => void;
+  range: '7d' | '30d' | '90d' | '1y';
+  onRangeChange: (range: '7d' | '30d' | '90d' | '1y') => void;
   flash?: boolean;
 };
 
 export function PerformanceChart(props: PerformanceChartProps) {
   const { range, onRangeChange, flash = false } = props;
-  const { data, isLoading, isError, error, refetch } =
-    usePortfolioHistoricalData(range);
+  const { data, isLoading, isError, error, refetch } = usePortfolioHistoricalData(range);
 
   const { totalValue, changePct } = useMemo(() => {
     if (data.length === 0) return { totalValue: 0, changePct: 0 };
@@ -43,27 +42,20 @@ export function PerformanceChart(props: PerformanceChartProps) {
       title="Portfolio value"
       subtitle="Performance"
       className={cn(
-        flash &&
-          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+        flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
       actions={
         <Inline align="center" className="gap-2">
-          <Chip selected={range === "7d"} onClick={() => onRangeChange("7d")}>
+          <Chip selected={range === '7d'} onClick={() => onRangeChange('7d')}>
             7D
           </Chip>
-          <Chip
-            selected={range === "30d"}
-            onClick={() => onRangeChange("30d")}
-          >
+          <Chip selected={range === '30d'} onClick={() => onRangeChange('30d')}>
             30D
           </Chip>
-          <Chip
-            selected={range === "90d"}
-            onClick={() => onRangeChange("90d")}
-          >
+          <Chip selected={range === '90d'} onClick={() => onRangeChange('90d')}>
             90D
           </Chip>
-          <Chip selected={range === "1y"} onClick={() => onRangeChange("1y")}>
+          <Chip selected={range === '1y'} onClick={() => onRangeChange('1y')}>
             1Y
           </Chip>
         </Inline>
@@ -81,9 +73,7 @@ export function PerformanceChart(props: PerformanceChartProps) {
             Historical data is unavailable right now.
           </Text>
           <Text as="div" size="sm" tone="muted">
-            {error instanceof Error
-              ? error.message
-              : "Please try again in a moment."}
+            {error instanceof Error ? error.message : 'Please try again in a moment.'}
           </Text>
           <div>
             <Button variant="secondary" size="sm" onClick={refetch}>
@@ -112,20 +102,8 @@ export function PerformanceChart(props: PerformanceChartProps) {
               </Text>
             </div>
             <DeltaPill
-              direction={
-                changePct > 0
-                  ? "up"
-                  : changePct < 0
-                    ? "down"
-                    : "flat"
-              }
-              tone={
-                changePct > 0
-                  ? "success"
-                  : changePct < 0
-                    ? "danger"
-                    : "neutral"
-              }
+              direction={changePct > 0 ? 'up' : changePct < 0 ? 'down' : 'flat'}
+              tone={changePct > 0 ? 'success' : changePct < 0 ? 'danger' : 'neutral'}
             >
               {formatSignedPct(changePct)}
             </DeltaPill>
@@ -135,14 +113,12 @@ export function PerformanceChart(props: PerformanceChartProps) {
             xKey="date"
             series={[
               {
-                key: "value",
-                name: "Portfolio value",
-                color: "var(--ui-primary)",
+                key: 'value',
+                name: 'Portfolio value',
+                color: 'var(--ui-primary)',
               },
             ]}
-            yTickFormatter={(v) =>
-              typeof v === "number" ? `$${formatCompact(v)}` : String(v)
-            }
+            yTickFormatter={v => (typeof v === 'number' ? `$${formatCompact(v)}` : String(v))}
           />
         </>
       )}

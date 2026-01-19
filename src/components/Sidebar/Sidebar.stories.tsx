@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import * as React from "react";
+import type { Meta, StoryObj } from '@storybook/react';
+import * as React from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -16,8 +16,8 @@ import {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-} from "./index";
-import { Button } from "../Button/Button";
+} from './index';
+import { Button } from '../Button/Button';
 
 function HomeIcon() {
   return (
@@ -47,12 +47,7 @@ function InboxIcon() {
 
 function MoreIcon() {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-5 w-5"
-      fill="currentColor"
-    >
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
       <circle cx="6" cy="12" r="1.6" />
       <circle cx="12" cy="12" r="1.6" />
       <circle cx="18" cy="12" r="1.6" />
@@ -61,14 +56,14 @@ function MoreIcon() {
 }
 
 const meta: Meta = {
-  title: "Navigation/Sidebar",
+  title: 'Navigation/Sidebar',
 };
 export default meta;
 
 type Story = StoryObj;
 
 function CollapsibleToIconsExample() {
-  const [active, setActive] = React.useState<"home" | "inbox">("home");
+  const [active, setActive] = React.useState<'home' | 'inbox'>('home');
 
   return (
     <SidebarProvider defaultOpen>
@@ -89,8 +84,8 @@ function CollapsibleToIconsExample() {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      isActive={active === "home"}
-                      onClick={() => setActive("home")}
+                      isActive={active === 'home'}
+                      onClick={() => setActive('home')}
                     >
                       <HomeIcon />
                       <span data-slot="label">Home</span>
@@ -102,8 +97,8 @@ function CollapsibleToIconsExample() {
 
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      isActive={active === "inbox"}
-                      onClick={() => setActive("inbox")}
+                      isActive={active === 'inbox'}
+                      onClick={() => setActive('inbox')}
                     >
                       <InboxIcon />
                       <span data-slot="label">Inbox</span>
@@ -142,9 +137,7 @@ function CollapsibleToIconsExample() {
         <main className="flex-1 p-6">
           <div className="flex items-center gap-3">
             <SidebarTrigger />
-            <div className="text-sm text-(--ui-text-muted)">
-              Content area (toggle sidebar)
-            </div>
+            <div className="text-sm text-(--ui-text-muted)">Content area (toggle sidebar)</div>
           </div>
         </main>
       </div>

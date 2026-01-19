@@ -1,11 +1,11 @@
-import { cn } from "@utils/cn";
+import { cn } from '@utils/cn';
 import type {
   TableCellProps,
   TableHeadCellProps,
   TableProps,
   TableRowProps,
   TableSectionProps,
-} from "./Table.types";
+} from './Table.types';
 import {
   tableClassName,
   tableTdClassName,
@@ -13,7 +13,7 @@ import {
   tableTheadClassName,
   tableWrapperClassName,
   tableRowHoverClassName,
-} from "./Table.styles";
+} from './Table.styles';
 
 /**
  * Table
@@ -45,16 +45,12 @@ export function TableBody(props: TableSectionProps) {
 
 export function TableRow(props: TableRowProps) {
   const { className, hover = false, ...rest } = props;
-  return (
-    <tr className={cn(hover && tableRowHoverClassName, className)} {...rest} />
-  );
+  return <tr className={cn(hover && tableRowHoverClassName, className)} {...rest} />;
 }
 
 export function TableHeadCell(props: TableHeadCellProps) {
-  const { className, scope = "col", ...rest } = props;
-  return (
-    <th scope={scope} className={cn(tableThClassName, className)} {...rest} />
-  );
+  const { className, scope = 'col', ...rest } = props;
+  return <th scope={scope} className={cn(tableThClassName, className)} {...rest} />;
 }
 
 export function TableCell(props: TableCellProps) {

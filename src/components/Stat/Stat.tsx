@@ -1,11 +1,11 @@
-import { cn } from "@utils/cn";
-import type { StatProps } from "./Stat.types";
+import { cn } from '@utils/cn';
+import type { StatProps } from './Stat.types';
 import {
   statContainerClassName,
   statLabelClassName,
   statSubvalueClassName,
   statValueClassName,
-} from "./Stat.styles";
+} from './Stat.styles';
 
 /**
  * Stat
@@ -17,9 +17,7 @@ export function Stat(props: StatProps) {
     <div className={cn(statContainerClassName, className)} {...rest}>
       <div className={statLabelClassName}>{label}</div>
       <div className={statValueClassName}>{value}</div>
-      {subvalue ? (
-        <div className={statSubvalueClassName}>{subvalue}</div>
-      ) : null}
+      {subvalue ? <div className={statSubvalueClassName}>{subvalue}</div> : null}
     </div>
   );
 }

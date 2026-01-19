@@ -1,5 +1,5 @@
-import type * as React from "react";
-import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from "../_internal/charts";
+import type * as React from 'react';
+import type { ChartAxisTickFormatter, ChartSeries, DatumKey } from '../_internal/charts';
 
 export type StackedBarChartProps<TDatum extends Record<string, unknown>> = {
   data: readonly TDatum[];
@@ -19,5 +19,3 @@ export type StackedBarChartProps<TDatum extends Record<string, unknown>> = {
   stackId?: string;
   className?: string;
 };
-
-

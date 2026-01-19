@@ -1,7 +1,5 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type AlertProps = React.HTMLAttributes<HTMLDivElement> & {
-  tone?: "info" | "success" | "warning" | "danger";
+  tone?: 'info' | 'success' | 'warning' | 'danger';
 };
-
-

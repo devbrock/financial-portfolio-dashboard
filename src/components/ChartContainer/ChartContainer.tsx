@@ -1,11 +1,11 @@
-import { cn } from "@utils/cn";
-import type { ChartContainerProps } from "./ChartContainer.types";
+import { cn } from '@utils/cn';
+import type { ChartContainerProps } from './ChartContainer.types';
 import {
   chartContainerStyles,
   chartHeaderStyles,
   chartSubtitleStyles,
   chartTitleStyles,
-} from "./ChartContainer.styles";
+} from './ChartContainer.styles';
 
 /**
  * ChartContainer
@@ -20,9 +20,7 @@ export function ChartContainer(props: ChartContainerProps) {
         <header className={chartHeaderStyles()}>
           <div className="min-w-0">
             {title ? <div className={chartTitleStyles()}>{title}</div> : null}
-            {subtitle ? (
-              <div className={chartSubtitleStyles()}>{subtitle}</div>
-            ) : null}
+            {subtitle ? <div className={chartSubtitleStyles()}>{subtitle}</div> : null}
           </div>
           {actions ? <div className="shrink-0">{actions}</div> : null}
         </header>

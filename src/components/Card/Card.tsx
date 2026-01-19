@@ -1,12 +1,7 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@utils/cn";
-import type { CardProps, CardSectionProps } from "./Card.types";
-import {
-  cardBodyStyles,
-  cardFooterStyles,
-  cardHeaderStyles,
-  cardStyles,
-} from "./Card.styles";
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@utils/cn';
+import type { CardProps, CardSectionProps } from './Card.types';
+import { cardBodyStyles, cardFooterStyles, cardHeaderStyles, cardStyles } from './Card.styles';
 
 /**
  * Card
@@ -14,14 +9,9 @@ import {
  */
 export function Card(props: CardProps) {
   const { asChild, className, tone, elevation, ...rest } = props;
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot : 'div';
 
-  return (
-    <Comp
-      className={cn(cardStyles({ tone, elevation }), className)}
-      {...rest}
-    />
-  );
+  return <Comp className={cn(cardStyles({ tone, elevation }), className)} {...rest} />;
 }
 
 /**

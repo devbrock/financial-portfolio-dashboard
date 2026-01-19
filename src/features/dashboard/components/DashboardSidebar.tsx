@@ -11,24 +11,12 @@ import {
   Inline,
   Text,
   Divider,
-} from "@components";
-import {
-  BotMessageSquare,
-  ChartLine,
-  Folder,
-  HelpCircle,
-  Home,
-  Newspaper,
-} from "lucide-react";
-import { cn } from "@/utils/cn";
-import OrionLogoLight from "@assets/orion_logo_light.svg";
+} from '@components';
+import { BotMessageSquare, ChartLine, Folder, HelpCircle, Home, Newspaper } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import OrionLogoLight from '@assets/orion_logo_light.svg';
 
-export type DashboardNav =
-  | "Overview"
-  | "Portfolio"
-  | "Market"
-  | "News"
-  | "AI Assistant";
+export type DashboardNav = 'Overview' | 'Portfolio' | 'Market' | 'News' | 'AI Assistant';
 
 type DashboardSidebarProps = {
   activeNav: DashboardNav;
@@ -39,23 +27,12 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
   const { activeNav, onNavChange } = props;
 
   return (
-    <Sidebar
-      collapsible="icon"
-      width={260}
-      className={cn("rounded-2xl overflow-hidden", "h-full")}
-    >
+    <Sidebar collapsible="icon" width={260} className={cn('overflow-hidden rounded-2xl', 'h-full')}>
       <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
         <Inline align="center" className="gap-3 px-1">
           <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">
-            <img
-              src={OrionLogoLight}
-              alt="Orion"
-              className="h-12 w-auto mx-auto mb-4"
-            />
-            <Text
-              as="div"
-              className="truncate font-semibold text-white font-brand! text-2xl pt-2"
-            >
+            <img src={OrionLogoLight} alt="Orion" className="mx-auto mb-4 h-12 w-auto" />
+            <Text as="div" className="font-brand! truncate pt-2 text-2xl font-semibold text-white">
               Orion Wealth
             </Text>
             <Text as="div" size="sm" className="text-white/70">
@@ -71,8 +48,8 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
             <SidebarMenu aria-label="Primary">
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === "Overview"}
-                  onClick={() => onNavChange("Overview")}
+                  isActive={activeNav === 'Overview'}
+                  onClick={() => onNavChange('Overview')}
                 >
                   <Home />
                   <span data-slot="label">Overview</span>
@@ -80,8 +57,8 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === "Portfolio"}
-                  onClick={() => onNavChange("Portfolio")}
+                  isActive={activeNav === 'Portfolio'}
+                  onClick={() => onNavChange('Portfolio')}
                 >
                   <Folder />
                   <span data-slot="label">Portfolio</span>
@@ -89,8 +66,8 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === "Market"}
-                  onClick={() => onNavChange("Market")}
+                  isActive={activeNav === 'Market'}
+                  onClick={() => onNavChange('Market')}
                 >
                   <ChartLine />
                   <span data-slot="label">Market</span>
@@ -98,8 +75,8 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === "News"}
-                  onClick={() => onNavChange("News")}
+                  isActive={activeNav === 'News'}
+                  onClick={() => onNavChange('News')}
                 >
                   <Newspaper />
                   <span data-slot="label">News</span>
@@ -107,8 +84,8 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === "AI Assistant"}
-                  onClick={() => onNavChange("AI Assistant")}
+                  isActive={activeNav === 'AI Assistant'}
+                  onClick={() => onNavChange('AI Assistant')}
                 >
                   <BotMessageSquare />
                   <span data-slot="label">AI Assistant</span>

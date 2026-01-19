@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Inline } from "./Inline";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Inline } from './Inline';
 
 const meta: Meta<typeof Inline> = {
-  title: "Primitives/Inline",
+  title: 'Primitives/Inline',
   component: Inline,
 };
 export default meta;
@@ -24,5 +24,3 @@ export const Default: Story = {
     </Inline>
   ),
 };
-
-

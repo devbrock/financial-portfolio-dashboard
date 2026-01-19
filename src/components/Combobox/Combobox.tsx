@@ -1,19 +1,13 @@
-import * as React from "react";
-import { cn } from "@utils/cn";
-import { Input } from "../Input/Input";
-import { useControllableState } from "../_internal/useControllableState";
-import type { ComboboxItem, ComboboxProps } from "./Combobox.types";
-import {
-  comboboxOptionClassName,
-  comboboxPanelClassName,
-} from "./Combobox.styles";
+import * as React from 'react';
+import { cn } from '@utils/cn';
+import { Input } from '../Input/Input';
+import { useControllableState } from '../_internal/useControllableState';
+import type { ComboboxItem, ComboboxProps } from './Combobox.types';
+import { comboboxOptionClassName, comboboxPanelClassName } from './Combobox.styles';
 
-function findLabel(
-  items: readonly ComboboxItem[],
-  value: string | undefined
-): string {
-  if (!value) return "";
-  return items.find((i) => i.value === value)?.label ?? "";
+function findLabel(items: readonly ComboboxItem[], value: string | undefined): string {
+  if (!value) return '';
+  return items.find(i => i.value === value)?.label ?? '';
 }
 
 /**
@@ -42,7 +36,7 @@ export function Combobox(props: ComboboxProps) {
     loading = false,
     className,
     inputClassName,
-    "data-testid": dataTestId,
+    'data-testid': dataTestId,
     onKeyDown,
     onFocus,
     onBlur,
@@ -54,14 +48,12 @@ export function Combobox(props: ComboboxProps) {
 
   const [selectedValue, setSelectedValue] = useControllableState<string>({
     value,
-    defaultValue: defaultValue ?? "",
+    defaultValue: defaultValue ?? '',
     onChange: onValueChange,
   });
 
   const [open, setOpen] = React.useState(false);
-  const [query, setQuery] = React.useState<string>(() =>
-    findLabel(items, selectedValue)
-  );
+  const [query, setQuery] = React.useState<string>(() => findLabel(items, selectedValue));
   const [debouncedQuery, setDebouncedQuery] = React.useState(query);
   const [activeIndex, setActiveIndex] = React.useState<number>(-1);
 
@@ -74,10 +66,7 @@ export function Combobox(props: ComboboxProps) {
 
   // Debounce query for filtering (and future async hooks).
   React.useEffect(() => {
-    const handle = window.setTimeout(
-      () => setDebouncedQuery(query),
-      debounceMs
-    );
+    const handle = window.setTimeout(() => setDebouncedQuery(query), debounceMs);
     return () => window.clearTimeout(handle);
   }, [query, debounceMs]);
 
@@ -89,7 +78,7 @@ export function Combobox(props: ComboboxProps) {
     const q = debouncedQuery.trim().toLowerCase();
     if (q.length < minChars) return [] as ComboboxItem[];
     if (!filterItems) return [...items];
-    return items.filter((it) => it.label.toLowerCase().includes(q));
+    return items.filter(it => it.label.toLowerCase().includes(q));
   }, [items, debouncedQuery, minChars, filterItems]);
 
   const activeItemId =
@@ -121,21 +110,21 @@ export function Combobox(props: ComboboxProps) {
     if (e.defaultPrevented) return;
 
     switch (e.key) {
-      case "ArrowDown": {
+      case 'ArrowDown': {
         e.preventDefault();
         if (!open) setOpen(true);
-        setActiveIndex((prev) => {
+        setActiveIndex(prev => {
           const next = Math.min(prev + 1, filtered.length - 1);
           return Number.isFinite(next) ? next : -1;
         });
         break;
       }
-      case "ArrowUp": {
+      case 'ArrowUp': {
         e.preventDefault();
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
+        setActiveIndex(prev => Math.max(prev - 1, 0));
         break;
       }
-      case "Enter": {
+      case 'Enter': {
         if (!open) return;
         const item = filtered[activeIndex];
         if (item) {
@@ -144,7 +133,7 @@ export function Combobox(props: ComboboxProps) {
         }
         break;
       }
-      case "Escape": {
+      case 'Escape': {
         if (!open) return;
         e.preventDefault();
         setOpen(false);
@@ -169,7 +158,7 @@ export function Combobox(props: ComboboxProps) {
   };
 
   return (
-    <div className={cn("relative", className)} data-testid={dataTestId}>
+    <div className={cn('relative', className)} data-testid={dataTestId}>
       <Input
         {...restInputProps}
         ref={inputRef}
@@ -178,11 +167,11 @@ export function Combobox(props: ComboboxProps) {
         aria-controls={listboxId}
         aria-expanded={open}
         aria-activedescendant={activeItemId}
-        aria-describedby={loading ? liveId : restInputProps["aria-describedby"]}
+        aria-describedby={loading ? liveId : restInputProps['aria-describedby']}
         placeholder={placeholder}
         className={cn(inputClassName)}
         value={query}
-        onChange={(e) => {
+        onChange={e => {
           const next = e.currentTarget.value;
           setQuery(next);
           setActiveIndex(-1);
@@ -195,23 +184,17 @@ export function Combobox(props: ComboboxProps) {
       />
 
       <div id={liveId} aria-live="polite" className="sr-only">
-        {loading
-          ? "Loading results"
-          : filtered.length === 0 && open
-          ? "No results"
-          : ""}
+        {loading ? 'Loading results' : filtered.length === 0 && open ? 'No results' : ''}
       </div>
 
       {open && (loading || filtered.length > 0) && (
         <div
           id={listboxId}
           role="listbox"
-          className={cn("absolute z-10 mt-2 w-full", comboboxPanelClassName)}
+          className={cn('absolute z-10 mt-2 w-full', comboboxPanelClassName)}
         >
           {loading ? (
-            <div className="px-3 py-2 text-sm text-(--ui-text-muted)">
-              Loading…
-            </div>
+            <div className="px-3 py-2 text-sm text-(--ui-text-muted)">Loading…</div>
           ) : (
             filtered.map((item, idx) => {
               const selected = item.value === selectedValue;
@@ -222,15 +205,15 @@ export function Combobox(props: ComboboxProps) {
                   id={`${listboxId}-opt-${idx}`}
                   role="option"
                   aria-selected={selected}
-                  data-active={active ? "true" : "false"}
+                  data-active={active ? 'true' : 'false'}
                   className={cn(
                     comboboxOptionClassName,
-                    "cursor-pointer",
-                    item.disabled && "opacity-50 cursor-not-allowed",
-                    active && "bg-(--ui-surface)"
+                    'cursor-pointer',
+                    item.disabled && 'cursor-not-allowed opacity-50',
+                    active && 'bg-(--ui-surface)'
                   )}
                   onMouseEnter={() => setActiveIndex(idx)}
-                  onMouseDown={(e) => {
+                  onMouseDown={e => {
                     // Prevent input blur before selection.
                     e.preventDefault();
                   }}

@@ -12,8 +12,8 @@ export function generateSeed(): string {
     screen.width.toString(),
     screen.height.toString(),
     new Date().getTimezoneOffset().toString(),
-    navigator.hardwareConcurrency?.toString() || "0",
-  ].join("|");
+    navigator.hardwareConcurrency?.toString() || '0',
+  ].join('|');
 
   // Add timestamp for uniqueness across visits
   const timestamp = Date.now().toString();

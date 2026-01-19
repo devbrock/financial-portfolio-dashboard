@@ -3,8 +3,8 @@ import type {
   CoinGeckoMarketChart,
   CoinGeckoCoin,
   CoinGeckoSearchResponse,
-} from "@/types/coinGecko";
-import { coinGeckoClient } from "@/services/api/clients/coinGeckoClient";
+} from '@/types/coinGecko';
+import { coinGeckoClient } from '@/services/api/clients/coinGeckoClient';
 
 export type SimplePriceParams = {
   ids: string; // Comma-separated coin IDs (e.g., "bitcoin,ethereum")
@@ -32,18 +32,15 @@ export type CoinDetailsParams = {
 /* Type-safe API functions */
 export const coinGeckoApi = {
   getSimplePrice: async (params: SimplePriceParams) => {
-    return coinGeckoClient.get<CoinGeckoSimplePrice>("/simple/price", {
+    return coinGeckoClient.get<CoinGeckoSimplePrice>('/simple/price', {
       params,
     });
   },
 
   getMarketChart: async (coinId: string, params: MarketChartParams) => {
-    return coinGeckoClient.get<CoinGeckoMarketChart>(
-      `/coins/${coinId}/market_chart`,
-      {
-        params,
-      }
-    );
+    return coinGeckoClient.get<CoinGeckoMarketChart>(`/coins/${coinId}/market_chart`, {
+      params,
+    });
   },
 
   getCoin: async (coinId: string, params: CoinDetailsParams) => {
@@ -53,7 +50,7 @@ export const coinGeckoApi = {
   },
 
   searchCoins: async (query: string) => {
-    return coinGeckoClient.get<CoinGeckoSearchResponse>("/search", {
+    return coinGeckoClient.get<CoinGeckoSearchResponse>('/search', {
       params: { query },
     });
   },

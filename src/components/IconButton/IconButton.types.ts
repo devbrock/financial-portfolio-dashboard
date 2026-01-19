@@ -1,13 +1,10 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { iconButtonStyles } from "./IconButton.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { iconButtonStyles } from './IconButton.styles';
 
 export type IconButtonVariants = VariantProps<typeof iconButtonStyles>;
 
-export type IconButtonProps = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "children"
-> &
+export type IconButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> &
   IconButtonVariants & {
     /**
      * Accessible name for icon-only buttons (required).
@@ -18,5 +15,3 @@ export type IconButtonProps = Omit<
      */
     icon: React.ReactNode;
   };
-
-

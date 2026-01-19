@@ -1,16 +1,9 @@
-import {
-  Card,
-  CardBody,
-  DeltaPill,
-  IconButton,
-  Inline,
-  Text,
-} from "@components";
-import { X } from "lucide-react";
-import { cn } from "@/utils/cn";
-import type { WatchlistCardModel } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatSignedPct } from "@utils/formatSignedPct";
+import { Card, CardBody, DeltaPill, IconButton, Inline, Text } from '@components';
+import { X } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import type { WatchlistCardModel } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatSignedPct } from '@utils/formatSignedPct';
 
 type WatchlistCardProps = {
   item: WatchlistCardModel;
@@ -25,11 +18,10 @@ export function WatchlistCard(props: WatchlistCardProps) {
     <Card
       elevation="sm"
       className={cn(
-        "p-5 w-72 shrink-0",
-        "transition-shadow duration-200 motion-reduce:transition-none",
-        "bg-(--ui-bg)",
-        flash &&
-          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+        'w-72 shrink-0 p-5',
+        'transition-shadow duration-200 motion-reduce:transition-none',
+        'bg-(--ui-bg)',
+        flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
     >
       <CardBody className="space-y-4">
@@ -37,22 +29,16 @@ export function WatchlistCard(props: WatchlistCardProps) {
           <Inline align="center" className="min-w-0 gap-3">
             <div
               className={cn(
-                "grid h-10 w-10 place-items-center rounded-2xl",
-                "border border-(--ui-border) bg-(--ui-surface)",
-                item.logo && "overflow-hidden"
+                'grid h-10 w-10 place-items-center rounded-2xl',
+                'border border-(--ui-border) bg-(--ui-surface)',
+                item.logo && 'overflow-hidden'
               )}
               aria-hidden="true"
             >
               {item.logo ? (
-                <img
-                  src={item.logo}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
+                <img src={item.logo} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="text-sm font-semibold">
-                  {item.name.slice(0, 1)}
-                </span>
+                <span className="text-sm font-semibold">{item.name.slice(0, 1)}</span>
               )}
             </div>
             <div className="min-w-0">
@@ -84,16 +70,8 @@ export function WatchlistCard(props: WatchlistCardProps) {
             </Text>
           </div>
           <DeltaPill
-            direction={
-              item.changePct > 0 ? "up" : item.changePct < 0 ? "down" : "flat"
-            }
-            tone={
-              item.changePct > 0
-                ? "success"
-                : item.changePct < 0
-                  ? "danger"
-                  : "neutral"
-            }
+            direction={item.changePct > 0 ? 'up' : item.changePct < 0 ? 'down' : 'flat'}
+            tone={item.changePct > 0 ? 'success' : item.changePct < 0 ? 'danger' : 'neutral'}
           >
             {formatSignedPct(item.changePct)}
           </DeltaPill>

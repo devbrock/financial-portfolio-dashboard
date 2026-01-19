@@ -1,5 +1,5 @@
-import { useMemo, useEffect, useState, useCallback, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMemo, useEffect, useState, useCallback, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -19,14 +19,14 @@ import {
   SidebarTrigger,
   Stack,
   Text,
-} from "@components";
-import { ChevronDown, Moon, Plus, Search, Sun } from "lucide-react";
-import { cn } from "@/utils/cn";
-import type { SortKey, SortDir, HoldingRow } from "@/types/dashboard";
-import { clampNumber } from "@utils/clampNumber";
-import { compareStrings } from "@utils/compareStrings";
-import { toast } from "sonner";
-import { useDashboardData } from "./hooks/useDashboardData";
+} from '@components';
+import { ChevronDown, Moon, Plus, Search, Sun } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import type { SortKey, SortDir, HoldingRow } from '@/types/dashboard';
+import { clampNumber } from '@utils/clampNumber';
+import { compareStrings } from '@utils/compareStrings';
+import { toast } from 'sonner';
+import { useDashboardData } from './hooks/useDashboardData';
 import {
   AddAssetModal,
   AddWatchlistModal,
@@ -38,34 +38,31 @@ import {
   HoldingsMobileCard,
   EmptyHoldings,
   WatchlistCard,
-} from "./components";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+} from './components';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   removeHolding,
   removeWatchlistItem,
   updatePreferences,
-} from "@/features/portfolio/portfolioSlice";
-import type { DashboardNav } from "./components/DashboardSidebar";
+} from '@/features/portfolio/portfolioSlice';
+import type { DashboardNav } from './components/DashboardSidebar';
 
 export function Dashboard() {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
-  const theme = useAppSelector((state) => state.portfolio.preferences.theme);
-  const [range, setRange] = useState<"7d" | "30d" | "90d" | "1y">("30d");
-  const [holdingsQuery, setHoldingsQuery] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("name");
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
-  const [activeNav, setActiveNav] = useState<DashboardNav>("Overview");
+  const theme = useAppSelector(state => state.portfolio.preferences.theme);
+  const [range, setRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
+  const [holdingsQuery, setHoldingsQuery] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>('name');
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
+  const [activeNav, setActiveNav] = useState<DashboardNav>('Overview');
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [isAddWatchlistOpen, setIsAddWatchlistOpen] = useState(false);
   const [flashPrices, setFlashPrices] = useState(false);
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
-  const handleAddWatchlist = useCallback(
-    () => setIsAddWatchlistOpen(true),
-    []
-  );
+  const handleAddWatchlist = useCallback(() => setIsAddWatchlistOpen(true), []);
   const handleLogout = useCallback(() => undefined, []);
   const dataUpdatedAtRef = useRef(0);
   const lastResetRef = useRef(0);
@@ -82,14 +79,14 @@ export function Dashboard() {
     errorMessage,
     dataUpdatedAt,
   } = useDashboardData();
-  const [liveMessage, setLiveMessage] = useState("");
-  const [errorAnnounce, setErrorAnnounce] = useState("");
+  const [liveMessage, setLiveMessage] = useState('');
+  const [errorAnnounce, setErrorAnnounce] = useState('');
   const lastToastErrorRef = useRef<string | null>(null);
 
   // Update "last updated" timer
   useEffect(() => {
     const t = window.setInterval(() => {
-      setLastUpdatedSeconds((s) => {
+      setLastUpdatedSeconds(s => {
         if (dataUpdatedAtRef.current !== lastResetRef.current) {
           lastResetRef.current = dataUpdatedAtRef.current;
           return 0;
@@ -104,7 +101,7 @@ export function Dashboard() {
     dataUpdatedAtRef.current = dataUpdatedAt;
     if (dataUpdatedAt > 0) {
       setFlashPrices(true);
-      setLiveMessage("Prices updated.");
+      setLiveMessage('Prices updated.');
       const handle = window.setTimeout(() => setFlashPrices(false), 1200);
       return () => window.clearTimeout(handle);
     }
@@ -112,21 +109,21 @@ export function Dashboard() {
 
   useEffect(() => {
     if (isLoading) {
-      setLiveMessage("Loading portfolio data.");
+      setLiveMessage('Loading portfolio data.');
       return;
     }
-    setLiveMessage("Portfolio data loaded.");
+    setLiveMessage('Portfolio data loaded.');
   }, [isLoading]);
 
   useEffect(() => {
     if (isError) {
-      setErrorAnnounce(errorMessage || "Market data unavailable.");
+      setErrorAnnounce(errorMessage || 'Market data unavailable.');
       if (errorMessage && lastToastErrorRef.current !== errorMessage) {
         toast.error(errorMessage);
         lastToastErrorRef.current = errorMessage;
       }
     } else {
-      setErrorAnnounce("");
+      setErrorAnnounce('');
       lastToastErrorRef.current = null;
     }
   }, [errorMessage, isError]);
@@ -135,31 +132,27 @@ export function Dashboard() {
   const visibleHoldings: readonly HoldingRow[] = useMemo(() => {
     const q = holdingsQuery.trim().toLowerCase();
     const filtered = q
-      ? holdings.filter(
-          (h) =>
-            h.name.toLowerCase().includes(q) ||
-            h.ticker.toLowerCase().includes(q)
-        )
+      ? holdings.filter(h => h.name.toLowerCase().includes(q) || h.ticker.toLowerCase().includes(q))
       : holdings;
 
-    const dir = sortDir === "asc" ? 1 : -1;
+    const dir = sortDir === 'asc' ? 1 : -1;
     const sorted = [...filtered].sort((a, b) => {
       switch (sortKey) {
-        case "name":
+        case 'name':
           return dir * compareStrings(a.name, b.name);
-        case "date":
+        case 'date':
           return dir * compareStrings(a.date, b.date);
-        case "status":
+        case 'status':
           return dir * compareStrings(a.status, b.status);
-        case "volume":
+        case 'volume':
           return dir * (a.volume - b.volume);
-        case "changePct":
+        case 'changePct':
           return dir * (a.changePct - b.changePct);
-        case "purchasePrice":
+        case 'purchasePrice':
           return dir * (a.purchasePrice - b.purchasePrice);
-        case "priceUsd":
+        case 'priceUsd':
           return dir * (a.priceUsd - b.priceUsd);
-        case "pnlUsd":
+        case 'pnlUsd':
           return dir * (a.pnlUsd - b.pnlUsd);
       }
     });
@@ -168,7 +161,7 @@ export function Dashboard() {
   }, [holdings, holdingsQuery, sortDir, sortKey]);
 
   const toggleTheme = useCallback(() => {
-    dispatch(updatePreferences({ theme: theme === "dark" ? "light" : "dark" }));
+    dispatch(updatePreferences({ theme: theme === 'dark' ? 'light' : 'dark' }));
   }, [dispatch, theme]);
 
   const handleRetry = useCallback(() => {
@@ -178,19 +171,19 @@ export function Dashboard() {
   useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
     const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
+    root.classList.toggle('dark', theme === 'dark');
     return () => {
-      root.classList.remove("dark");
+      root.classList.remove('dark');
     };
   }, [theme]);
 
   const triggerSort = (key: SortKey) => {
-    setSortKey((prev) => {
+    setSortKey(prev => {
       if (prev !== key) {
-        setSortDir("asc");
+        setSortDir('asc');
         return key;
       }
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+      setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
       return prev;
     });
   };
@@ -200,16 +193,16 @@ export function Dashboard() {
       <div
         className={cn(
           // Fixed app shell: sidebar stays pinned; main content scrolls.
-          "h-screen overflow-hidden",
+          'h-screen overflow-hidden',
           // In dark mode `--ui-surface` is intentionally translucent; use a solid base
           // so the page doesn't look "washed out" when the canvas/body behind is light.
-          theme === "dark" ? "bg-(--ui-bg)" : "bg-(--ui-surface)",
-          theme === "dark" && "dark"
+          theme === 'dark' ? 'bg-(--ui-bg)' : 'bg-(--ui-surface)',
+          theme === 'dark' && 'dark'
         )}
       >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
         >
           Skip to main content
         </a>
@@ -224,46 +217,34 @@ export function Dashboard() {
           <DashboardSidebar activeNav={activeNav} onNavChange={setActiveNav} />
 
           {/* Main content */}
-          <main
-            id="main-content"
-            className="min-w-0 min-h-0 flex-1 overflow-y-auto"
-          >
+          <main id="main-content" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
             <Container className="max-w-none px-0">
               <Stack gap="lg">
                 {/* App header */}
                 <header
                   className={cn(
-                    "rounded-2xl border border-(--ui-border) bg-(--ui-bg)",
-                    "px-4 py-3 shadow-sm shadow-black/5"
+                    'rounded-2xl border border-(--ui-border) bg-(--ui-bg)',
+                    'px-4 py-3 shadow-sm shadow-black/5'
                   )}
                 >
                   <Inline align="center" justify="between" className="gap-3">
                     <SidebarTrigger ariaLabel="Toggle sidebar" />
-                    <Inline
-                      align="center"
-                      className="w-full max-w-[420px] gap-2"
-                    >
+                    <Inline align="center" className="w-full max-w-[420px] gap-2">
                       <div className="relative w-full">
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
+                        <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
                           <Search />
                         </span>
-                        <Input
-                          aria-label="Search"
-                          placeholder="Search..."
-                          className="pl-9"
-                        />
+                        <Input aria-label="Search" placeholder="Search..." className="pl-9" />
                       </div>
                     </Inline>
 
                     <Inline align="center" className="shrink-0 gap-2">
                       <IconButton
-                        ariaLabel={`Switch to ${
-                          theme === "dark" ? "light" : "dark"
-                        } theme`}
+                        ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                         variant="ghost"
                         size="md"
                         onClick={toggleTheme}
-                        icon={theme === "dark" ? <Sun /> : <Moon />}
+                        icon={theme === 'dark' ? <Sun /> : <Moon />}
                       />
 
                       <DropdownMenu>
@@ -280,17 +261,12 @@ export function Dashboard() {
                                 aria-hidden="true"
                                 className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
                               >
-                                <span className="text-sm font-semibold">
-                                  BB
-                                </span>
+                                <span className="text-sm font-semibold">BB</span>
                               </span>
                             }
                           >
                             <span className="hidden text-left sm:block">
-                              <Text
-                                as="div"
-                                className="text-sm font-semibold leading-4"
-                              >
+                              <Text as="div" className="text-sm leading-4 font-semibold">
                                 Brock Balducci
                               </Text>
                             </span>
@@ -298,12 +274,10 @@ export function Dashboard() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           className={cn(
-                            "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                            'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                           )}
                         >
-                          <DropdownMenuItem onClick={handleLogout}>
-                            Logout
-                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </Inline>
@@ -313,27 +287,16 @@ export function Dashboard() {
                 {isError ? (
                   <Card className="border-amber-200 bg-amber-50/60">
                     <CardBody>
-                      <Inline
-                        align="center"
-                        justify="between"
-                        className="gap-4"
-                      >
+                      <Inline align="center" justify="between" className="gap-4">
                         <div className="min-w-0">
-                          <Text
-                            as="div"
-                            className="font-semibold text-amber-900"
-                          >
+                          <Text as="div" className="font-semibold text-amber-900">
                             Market data is temporarily unavailable.
                           </Text>
                           <Text as="div" size="sm" className="text-amber-800">
                             {errorMessage}
                           </Text>
                         </div>
-                        <Button
-                          variant="secondary"
-                          className="shrink-0"
-                          onClick={handleRetry}
-                        >
+                        <Button variant="secondary" className="shrink-0" onClick={handleRetry}>
                           Retry
                         </Button>
                       </Inline>
@@ -353,11 +316,7 @@ export function Dashboard() {
                 <section aria-label="My watchlist">
                   <Card>
                     <CardHeader className="pb-3">
-                      <Inline
-                        align="center"
-                        justify="between"
-                        className="w-full gap-3"
-                      >
+                      <Inline align="center" justify="between" className="w-full gap-3">
                         <div className="min-w-0">
                           <Heading as="h3" className="text-base">
                             My Watchlist
@@ -366,11 +325,7 @@ export function Dashboard() {
                             Track live prices for assets you care about.
                           </Text>
                         </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={handleAddWatchlist}
-                        >
+                        <Button variant="secondary" size="sm" onClick={handleAddWatchlist}>
                           Add to Watchlist
                         </Button>
                       </Inline>
@@ -382,14 +337,9 @@ export function Dashboard() {
                             Your watchlist is empty
                           </Text>
                           <Text as="div" size="sm" tone="muted">
-                            Add a stock or crypto to start tracking live
-                            prices.
+                            Add a stock or crypto to start tracking live prices.
                           </Text>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={handleAddWatchlist}
-                          >
+                          <Button variant="primary" size="sm" onClick={handleAddWatchlist}>
                             Add your first asset
                           </Button>
                         </div>
@@ -398,14 +348,14 @@ export function Dashboard() {
                           className="flex gap-3 overflow-x-auto pb-2"
                           aria-label="Watchlist ticker list"
                         >
-                          {watchlist.map((item) => (
+                          {watchlist.map(item => (
                             <WatchlistCard
                               key={item.id}
                               item={item}
                               flash={flashPrices}
-                              onRemove={(id) => {
+                              onRemove={id => {
                                 dispatch(removeWatchlistItem(id));
-                                toast.success("Removed from your watchlist.");
+                                toast.success('Removed from your watchlist.');
                               }}
                             />
                           ))}
@@ -416,15 +366,8 @@ export function Dashboard() {
                 </section>
 
                 {/* Charts */}
-                <section
-                  aria-label="Charts"
-                  className="grid grid-cols-1 gap-4 lg:grid-cols-2"
-                >
-                  <PerformanceChart
-                    range={range}
-                    onRangeChange={setRange}
-                    flash={flashPrices}
-                  />
+                <section aria-label="Charts" className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <PerformanceChart range={range} onRangeChange={setRange} flash={flashPrices} />
                   <AllocationChart
                     data={allocation}
                     totalInvested={metrics.totalCostBasis}
@@ -436,11 +379,7 @@ export function Dashboard() {
                 <section aria-label="Holdings">
                   <Card>
                     <CardHeader className="pb-3">
-                      <Inline
-                        align="center"
-                        justify="between"
-                        className="w-full gap-3"
-                      >
+                      <Inline align="center" justify="between" className="w-full gap-3">
                         <div className="min-w-0 flex-1">
                           <Heading as="h3" className="text-base">
                             My Holdings
@@ -452,27 +391,21 @@ export function Dashboard() {
 
                         <div className="flex w-full flex-1 justify-center">
                           <div className="relative w-full max-w-[280px]">
-                            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-(--ui-text-muted)">
+                            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
                               <Search />
                             </span>
                             <Input
                               aria-label="Search holdings"
                               placeholder="Search..."
                               value={holdingsQuery}
-                              onChange={(e) =>
-                                setHoldingsQuery(e.currentTarget.value)
-                              }
+                              onChange={e => setHoldingsQuery(e.currentTarget.value)}
                               className="pl-9"
                             />
                           </div>
                         </div>
 
                         <div className="flex flex-1 justify-end">
-                          <Button
-                            variant="primary"
-                            leftIcon={<Plus />}
-                            onClick={handleAddAsset}
-                          >
+                          <Button variant="primary" leftIcon={<Plus />} onClick={handleAddAsset}>
                             Add Asset
                           </Button>
                         </div>
@@ -502,7 +435,7 @@ export function Dashboard() {
                           <EmptyHoldings onAddHolding={handleAddAsset} />
                         ) : (
                           <div className="space-y-3">
-                            {visibleHoldings.map((h) => (
+                            {visibleHoldings.map(h => (
                               <HoldingsMobileCard
                                 key={h.id}
                                 holding={h}
@@ -524,17 +457,14 @@ export function Dashboard() {
         {/* Confirm remove dialog */}
         <Modal
           open={confirmRemoveId !== null}
-          onOpenChange={(open) => {
+          onOpenChange={open => {
             if (!open) setConfirmRemoveId(null);
           }}
           title="Remove holding?"
           description="This will remove the position from your dashboard. You can add it again later."
           footer={
             <>
-              <Button
-                variant="secondary"
-                onClick={() => setConfirmRemoveId(null)}
-              >
+              <Button variant="secondary" onClick={() => setConfirmRemoveId(null)}>
                 Cancel
               </Button>
               <Button
@@ -542,7 +472,7 @@ export function Dashboard() {
                 onClick={() => {
                   if (confirmRemoveId) {
                     dispatch(removeHolding(confirmRemoveId));
-                    toast.success("Asset removed from your portfolio.");
+                    toast.success('Asset removed from your portfolio.');
                   }
                   setConfirmRemoveId(null);
                 }}
@@ -553,16 +483,13 @@ export function Dashboard() {
           }
         >
           <Text as="p" size="sm" tone="muted">
-            Think of this like removing a sticky note from your desk: it doesn't
-            change the company, it just clears your view.
+            Think of this like removing a sticky note from your desk: it doesn't change the company,
+            it just clears your view.
           </Text>
         </Modal>
 
         <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
-        <AddWatchlistModal
-          open={isAddWatchlistOpen}
-          onOpenChange={setIsAddWatchlistOpen}
-        />
+        <AddWatchlistModal open={isAddWatchlistOpen} onOpenChange={setIsAddWatchlistOpen} />
       </div>
     </SidebarProvider>
   );

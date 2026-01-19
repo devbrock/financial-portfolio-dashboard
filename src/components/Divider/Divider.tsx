@@ -1,13 +1,13 @@
-import { cn } from "@utils/cn";
-import type { DividerProps } from "./Divider.types";
-import { dividerStyles } from "./Divider.styles";
+import { cn } from '@utils/cn';
+import type { DividerProps } from './Divider.types';
+import { dividerStyles } from './Divider.styles';
 
 /**
  * Divider
  * Subtle separator for content groups.
  */
 export function Divider(props: DividerProps) {
-  const { orientation = "horizontal", className, ...rest } = props;
+  const { orientation = 'horizontal', className, ...rest } = props;
 
   return (
     <div

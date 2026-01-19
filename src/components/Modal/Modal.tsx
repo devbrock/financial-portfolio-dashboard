@@ -1,8 +1,8 @@
-import * as React from "react";
-import { cn } from "@utils/cn";
-import { Portal } from "../_internal/portal";
-import { getFocusableElements } from "../_internal/dom";
-import type { ModalProps } from "./Modal.types";
+import * as React from 'react';
+import { cn } from '@utils/cn';
+import { Portal } from '../_internal/portal';
+import { getFocusableElements } from '../_internal/dom';
+import type { ModalProps } from './Modal.types';
 import {
   modalContentClassName,
   modalDescriptionClassName,
@@ -10,7 +10,7 @@ import {
   modalHeaderClassName,
   modalOverlayClassName,
   modalTitleClassName,
-} from "./Modal.styles";
+} from './Modal.styles';
 
 /**
  * Modal
@@ -42,9 +42,7 @@ export function Modal(props: ModalProps) {
   React.useEffect(() => {
     if (!open) return;
     previouslyFocusedRef.current =
-      (document.activeElement instanceof HTMLElement &&
-        document.activeElement) ||
-      null;
+      (document.activeElement instanceof HTMLElement && document.activeElement) || null;
   }, [open]);
 
   React.useEffect(() => {
@@ -64,12 +62,12 @@ export function Modal(props: ModalProps) {
     if (!open) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && closeOnEsc) {
+      if (e.key === 'Escape' && closeOnEsc) {
         e.preventDefault();
         onOpenChange(false);
         return;
       }
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       const content = contentRef.current;
       if (!content) return;
@@ -93,8 +91,8 @@ export function Modal(props: ModalProps) {
       }
     };
 
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [closeOnEsc, onOpenChange, open]);
 
   if (!open) return null;
@@ -103,7 +101,7 @@ export function Modal(props: ModalProps) {
     <Portal>
       <div
         className={modalOverlayClassName}
-        onMouseDown={(e) => {
+        onMouseDown={e => {
           if (!closeOnOverlayClick) return;
           if (e.target === e.currentTarget) onOpenChange(false);
         }}

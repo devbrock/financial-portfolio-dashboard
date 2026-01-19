@@ -1,20 +1,20 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from 'msw';
 
-const FINNHUB_BASE = "https://finnhub.io/api/v1";
-const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
+const FINNHUB_BASE = 'https://finnhub.io/api/v1';
+const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
 
 export const handlers = [
   http.get(`${FINNHUB_BASE}/search`, ({ request }) => {
     const url = new URL(request.url);
-    const query = url.searchParams.get("q") ?? "";
+    const query = url.searchParams.get('q') ?? '';
 
     const result = query
       ? [
           {
-            description: "Apple Inc",
-            displaySymbol: "AAPL",
-            symbol: "AAPL",
-            type: "Common Stock",
+            description: 'Apple Inc',
+            displaySymbol: 'AAPL',
+            symbol: 'AAPL',
+            type: 'Common Stock',
           },
         ]
       : [];
@@ -23,8 +23,8 @@ export const handlers = [
   }),
   http.get(`${FINNHUB_BASE}/quote`, ({ request }) => {
     const url = new URL(request.url);
-    const symbol = url.searchParams.get("symbol") ?? "";
-    const price = symbol === "AAPL" ? 190 : 120;
+    const symbol = url.searchParams.get('symbol') ?? '';
+    const price = symbol === 'AAPL' ? 190 : 120;
     return HttpResponse.json({
       c: price,
       d: 1,
@@ -37,33 +37,33 @@ export const handlers = [
   }),
   http.get(`${FINNHUB_BASE}/stock/profile2`, ({ request }) => {
     const url = new URL(request.url);
-    const symbol = url.searchParams.get("symbol") ?? "";
+    const symbol = url.searchParams.get('symbol') ?? '';
     return HttpResponse.json({
-      country: "US",
-      currency: "USD",
-      exchange: "NASDAQ",
-      ipo: "1980-12-12",
+      country: 'US',
+      currency: 'USD',
+      exchange: 'NASDAQ',
+      ipo: '1980-12-12',
       marketCapitalization: 1000,
-      name: symbol === "AAPL" ? "Apple" : "Company",
-      phone: "",
+      name: symbol === 'AAPL' ? 'Apple' : 'Company',
+      phone: '',
       shareOutstanding: 100,
       ticker: symbol,
-      weburl: "https://example.com",
-      logo: "https://logo.example.com/logo.png",
-      finnhubIndustry: "Technology",
+      weburl: 'https://example.com',
+      logo: 'https://logo.example.com/logo.png',
+      finnhubIndustry: 'Technology',
     });
   }),
   http.get(`${COINGECKO_BASE}/search`, ({ request }) => {
     const url = new URL(request.url);
-    const query = url.searchParams.get("query") ?? "";
+    const query = url.searchParams.get('query') ?? '';
     const coins = query
       ? [
           {
-            id: "bitcoin",
-            name: "Bitcoin",
-            symbol: "btc",
-            thumb: "https://assets.coingecko.com/coins/images/1/thumb.png",
-            large: "https://assets.coingecko.com/coins/images/1/large.png",
+            id: 'bitcoin',
+            name: 'Bitcoin',
+            symbol: 'btc',
+            thumb: 'https://assets.coingecko.com/coins/images/1/thumb.png',
+            large: 'https://assets.coingecko.com/coins/images/1/large.png',
             market_cap_rank: 1,
           },
         ]
@@ -72,13 +72,12 @@ export const handlers = [
   }),
   http.get(`${COINGECKO_BASE}/simple/price`, ({ request }) => {
     const url = new URL(request.url);
-    const ids = (url.searchParams.get("ids") ?? "").split(",");
-    const response: Record<string, { usd: number; usd_24h_change: number }> =
-      {};
-    ids.filter(Boolean).forEach((id) => {
+    const ids = (url.searchParams.get('ids') ?? '').split(',');
+    const response: Record<string, { usd: number; usd_24h_change: number }> = {};
+    ids.filter(Boolean).forEach(id => {
       response[id] = {
-        usd: id === "bitcoin" ? 50000 : 100,
-        usd_24h_change: id === "bitcoin" ? 2.5 : -1.2,
+        usd: id === 'bitcoin' ? 50000 : 100,
+        usd_24h_change: id === 'bitcoin' ? 2.5 : -1.2,
       };
     });
     return HttpResponse.json(response);
@@ -88,11 +87,11 @@ export const handlers = [
     return HttpResponse.json({
       id,
       symbol: id.slice(0, 3),
-      name: id === "bitcoin" ? "Bitcoin" : id,
+      name: id === 'bitcoin' ? 'Bitcoin' : id,
       image: {
-        thumb: "https://assets.coingecko.com/coins/images/1/thumb.png",
-        small: "https://assets.coingecko.com/coins/images/1/small.png",
-        large: "https://assets.coingecko.com/coins/images/1/large.png",
+        thumb: 'https://assets.coingecko.com/coins/images/1/thumb.png',
+        small: 'https://assets.coingecko.com/coins/images/1/small.png',
+        large: 'https://assets.coingecko.com/coins/images/1/large.png',
       },
     });
   }),

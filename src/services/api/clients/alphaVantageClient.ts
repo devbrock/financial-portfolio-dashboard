@@ -1,7 +1,7 @@
-import axios from "axios";
-import { applyApiErrorHandling } from "./withErrorHandling";
+import axios from 'axios';
+import { applyApiErrorHandling } from './withErrorHandling';
 
-const BASE_URL = "https://www.alphavantage.co/query";
+const BASE_URL = 'https://www.alphavantage.co/query';
 
 /* Axios client for the Alpha Vantage API */
 export const alphaVantageClient = axios.create({
@@ -11,4 +11,4 @@ export const alphaVantageClient = axios.create({
   },
 });
 
-applyApiErrorHandling(alphaVantageClient, "Alpha Vantage");
+applyApiErrorHandling(alphaVantageClient, 'Alpha Vantage');

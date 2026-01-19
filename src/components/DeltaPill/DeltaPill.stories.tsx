@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { DeltaPill } from "./DeltaPill";
+import type { Meta, StoryObj } from '@storybook/react';
+import { DeltaPill } from './DeltaPill';
 
 const meta: Meta<typeof DeltaPill> = {
-  title: "Data Display/DeltaPill",
+  title: 'Data Display/DeltaPill',
   component: DeltaPill,
 };
 export default meta;
@@ -24,5 +24,3 @@ export const Examples: Story = {
     </div>
   ),
 };
-
-

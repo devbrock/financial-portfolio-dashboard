@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Heading } from "./Heading";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Heading } from './Heading';
 
 const meta: Meta<typeof Heading> = {
-  title: "Primitives/Heading",
+  title: 'Primitives/Heading',
   component: Heading,
 };
 export default meta;
@@ -31,5 +31,3 @@ export const Inverse: Story = {
     </div>
   ),
 };
-
-

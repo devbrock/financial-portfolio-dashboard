@@ -1,8 +1,8 @@
-import * as React from "react";
-import { cn } from "@utils/cn";
-import { Portal } from "../_internal/portal";
-import type { TooltipProps } from "./Tooltip.types";
-import { tooltipContentClassName } from "./Tooltip.styles";
+import * as React from 'react';
+import { cn } from '@utils/cn';
+import { Portal } from '../_internal/portal';
+import type { TooltipProps } from './Tooltip.types';
+import { tooltipContentClassName } from './Tooltip.styles';
 
 /**
  * Tooltip
@@ -14,7 +14,7 @@ import { tooltipContentClassName } from "./Tooltip.styles";
  * - Must not contain interactive content.
  */
 export function Tooltip(props: TooltipProps) {
-  const { content, children, side = "top", delayMs = 0 } = props;
+  const { content, children, side = 'top', delayMs = 0 } = props;
   const child = children as React.ReactElement<React.HTMLAttributes<Element>>;
   const id = React.useId();
   const [open, setOpen] = React.useState(false);
@@ -27,7 +27,7 @@ export function Tooltip(props: TooltipProps) {
 
   const scheduleOpen = (anchor: HTMLElement) => {
     const rect = anchor.getBoundingClientRect();
-    const top = side === "top" ? rect.top - 10 : rect.bottom + 10;
+    const top = side === 'top' ? rect.top - 10 : rect.bottom + 10;
     const left = rect.left + rect.width / 2;
 
     const openNow = () => {
@@ -50,7 +50,7 @@ export function Tooltip(props: TooltipProps) {
   };
 
   const childProps = {
-    "aria-describedby": open ? id : undefined,
+    'aria-describedby': open ? id : undefined,
     onMouseEnter: (e: React.MouseEvent<Element>) => {
       child.props.onMouseEnter?.(e);
       if (e.defaultPrevented) return;
@@ -69,7 +69,7 @@ export function Tooltip(props: TooltipProps) {
       child.props.onBlur?.(e);
       close();
     },
-  } satisfies Partial<React.ComponentProps<"span">>;
+  } satisfies Partial<React.ComponentProps<'span'>>;
 
   return (
     <>
@@ -82,14 +82,11 @@ export function Tooltip(props: TooltipProps) {
             role="tooltip"
             className={cn(tooltipContentClassName)}
             style={{
-              position: "fixed",
+              position: 'fixed',
               top: pos.top,
               left: pos.left,
-              transform:
-                side === "top"
-                  ? "translate(-50%, -100%)"
-                  : "translate(-50%, 0)",
-              pointerEvents: "none",
+              transform: side === 'top' ? 'translate(-50%, -100%)' : 'translate(-50%, 0)',
+              pointerEvents: 'none',
               zIndex: 50,
             }}
           >

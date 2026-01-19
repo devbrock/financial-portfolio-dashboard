@@ -1,6 +1,6 @@
-import { cn } from "@utils/cn";
-import type { ChipProps } from "./Chip.types";
-import { chipFocusStyles, chipStyles } from "./Chip.styles";
+import { cn } from '@utils/cn';
+import type { ChipProps } from './Chip.types';
+import { chipFocusStyles, chipStyles } from './Chip.styles';
 
 /**
  * Chip
@@ -18,11 +18,7 @@ export function Chip(props: ChipProps) {
       type="button"
       aria-pressed={selected}
       disabled={disabled}
-      className={cn(
-        chipStyles({ selected, disabled }),
-        chipFocusStyles,
-        className
-      )}
+      className={cn(chipStyles({ selected, disabled }), chipFocusStyles, className)}
       {...rest}
     />
   );

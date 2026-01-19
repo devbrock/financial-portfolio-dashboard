@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type TooltipProps = {
   /**
@@ -12,11 +12,9 @@ export type TooltipProps = {
   /**
    * Preferred side for placement.
    */
-  side?: "top" | "bottom";
+  side?: 'top' | 'bottom';
   /**
    * Optional delay before showing (ms).
    */
   delayMs?: number;
 };
-
-

@@ -1,7 +1,7 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@utils/cn";
-import type { StackProps } from "./Stack.types";
-import { stackStyles } from "./Stack.styles";
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@utils/cn';
+import type { StackProps } from './Stack.types';
+import { stackStyles } from './Stack.styles';
 
 /**
  * Stack
@@ -9,9 +9,7 @@ import { stackStyles } from "./Stack.styles";
  */
 export function Stack(props: StackProps) {
   const { asChild, className, gap, align, ...rest } = props;
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot : 'div';
 
-  return (
-    <Comp className={cn(stackStyles({ gap, align }), className)} {...rest} />
-  );
+  return <Comp className={cn(stackStyles({ gap, align }), className)} {...rest} />;
 }

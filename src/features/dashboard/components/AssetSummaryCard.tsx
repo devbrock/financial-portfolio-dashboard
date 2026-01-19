@@ -11,12 +11,12 @@ import {
   Inline,
   Skeleton,
   Text,
-} from "@components";
-import { EllipsisVertical } from "lucide-react";
-import { cn } from "@/utils/cn";
-import type { AssetCardModel } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
-import { formatSignedPct } from "@utils/formatSignedPct";
+} from '@components';
+import { EllipsisVertical } from 'lucide-react';
+import { cn } from '@/utils/cn';
+import type { AssetCardModel } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { formatSignedPct } from '@utils/formatSignedPct';
 
 type AssetSummaryCardProps = {
   asset: AssetCardModel;
@@ -29,27 +29,26 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
 
   const deltaTone =
     asset.weeklyDeltaPct > 0
-      ? ("success" as const)
+      ? ('success' as const)
       : asset.weeklyDeltaPct < 0
-        ? ("danger" as const)
-        : ("neutral" as const);
+        ? ('danger' as const)
+        : ('neutral' as const);
 
   const deltaDir =
     asset.weeklyDeltaPct > 0
-      ? ("up" as const)
+      ? ('up' as const)
       : asset.weeklyDeltaPct < 0
-        ? ("down" as const)
-        : ("flat" as const);
+        ? ('down' as const)
+        : ('flat' as const);
 
   return (
     <Card
       elevation="sm"
       className={cn(
-        "p-5",
-        "transition-shadow duration-200 motion-reduce:transition-none",
-        !loading && "hover:shadow-md hover:shadow-black/10",
-        flash &&
-          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+        'p-5',
+        'transition-shadow duration-200 motion-reduce:transition-none',
+        !loading && 'hover:shadow-md hover:shadow-black/10',
+        flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
     >
       <CardBody className="space-y-3">
@@ -57,22 +56,16 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
           <Inline align="center" className="min-w-0 gap-3">
             <div
               className={cn(
-                "grid h-10 w-10 place-items-center rounded-2xl",
-                "border border-(--ui-border) bg-(--ui-surface)",
-                asset.logo && "overflow-hidden"
+                'grid h-10 w-10 place-items-center rounded-2xl',
+                'border border-(--ui-border) bg-(--ui-surface)',
+                asset.logo && 'overflow-hidden'
               )}
               aria-hidden="true"
             >
               {asset.logo ? (
-                <img
-                  src={asset.logo}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
+                <img src={asset.logo} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="text-sm font-semibold">
-                  {asset.name.slice(0, 1)}
-                </span>
+                <span className="text-sm font-semibold">{asset.name.slice(0, 1)}</span>
               )}
             </div>
             <div className="min-w-0">
@@ -105,18 +98,12 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className={cn(
-                "animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none"
+                'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
               )}
             >
-              <DropdownMenuItem onClick={() => undefined}>
-                View asset
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => undefined}>
-                Add alert
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => undefined}>
-                Export
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>View asset</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>Add alert</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => undefined}>Export</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </Inline>

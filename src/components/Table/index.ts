@@ -1,4 +1,2 @@
-export * from "./Table";
-export type * from "./Table.types";
-
-
+export * from './Table';
+export type * from './Table.types';

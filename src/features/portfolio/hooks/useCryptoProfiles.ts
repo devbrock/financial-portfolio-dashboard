@@ -1,6 +1,6 @@
-import { useQueries } from "@tanstack/react-query";
-import { GetCryptoCoinQueryOptions } from "@/queryOptions/GetCryptoCoinQueryOptions";
-import type { CoinGeckoCoin } from "@/types/coinGecko";
+import { useQueries } from '@tanstack/react-query';
+import { GetCryptoCoinQueryOptions } from '@/queryOptions/GetCryptoCoinQueryOptions';
+import type { CoinGeckoCoin } from '@/types/coinGecko';
 
 const COIN_DETAILS_PARAMS = {
   localization: false,
@@ -16,14 +16,12 @@ const COIN_DETAILS_PARAMS = {
  */
 export function useCryptoProfiles(coinIds: string[]) {
   const queries = useQueries({
-    queries: coinIds.map((coinId) =>
-      GetCryptoCoinQueryOptions(coinId, COIN_DETAILS_PARAMS)
-    ),
+    queries: coinIds.map(coinId => GetCryptoCoinQueryOptions(coinId, COIN_DETAILS_PARAMS)),
   });
 
-  const isLoading = queries.some((query) => query.isLoading);
-  const isError = queries.some((query) => query.isError);
-  const error = queries.find((query) => query.error)?.error ?? null;
+  const isLoading = queries.some(query => query.isLoading);
+  const isError = queries.some(query => query.isError);
+  const error = queries.find(query => query.error)?.error ?? null;
 
   const profileMap = new Map<string, CoinGeckoCoin>();
   queries.forEach((query, index) => {

@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Card, CardBody, CardFooter, CardHeader } from "./Card";
-import { Button } from "../Button/Button";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card, CardBody, CardFooter, CardHeader } from './Card';
+import { Button } from '../Button/Button';
 
 const meta: Meta<typeof Card> = {
-  title: "Primitives/Card",
+  title: 'Primitives/Card',
   component: Card,
 };
 export default meta;
@@ -16,18 +16,14 @@ export const Default: Story = {
       <CardHeader>
         <div>
           <div className="text-sm font-semibold">Account Overview</div>
-          <div className="text-sm text-(--ui-text-muted)">
-            Updated 2 minutes ago
-          </div>
+          <div className="text-sm text-(--ui-text-muted)">Updated 2 minutes ago</div>
         </div>
         <Button size="sm" variant="secondary">
           Action
         </Button>
       </CardHeader>
       <CardBody>
-        <div className="text-sm text-(--ui-text)">
-          Executive-friendly body content.
-        </div>
+        <div className="text-sm text-(--ui-text)">Executive-friendly body content.</div>
       </CardBody>
       <CardFooter>
         <Button variant="ghost">Cancel</Button>
@@ -49,5 +45,3 @@ export const Inverse: Story = {
     </Card>
   ),
 };
-
-

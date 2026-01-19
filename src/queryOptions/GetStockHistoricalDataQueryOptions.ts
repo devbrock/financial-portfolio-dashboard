@@ -1,16 +1,16 @@
-import { queryOptions } from "@tanstack/react-query";
-import { alphaVantageApi } from "@functions/alphaVantageApi";
-import { ApiError } from "@/services/api/clients/apiError";
+import { queryOptions } from '@tanstack/react-query';
+import { alphaVantageApi } from '@functions/alphaVantageApi';
+import { ApiError } from '@/services/api/clients/apiError';
 
 export type GetStockHistoricalDataQueryKey = readonly [
-  "stockHistoricalData",
+  'stockHistoricalData',
   string,
-  "compact" | "full"
+  'compact' | 'full',
 ];
 
 const getStockHistoricalData = async (
   symbol: string,
-  outputsize: "compact" | "full" = "compact"
+  outputsize: 'compact' | 'full' = 'compact'
 ) => {
   const { data } = await alphaVantageApi.getTimeSeriesDaily(symbol, outputsize);
   return data;
@@ -18,14 +18,10 @@ const getStockHistoricalData = async (
 
 const GetStockHistoricalDataQueryOptions = (
   symbol: string,
-  outputsize: "compact" | "full" = "compact"
+  outputsize: 'compact' | 'full' = 'compact'
 ) => {
   return queryOptions({
-    queryKey: [
-      "stockHistoricalData",
-      symbol,
-      outputsize,
-    ] as GetStockHistoricalDataQueryKey,
+    queryKey: ['stockHistoricalData', symbol, outputsize] as GetStockHistoricalDataQueryKey,
     queryFn: () => getStockHistoricalData(symbol, outputsize),
     retry: (failureCount, error) => {
       if (error instanceof ApiError && error.status === 429) {
@@ -33,8 +29,7 @@ const GetStockHistoricalDataQueryOptions = (
       }
       return failureCount < 1;
     },
-    retryDelay: (attemptIndex) =>
-      Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: Infinity, // Historical data never changes
     gcTime: Infinity, // Keep in cache indefinitely
   });

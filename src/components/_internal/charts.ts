@@ -25,7 +25,5 @@ export type ChartAxisTickFormatter = (value: string | number) => string;
  * Converts a value to a label-friendly string.
  */
 export function toTick(value: string | number): string {
-  return typeof value === "number" ? String(value) : value;
+  return typeof value === 'number' ? String(value) : value;
 }
-
-

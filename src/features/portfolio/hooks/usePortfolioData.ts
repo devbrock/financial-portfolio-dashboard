@@ -1,17 +1,14 @@
-import { useMemo, useEffect } from "react";
-import { useAppDispatch } from "@/store/hooks";
-import { initializePortfolio } from "../portfolioSlice";
-import { usePortfolioHoldings } from "./usePortfolioHoldings";
-import { usePortfolioWatchlist } from "./usePortfolioWatchlist";
-import { useStockPrices } from "./useStockPrices";
-import { useStockProfiles } from "./useStockProfiles";
-import { useCryptoPrices } from "./useCryptoPrices";
-import { useCryptoProfiles } from "./useCryptoProfiles";
-import {
-  enrichHoldingWithPrice,
-  calculatePortfolioMetrics,
-} from "@/utils/portfolioCalculations";
-import type { HoldingWithPrice, WatchlistItemWithPrice } from "@/types/portfolio";
+import { useMemo, useEffect } from 'react';
+import { useAppDispatch } from '@/store/hooks';
+import { initializePortfolio } from '../portfolioSlice';
+import { usePortfolioHoldings } from './usePortfolioHoldings';
+import { usePortfolioWatchlist } from './usePortfolioWatchlist';
+import { useStockPrices } from './useStockPrices';
+import { useStockProfiles } from './useStockProfiles';
+import { useCryptoPrices } from './useCryptoPrices';
+import { useCryptoProfiles } from './useCryptoProfiles';
+import { enrichHoldingWithPrice, calculatePortfolioMetrics } from '@/utils/portfolioCalculations';
+import type { HoldingWithPrice, WatchlistItemWithPrice } from '@/types/portfolio';
 
 /**
  * Main hook for orchestrating all portfolio data.
@@ -30,24 +27,16 @@ export function usePortfolioData() {
   // Extract symbols by asset type
   const stockSymbols = useMemo(() => {
     const symbols = [
-      ...holdings
-        .filter((h) => h.assetType === "stock")
-        .map((h) => h.symbol.toUpperCase()),
-      ...watchlist
-        .filter((w) => w.assetType === "stock")
-        .map((w) => w.symbol.toUpperCase()),
+      ...holdings.filter(h => h.assetType === 'stock').map(h => h.symbol.toUpperCase()),
+      ...watchlist.filter(w => w.assetType === 'stock').map(w => w.symbol.toUpperCase()),
     ];
     return Array.from(new Set(symbols));
   }, [holdings, watchlist]);
 
   const cryptoSymbols = useMemo(() => {
     const symbols = [
-      ...holdings
-        .filter((h) => h.assetType === "crypto")
-        .map((h) => h.symbol.toLowerCase()),
-      ...watchlist
-        .filter((w) => w.assetType === "crypto")
-        .map((w) => w.symbol.toLowerCase()),
+      ...holdings.filter(h => h.assetType === 'crypto').map(h => h.symbol.toLowerCase()),
+      ...watchlist.filter(w => w.assetType === 'crypto').map(w => w.symbol.toLowerCase()),
     ];
     return Array.from(new Set(symbols));
   }, [holdings, watchlist]);
@@ -89,50 +78,32 @@ export function usePortfolioData() {
 
   // Combine holdings with prices
   const holdingsWithPrice: HoldingWithPrice[] = useMemo(() => {
-    return holdings.map((holding) => {
+    return holdings.map(holding => {
       const symbol =
-        holding.assetType === "stock"
-          ? holding.symbol.toUpperCase()
-          : holding.symbol.toLowerCase();
+        holding.assetType === 'stock' ? holding.symbol.toUpperCase() : holding.symbol.toLowerCase();
 
-      if (holding.assetType === "stock") {
+      if (holding.assetType === 'stock') {
         const quote = quoteMap.get(symbol);
         const profile = profileMap.get(symbol);
         const currentPrice = quote?.c || holding.purchasePrice;
 
-        return enrichHoldingWithPrice(
-          holding,
-          currentPrice,
-          profile?.name,
-          profile?.logo
-        );
+        return enrichHoldingWithPrice(holding, currentPrice, profile?.name, profile?.logo);
       } else {
         // Crypto
-        const currentPrice =
-          cryptoPriceMap.get(symbol) || holding.purchasePrice;
+        const currentPrice = cryptoPriceMap.get(symbol) || holding.purchasePrice;
         const profile = cryptoProfileMap.get(symbol);
-        const logo =
-          profile?.image?.small ||
-          profile?.image?.thumb ||
-          profile?.image?.large;
-        return enrichHoldingWithPrice(
-          holding,
-          currentPrice,
-          profile?.name,
-          logo
-        );
+        const logo = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+        return enrichHoldingWithPrice(holding, currentPrice, profile?.name, logo);
       }
     });
   }, [holdings, quoteMap, profileMap, cryptoPriceMap, cryptoProfileMap]);
 
   const watchlistWithPrice: WatchlistItemWithPrice[] = useMemo(() => {
-    return watchlist.map((item) => {
+    return watchlist.map(item => {
       const symbol =
-        item.assetType === "stock"
-          ? item.symbol.toUpperCase()
-          : item.symbol.toLowerCase();
+        item.assetType === 'stock' ? item.symbol.toUpperCase() : item.symbol.toLowerCase();
 
-      if (item.assetType === "stock") {
+      if (item.assetType === 'stock') {
         const quote = quoteMap.get(symbol);
         const profile = profileMap.get(symbol);
         return {
@@ -145,8 +116,7 @@ export function usePortfolioData() {
       }
 
       const profile = cryptoProfileMap.get(symbol);
-      const logo =
-        profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+      const logo = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
 
       return {
         ...item,
@@ -156,14 +126,7 @@ export function usePortfolioData() {
         logo,
       };
     });
-  }, [
-    watchlist,
-    quoteMap,
-    profileMap,
-    cryptoPriceMap,
-    cryptoChangePctMap,
-    cryptoProfileMap,
-  ]);
+  }, [watchlist, quoteMap, profileMap, cryptoPriceMap, cryptoChangePctMap, cryptoProfileMap]);
 
   // Calculate portfolio metrics
   const metrics = useMemo(() => {
@@ -171,20 +134,12 @@ export function usePortfolioData() {
   }, [holdings, holdingsWithPrice]);
 
   // Loading state
-  const isLoading =
-    stocksLoading || profilesLoading || cryptoLoading || cryptoProfilesLoading;
-  const isError =
-    stocksError || profilesError || cryptoError || cryptoProfilesError;
+  const isLoading = stocksLoading || profilesLoading || cryptoLoading || cryptoProfilesLoading;
+  const isError = stocksError || profilesError || cryptoError || cryptoProfilesError;
   const firstError =
-    stocksErrorObj ||
-    profilesErrorObj ||
-    cryptoErrorObj ||
-    cryptoProfilesErrorObj ||
-    null;
+    stocksErrorObj || profilesErrorObj || cryptoErrorObj || cryptoProfilesErrorObj || null;
   const errorMessage =
-    firstError instanceof Error
-      ? firstError.message
-      : "We couldn't load your latest market data.";
+    firstError instanceof Error ? firstError.message : "We couldn't load your latest market data.";
 
   return {
     holdings,

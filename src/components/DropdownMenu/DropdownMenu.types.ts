@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type DropdownMenuProps = {
   open?: boolean;
@@ -22,11 +22,6 @@ export type DropdownMenuContentProps = React.HTMLAttributes<HTMLDivElement> & {
   minWidth?: number;
 };
 
-export type DropdownMenuItemProps = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "type"
-> & {
+export type DropdownMenuItemProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {
   inset?: boolean;
 };
-
-

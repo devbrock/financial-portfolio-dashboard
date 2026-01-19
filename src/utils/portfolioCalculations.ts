@@ -1,8 +1,4 @@
-import type {
-  Holding,
-  HoldingWithPrice,
-  PortfolioMetrics,
-} from "@/types/portfolio";
+import type { Holding, HoldingWithPrice, PortfolioMetrics } from '@/types/portfolio';
 
 /**
  * Calculate profit/loss for a single holding
@@ -63,14 +59,17 @@ export function calculateTotalCostBasis(holdings: Holding[]): number {
 /**
  * Calculate asset allocation (stocks vs crypto)
  */
-export function calculateAssetAllocation(
-  holdings: HoldingWithPrice[]
-): { stockValue: number; cryptoValue: number; stockPct: number; cryptoPct: number } {
+export function calculateAssetAllocation(holdings: HoldingWithPrice[]): {
+  stockValue: number;
+  cryptoValue: number;
+  stockPct: number;
+  cryptoPct: number;
+} {
   let stockValue = 0;
   let cryptoValue = 0;
 
-  holdings.forEach((holding) => {
-    if (holding.assetType === "stock") {
+  holdings.forEach(holding => {
+    if (holding.assetType === 'stock') {
       stockValue += holding.currentValue;
     } else {
       cryptoValue += holding.currentValue;

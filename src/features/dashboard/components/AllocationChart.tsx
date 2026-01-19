@@ -1,13 +1,7 @@
-import {
-  ChartContainer,
-  Inline,
-  PieDonutChart,
-  Skeleton,
-  Text,
-} from "@components";
-import { cn } from "@/utils/cn";
-import type { AllocationSlice } from "@/types/dashboard";
-import { formatMoneyUsd } from "@utils/formatMoneyUsd";
+import { ChartContainer, Inline, PieDonutChart, Skeleton, Text } from '@components';
+import { cn } from '@/utils/cn';
+import type { AllocationSlice } from '@/types/dashboard';
+import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 
 type AllocationChartProps = {
   data: readonly AllocationSlice[];
@@ -24,8 +18,7 @@ export function AllocationChart(props: AllocationChartProps) {
       title="Diversification"
       subtitle="Current allocation"
       className={cn(
-        flash &&
-          "ring-2 ring-emerald-200/80 shadow-[0_0_0_2px_rgba(16,185,129,0.2)] animate-pulse"
+        flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
       aria-busy={loading || undefined}
     >
@@ -41,16 +34,16 @@ export function AllocationChart(props: AllocationChartProps) {
             nameKey="name"
             valueKey="value"
             variant="donut"
-            colors={data.map((s) => s.color)}
-            tooltipLabelFormatter={(l) => <span>{String(l)}</span>}
-            tooltipValueFormatter={(v) => <span>{String(v)}%</span>}
+            colors={data.map(s => s.color)}
+            tooltipLabelFormatter={l => <span>{String(l)}</span>}
+            tooltipValueFormatter={v => <span>{String(v)}%</span>}
           />
 
           {/* Center label */}
           <div
             className={cn(
-              "pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-              "text-center"
+              'pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+              'text-center'
             )}
           >
             <Text as="div" className="text-lg font-semibold">
@@ -66,7 +59,7 @@ export function AllocationChart(props: AllocationChartProps) {
       {/* Legend */}
       {!loading ? (
         <Inline wrap gap="sm" className="mt-3">
-          {data.map((s) => (
+          {data.map(s => (
             <Inline key={s.name} align="center" className="gap-2">
               <span
                 aria-hidden="true"

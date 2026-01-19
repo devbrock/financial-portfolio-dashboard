@@ -1,9 +1,9 @@
-import type { ReactElement, PropsWithChildren } from "react";
-import { render } from "@testing-library/react";
-import { Provider } from "react-redux";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { configureStore } from "@reduxjs/toolkit";
-import portfolioReducer from "@/features/portfolio/portfolioSlice";
+import type { ReactElement, PropsWithChildren } from 'react';
+import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { configureStore } from '@reduxjs/toolkit';
+import portfolioReducer from '@/features/portfolio/portfolioSlice';
 
 export function createTestStore(preloadedState?: {
   portfolio?: ReturnType<typeof portfolioReducer>;
@@ -38,9 +38,7 @@ export function createTestWrapper(
   return function Wrapper({ children }: PropsWithChildren) {
     return (
       <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </Provider>
     );
   };

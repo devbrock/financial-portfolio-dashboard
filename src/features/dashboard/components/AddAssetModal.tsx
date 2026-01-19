@@ -1,31 +1,24 @@
-import { useCallback, useMemo, useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Combobox,
-  Inline,
-  Input,
-  Modal,
-  Text,
-} from "@components";
-import type { ComboboxItem } from "@components";
-import { useSymbolSearch } from "@/hooks/useSymbolSearch";
-import { useCryptoSearch } from "@/hooks/useCryptoSearch";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addHolding } from "@/features/portfolio/portfolioSlice";
-import type { AssetType, Holding } from "@/types/portfolio";
-import { toast } from "sonner";
+import { useCallback, useMemo, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Combobox, Inline, Input, Modal, Text } from '@components';
+import type { ComboboxItem } from '@components';
+import { useSymbolSearch } from '@/hooks/useSymbolSearch';
+import { useCryptoSearch } from '@/hooks/useCryptoSearch';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { addHolding } from '@/features/portfolio/portfolioSlice';
+import type { AssetType, Holding } from '@/types/portfolio';
+import { toast } from 'sonner';
 
 const addAssetSchema = z.object({
-  assetSelection: z.string().min(1, "Select an asset from search"),
-  assetType: z.enum(["stock", "crypto"]),
-  symbol: z.string().min(1, "Select an asset from search"),
-  quantity: z.number().positive("Quantity must be greater than 0"),
-  purchasePrice: z.number().positive("Purchase price must be greater than 0"),
-  purchaseDate: z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: "Purchase date is required",
+  assetSelection: z.string().min(1, 'Select an asset from search'),
+  assetType: z.enum(['stock', 'crypto']),
+  symbol: z.string().min(1, 'Select an asset from search'),
+  quantity: z.number().positive('Quantity must be greater than 0'),
+  purchasePrice: z.number().positive('Purchase price must be greater than 0'),
+  purchaseDate: z.string().refine(value => !Number.isNaN(Date.parse(value)), {
+    message: 'Purchase date is required',
   }),
 });
 
@@ -44,11 +37,11 @@ function generateHoldingId(): string {
 export function AddAssetModal(props: AddAssetModalProps) {
   const { open, onOpenChange, onAdded } = props;
   const dispatch = useAppDispatch();
-  const holdings = useAppSelector((state) => state.portfolio.holdings);
-  const [assetQuery, setAssetQuery] = useState("");
-  const [selectedAssetLabel, setSelectedAssetLabel] = useState("");
+  const holdings = useAppSelector(state => state.portfolio.holdings);
+  const [assetQuery, setAssetQuery] = useState('');
+  const [selectedAssetLabel, setSelectedAssetLabel] = useState('');
 
-  const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const {
     register,
@@ -60,9 +53,9 @@ export function AddAssetModal(props: AddAssetModalProps) {
   } = useForm<AddAssetFormValues>({
     resolver: zodResolver(addAssetSchema),
     defaultValues: {
-      assetSelection: "",
-      assetType: "stock",
-      symbol: "",
+      assetSelection: '',
+      assetType: 'stock',
+      symbol: '',
       quantity: 0,
       purchasePrice: 0,
       purchaseDate: today,
@@ -71,21 +64,21 @@ export function AddAssetModal(props: AddAssetModalProps) {
 
   const selectedAssetValue = useWatch({
     control,
-    name: "assetSelection",
+    name: 'assetSelection',
   });
   const selectedSymbol = useWatch({
     control,
-    name: "symbol",
+    name: 'symbol',
   });
   const selectedAssetType = useWatch({
     control,
-    name: "assetType",
+    name: 'assetType',
   });
 
   const isDuplicateAsset = useMemo(() => {
     if (!selectedSymbol) return false;
     return holdings.some(
-      (holding) =>
+      holding =>
         holding.assetType === selectedAssetType &&
         holding.symbol.toLowerCase() === selectedSymbol.toLowerCase()
     );
@@ -95,25 +88,23 @@ export function AddAssetModal(props: AddAssetModalProps) {
     (nextQuery: string) => {
       if (selectedAssetLabel && nextQuery === selectedAssetLabel) return;
       const trimmed = nextQuery.trim();
-      setAssetQuery(trimmed.length >= 2 ? trimmed : "");
+      setAssetQuery(trimmed.length >= 2 ? trimmed : '');
     },
     [selectedAssetLabel]
   );
 
-  const { data: stockSearch, isFetching: isStockSearchLoading } =
-    useSymbolSearch(assetQuery);
-  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } =
-    useCryptoSearch(assetQuery);
+  const { data: stockSearch, isFetching: isStockSearchLoading } = useSymbolSearch(assetQuery);
+  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } = useCryptoSearch(assetQuery);
 
   const assetOptions: ComboboxItem[] = useMemo(() => {
     const stockItems = (stockSearch?.result ?? [])
-      .filter((result) => result.symbol)
+      .filter(result => result.symbol)
       .slice(0, 6)
-      .map((result) => ({
+      .map(result => ({
         value: `stock:${result.symbol.toUpperCase()}`,
         label: `Stock · ${result.displaySymbol} — ${result.description}`,
       }));
-    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map((coin) => ({
+    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map(coin => ({
       value: `crypto:${coin.id.toLowerCase()}`,
       label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
     }));
@@ -121,12 +112,9 @@ export function AddAssetModal(props: AddAssetModalProps) {
     if (
       selectedAssetValue &&
       selectedAssetLabel &&
-      !merged.some((item) => item.value === selectedAssetValue)
+      !merged.some(item => item.value === selectedAssetValue)
     ) {
-      return [
-        { value: selectedAssetValue, label: selectedAssetLabel },
-        ...merged,
-      ];
+      return [{ value: selectedAssetValue, label: selectedAssetLabel }, ...merged];
     }
     return merged;
   }, [stockSearch, cryptoSearch, selectedAssetLabel, selectedAssetValue]);
@@ -134,12 +122,12 @@ export function AddAssetModal(props: AddAssetModalProps) {
   const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
 
   const resetForm = useCallback(() => {
-    setAssetQuery("");
-    setSelectedAssetLabel("");
+    setAssetQuery('');
+    setSelectedAssetLabel('');
     reset({
-      assetSelection: "",
-      assetType: "stock",
-      symbol: "",
+      assetSelection: '',
+      assetType: 'stock',
+      symbol: '',
       quantity: 0,
       purchasePrice: 0,
       purchaseDate: today,
@@ -158,7 +146,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
     (values: AddAssetFormValues) => {
       const assetType = values.assetType as AssetType;
       const normalizedSymbol =
-        assetType === "stock"
+        assetType === 'stock'
           ? values.symbol.trim().toUpperCase()
           : values.symbol.trim().toLowerCase();
 
@@ -172,7 +160,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
       };
 
       dispatch(addHolding(holding));
-      toast.success("Asset added to your portfolio.");
+      toast.success('Asset added to your portfolio.');
       onAdded?.(holding);
       resetForm();
       onOpenChange(false);
@@ -181,7 +169,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
   );
 
   const handleInvalid = useCallback(() => {
-    toast.error("Please correct the form errors and try again.");
+    toast.error('Please correct the form errors and try again.');
   }, []);
 
   return (
@@ -195,12 +183,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
           <Button variant="secondary" onClick={() => handleClose(false)}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            form="add-asset-form"
-            disabled={isSubmitting}
-          >
+          <Button variant="primary" type="submit" form="add-asset-form" disabled={isSubmitting}>
             Add Asset
           </Button>
         </>
@@ -224,34 +207,27 @@ export function AddAssetModal(props: AddAssetModalProps) {
                 placeholder="Search RBLX, Adobe, BTC, Ethereum..."
                 items={assetOptions}
                 value={field.value}
-                onValueChange={(nextValue) => {
+                onValueChange={nextValue => {
                   field.onChange(nextValue);
-                  const selectedItem = assetOptions.find(
-                    (item) => item.value === nextValue
-                  );
-                  setSelectedAssetLabel(selectedItem?.label ?? "");
-                  const isStock = nextValue.startsWith("stock:");
-                  const rawSymbol = nextValue.replace(
-                    isStock ? "stock:" : "crypto:",
-                    ""
-                  );
-                  setValue("assetType", isStock ? "stock" : "crypto", {
+                  const selectedItem = assetOptions.find(item => item.value === nextValue);
+                  setSelectedAssetLabel(selectedItem?.label ?? '');
+                  const isStock = nextValue.startsWith('stock:');
+                  const rawSymbol = nextValue.replace(isStock ? 'stock:' : 'crypto:', '');
+                  setValue('assetType', isStock ? 'stock' : 'crypto', {
                     shouldValidate: true,
                   });
-                  setValue(
-                    "symbol",
-                    isStock ? rawSymbol.toUpperCase() : rawSymbol.toLowerCase(),
-                    { shouldValidate: true }
-                  );
+                  setValue('symbol', isStock ? rawSymbol.toUpperCase() : rawSymbol.toLowerCase(), {
+                    shouldValidate: true,
+                  });
                 }}
                 onInputChange={() => {
                   if (field.value) {
-                    field.onChange("");
-                    setSelectedAssetLabel("");
-                    setValue("assetType", "stock", {
+                    field.onChange('');
+                    setSelectedAssetLabel('');
+                    setValue('assetType', 'stock', {
                       shouldValidate: true,
                     });
-                    setValue("symbol", "", { shouldValidate: true });
+                    setValue('symbol', '', { shouldValidate: true });
                   }
                 }}
                 onQueryChange={handleAssetQueryChange}
@@ -277,8 +253,8 @@ export function AddAssetModal(props: AddAssetModalProps) {
           ) : null}
         </div>
 
-        <input type="hidden" {...register("assetType")} />
-        <input type="hidden" {...register("symbol")} />
+        <input type="hidden" {...register('assetType')} />
+        <input type="hidden" {...register('symbol')} />
 
         <Inline align="start" className="gap-3">
           <div className="w-full">
@@ -290,7 +266,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
               type="number"
               step="any"
               className="mt-1"
-              {...register("quantity", { valueAsNumber: true })}
+              {...register('quantity', { valueAsNumber: true })}
             />
             {errors.quantity ? (
               <Text as="div" size="sm" className="mt-1 text-red-600">
@@ -307,7 +283,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
               type="number"
               step="any"
               className="mt-1"
-              {...register("purchasePrice", { valueAsNumber: true })}
+              {...register('purchasePrice', { valueAsNumber: true })}
             />
             {errors.purchasePrice ? (
               <Text as="div" size="sm" className="mt-1 text-red-600">
@@ -321,12 +297,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
           <Text as="label" htmlFor="purchaseDate" size="sm">
             Purchase date
           </Text>
-          <Input
-            id="purchaseDate"
-            type="date"
-            className="mt-1"
-            {...register("purchaseDate")}
-          />
+          <Input id="purchaseDate" type="date" className="mt-1" {...register('purchaseDate')} />
           {errors.purchaseDate ? (
             <Text as="div" size="sm" className="mt-1 text-red-600">
               {errors.purchaseDate.message}

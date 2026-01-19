@@ -1,4 +1,2 @@
-export * from "./ChartTooltip";
-export type * from "./ChartTooltip.types";
-
-
+export * from './ChartTooltip';
+export type * from './ChartTooltip.types';

@@ -1,10 +1,8 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
   /**
    * Optional test id.
    */
-  "data-testid"?: string;
+  'data-testid'?: string;
 };
-
-

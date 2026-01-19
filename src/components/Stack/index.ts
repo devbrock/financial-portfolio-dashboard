@@ -1,4 +1,2 @@
-export * from "./Stack";
-export type * from "./Stack.types";
-
-
+export * from './Stack';
+export type * from './Stack.types';

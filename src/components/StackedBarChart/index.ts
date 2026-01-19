@@ -1,4 +1,2 @@
-export * from "./StackedBarChart";
-export type * from "./StackedBarChart.types";
-
-
+export * from './StackedBarChart';
+export type * from './StackedBarChart.types';

@@ -1,7 +1,7 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@utils/cn";
-import type { ButtonProps } from "./Button.types";
-import { buttonStyles } from "./Button.styles";
+import { Slot } from '@radix-ui/react-slot';
+import { cn } from '@utils/cn';
+import type { ButtonProps } from './Button.types';
+import { buttonStyles } from './Button.styles';
 
 function Spinner(props: { className?: string }) {
   const { className } = props;
@@ -9,7 +9,7 @@ function Spinner(props: { className?: string }) {
     <span
       aria-hidden="true"
       className={cn(
-        "inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent",
+        'inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent',
         className
       )}
     />
@@ -38,7 +38,7 @@ export function Button(props: ButtonProps) {
     ...rest
   } = props;
 
-  const Comp = asChild ? Slot : "button";
+  const Comp = asChild ? Slot : 'button';
   const isDisabled = !!disabled || loading;
 
   return (
@@ -54,9 +54,7 @@ export function Button(props: ButtonProps) {
         {loading ? <Spinner /> : leftIcon}
       </span>
       <span className="truncate">{children}</span>
-      <span className="inline-flex items-center justify-center">
-        {rightIcon}
-      </span>
+      <span className="inline-flex items-center justify-center">{rightIcon}</span>
     </Comp>
   );
 }

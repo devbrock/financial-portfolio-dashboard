@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Container } from "./Container";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Container } from './Container';
 
 const meta: Meta<typeof Container> = {
-  title: "Primitives/Container",
+  title: 'Primitives/Container',
   component: Container,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: 'fullscreen' },
 };
 export default meta;
 
@@ -33,5 +33,3 @@ export const Dark: Story = {
     </div>
   ),
 };
-
-

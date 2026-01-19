@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./DropdownMenu";
-import { Button } from "../Button/Button";
+} from './DropdownMenu';
+import { Button } from '../Button/Button';
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Navigation/DropdownMenu",
+  title: 'Navigation/DropdownMenu',
   component: DropdownMenu,
 };
 export default meta;
@@ -31,5 +31,3 @@ export const Default: Story = {
     </DropdownMenu>
   ),
 };
-
-

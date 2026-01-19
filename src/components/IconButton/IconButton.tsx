@@ -1,6 +1,6 @@
-import { cn } from "@utils/cn";
-import type { IconButtonProps } from "./IconButton.types";
-import { iconButtonStyles } from "./IconButton.styles";
+import { cn } from '@utils/cn';
+import type { IconButtonProps } from './IconButton.types';
+import { iconButtonStyles } from './IconButton.styles';
 
 /**
  * IconButton

@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ChartContainer } from "../ChartContainer/ChartContainer";
-import { PieDonutChart } from "./PieDonutChart";
+import type { Meta, StoryObj } from '@storybook/react';
+import { ChartContainer } from '../ChartContainer/ChartContainer';
+import { PieDonutChart } from './PieDonutChart';
 
 type Datum = { name: string; value: number };
 
 const data: readonly Datum[] = [
-  { name: "Equities", value: 52 },
-  { name: "Fixed Income", value: 28 },
-  { name: "Alternatives", value: 14 },
-  { name: "Cash", value: 6 },
+  { name: 'Equities', value: 52 },
+  { name: 'Fixed Income', value: 28 },
+  { name: 'Alternatives', value: 14 },
+  { name: 'Cash', value: 6 },
 ];
 
 const meta: Meta<typeof PieDonutChart<Datum>> = {
-  title: "Charts/PieDonutChart",
+  title: 'Charts/PieDonutChart',
   component: PieDonutChart,
 };
 export default meta;
@@ -34,5 +34,3 @@ export const Pie: Story = {
     </ChartContainer>
   ),
 };
-
-

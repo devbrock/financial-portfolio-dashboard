@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type ChartContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
@@ -14,5 +14,3 @@ export type ChartContainerProps = React.HTMLAttributes<HTMLDivElement> & {
    */
   actions?: React.ReactNode;
 };
-
-

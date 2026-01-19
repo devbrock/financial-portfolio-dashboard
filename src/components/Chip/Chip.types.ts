@@ -1,9 +1,6 @@
-import type * as React from "react";
+import type * as React from 'react';
 
-export type ChipProps = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "type"
-> & {
+export type ChipProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {
   /**
    * Selected state (toggles styling) and should be reflected via `aria-pressed`.
    */
@@ -13,5 +10,3 @@ export type ChipProps = Omit<
    */
   disabled?: boolean;
 };
-
-

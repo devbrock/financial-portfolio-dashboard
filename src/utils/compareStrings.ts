@@ -1,3 +1,3 @@
 export function compareStrings(a: string, b: string): number {
-  return a.localeCompare(b, "en", { sensitivity: "base" });
+  return a.localeCompare(b, 'en', { sensitivity: 'base' });
 }

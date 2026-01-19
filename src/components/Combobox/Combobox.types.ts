@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type * as React from 'react';
 
 export type ComboboxItem = {
   value: string;
@@ -70,8 +70,8 @@ export type ComboboxProps = {
   /**
    * Optional test id.
    */
-  "data-testid"?: string;
+  'data-testid'?: string;
 } & Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "value" | "defaultValue" | "onChange" | "className" | "placeholder" | "size"
+  'value' | 'defaultValue' | 'onChange' | 'className' | 'placeholder' | 'size'
 >;

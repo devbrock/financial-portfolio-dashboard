@@ -1,14 +1,14 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   Holding,
   PortfolioState,
   UserPreferences,
   WatchlistItem,
   HistoricalStockCacheEntry,
-} from "@/types/portfolio";
-import { generateSeed } from "@/utils/generateSeed";
-import { generateMockHoldings } from "@/utils/generateMockHoldings";
-import { generateMockWatchlist } from "@/utils/generateMockWatchlist";
+} from '@/types/portfolio';
+import { generateSeed } from '@/utils/generateSeed';
+import { generateMockHoldings } from '@/utils/generateMockHoldings';
+import { generateMockWatchlist } from '@/utils/generateMockWatchlist';
 
 /**
  * Initial state for portfolio
@@ -17,16 +17,16 @@ const initialState: PortfolioState = {
   holdings: [],
   watchlist: [],
   preferences: {
-    theme: "light",
-    currency: "USD",
-    chartRange: "30d",
+    theme: 'light',
+    currency: 'USD',
+    chartRange: '30d',
     sortPreference: {
-      key: "name",
-      direction: "asc",
+      key: 'name',
+      direction: 'asc',
     },
   },
   userSeed: {
-    seed: "",
+    seed: '',
     initialized: false,
   },
   historicalCache: {
@@ -38,13 +38,13 @@ const initialState: PortfolioState = {
  * Portfolio slice - manages holdings and user preferences
  */
 const portfolioSlice = createSlice({
-  name: "portfolio",
+  name: 'portfolio',
   initialState,
   reducers: {
     /**
      * Initialize portfolio with mock data for first-time users
      */
-    initializePortfolio: (state) => {
+    initializePortfolio: state => {
       if (!state.userSeed.initialized) {
         const seed = generateSeed();
         const mockHoldings = generateMockHoldings(seed);
@@ -70,9 +70,7 @@ const portfolioSlice = createSlice({
      * Remove holding by ID
      */
     removeHolding: (state, action: PayloadAction<string>) => {
-      state.holdings = state.holdings.filter(
-        (holding) => holding.id !== action.payload
-      );
+      state.holdings = state.holdings.filter(holding => holding.id !== action.payload);
     },
 
     /**
@@ -86,21 +84,14 @@ const portfolioSlice = createSlice({
      * Remove watchlist item by ID
      */
     removeWatchlistItem: (state, action: PayloadAction<string>) => {
-      state.watchlist = state.watchlist.filter(
-        (item) => item.id !== action.payload
-      );
+      state.watchlist = state.watchlist.filter(item => item.id !== action.payload);
     },
 
     /**
      * Update existing holding
      */
-    updateHolding: (
-      state,
-      action: PayloadAction<{ id: string; updates: Partial<Holding> }>
-    ) => {
-      const index = state.holdings.findIndex(
-        (holding) => holding.id === action.payload.id
-      );
+    updateHolding: (state, action: PayloadAction<{ id: string; updates: Partial<Holding> }>) => {
+      const index = state.holdings.findIndex(holding => holding.id === action.payload.id);
       if (index !== -1) {
         state.holdings[index] = {
           ...state.holdings[index],
@@ -112,10 +103,7 @@ const portfolioSlice = createSlice({
     /**
      * Update user preferences
      */
-    updatePreferences: (
-      state,
-      action: PayloadAction<Partial<UserPreferences>>
-    ) => {
+    updatePreferences: (state, action: PayloadAction<Partial<UserPreferences>>) => {
       state.preferences = {
         ...state.preferences,
         ...action.payload,
@@ -125,11 +113,11 @@ const portfolioSlice = createSlice({
     /**
      * Reset portfolio (for testing or user request)
      */
-    resetPortfolio: (state) => {
+    resetPortfolio: state => {
       state.holdings = [];
       state.watchlist = [];
       state.userSeed = {
-        seed: "",
+        seed: '',
         initialized: false,
       };
       state.historicalCache.stocks = {};

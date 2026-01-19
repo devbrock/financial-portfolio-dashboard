@@ -1,6 +1,6 @@
-import type * as React from "react";
-import type { VariantProps } from "class-variance-authority";
-import type { cardStyles } from "./Card.styles";
+import type * as React from 'react';
+import type { VariantProps } from 'class-variance-authority';
+import type { cardStyles } from './Card.styles';
 
 export type CardVariants = VariantProps<typeof cardStyles>;
 
@@ -14,5 +14,3 @@ export type CardProps = React.HTMLAttributes<HTMLDivElement> &
   };
 
 export type CardSectionProps = React.HTMLAttributes<HTMLDivElement>;
-
-
