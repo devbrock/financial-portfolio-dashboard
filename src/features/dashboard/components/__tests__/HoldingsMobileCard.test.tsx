@@ -11,6 +11,7 @@ const holding: HoldingRow = {
   date: "January 1, 2024",
   volume: 10,
   changePct: 1.2,
+  purchasePrice: 150,
   priceUsd: 190,
   pnlUsd: 100,
   status: "active",

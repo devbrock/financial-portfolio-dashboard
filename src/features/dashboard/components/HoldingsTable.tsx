@@ -40,13 +40,13 @@ export function HoldingsTable(props: HoldingsTableProps) {
       <TableHead>
         <TableRow>
           <SortableTh
-            label="Name Stock"
+            label="Name"
             active={sortKey === "name"}
             dir={sortKey === "name" ? sortDir : null}
             onClick={() => onSort("name")}
           />
           <SortableTh
-            label="Date"
+            label="Purchase Date"
             active={sortKey === "date"}
             dir={sortKey === "date" ? sortDir : null}
             onClick={() => onSort("date")}
@@ -64,7 +64,13 @@ export function HoldingsTable(props: HoldingsTableProps) {
             onClick={() => onSort("changePct")}
           />
           <SortableTh
-            label="Price/stock"
+            label="Purchase Price"
+            active={sortKey === "purchasePrice"}
+            dir={sortKey === "purchasePrice" ? sortDir : null}
+            onClick={() => onSort("purchasePrice")}
+          />
+          <SortableTh
+            label="Current Price"
             active={sortKey === "priceUsd"}
             dir={sortKey === "priceUsd" ? sortDir : null}
             onClick={() => onSort("priceUsd")}
@@ -138,6 +144,7 @@ export function HoldingsTable(props: HoldingsTableProps) {
                 {formatSignedPct(h.changePct)}
               </DeltaPill>
             </TableCell>
+            <TableCell>{formatMoneyUsd(h.purchasePrice)}</TableCell>
             <TableCell>{formatMoneyUsd(h.priceUsd)}</TableCell>
             <TableCell>
               <Text

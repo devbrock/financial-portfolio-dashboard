@@ -118,6 +118,14 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
 
         <Inline align="center" justify="between" className="gap-3">
           <Text as="div" size="sm" tone="muted">
+            Purchase price
+          </Text>
+          <Text as="div" className="font-semibold">
+            {formatMoneyUsd(holding.purchasePrice)}
+          </Text>
+        </Inline>
+        <Inline align="center" justify="between" className="gap-3">
+          <Text as="div" size="sm" tone="muted">
             Price
           </Text>
           <Text as="div" className="font-semibold">

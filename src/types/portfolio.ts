@@ -1,3 +1,5 @@
+import type { AlphaVantageTimeSeriesDaily } from "./alphaVantage";
+
 export type AssetType = "stock" | "crypto";
 
 export type Holding = {
@@ -36,6 +38,9 @@ export type PortfolioState = {
   watchlist: WatchlistItem[];
   preferences: UserPreferences;
   userSeed: UserSeed;
+  historicalCache: {
+    stocks: Record<string, HistoricalStockCacheEntry>;
+  };
 };
 
 export type HoldingWithPrice = Holding & {
@@ -63,4 +68,10 @@ export type PortfolioMetrics = {
   cryptoValue: number;
   stockPct: number;
   cryptoPct: number;
+};
+
+export type HistoricalStockCacheEntry = {
+  data: AlphaVantageTimeSeriesDaily;
+  outputsize: "compact" | "full";
+  fetchedAt: number;
 };

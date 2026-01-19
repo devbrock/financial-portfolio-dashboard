@@ -52,6 +52,7 @@ export function useDashboardData() {
       date: formatDate(holding.purchaseDate),
       volume: holding.quantity,
       changePct: holding.plPct,
+      purchasePrice: holding.purchasePrice,
       priceUsd: holding.currentPrice,
       pnlUsd: holding.plUsd,
       status: "active" as const, // All holdings are active in this demo

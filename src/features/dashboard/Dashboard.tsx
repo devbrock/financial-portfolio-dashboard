@@ -155,6 +155,8 @@ export function Dashboard() {
           return dir * (a.volume - b.volume);
         case "changePct":
           return dir * (a.changePct - b.changePct);
+        case "purchasePrice":
+          return dir * (a.purchasePrice - b.purchasePrice);
         case "priceUsd":
           return dir * (a.priceUsd - b.priceUsd);
         case "pnlUsd":

@@ -53,9 +53,9 @@ export function generateMockHoldings(seed: string): Holding[] {
   const rng = new SeededRandom(seed);
   const holdings: Holding[] = [];
 
-  // Determine number of assets
-  const numStocks = rng.nextInt(3, 6);
-  const numCrypto = rng.nextInt(1, 3);
+  // Determine number of assets (limit to reduce free API usage)
+  const numStocks = 2;
+  const numCrypto = 2;
 
   // Shuffle pools to get random selection
   const shuffledStocks = rng.shuffle([...STOCK_POOL]);

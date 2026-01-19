@@ -28,6 +28,7 @@ const baseHoldings: HoldingRow[] = [
     date: "January 1, 2024",
     volume: 10,
     changePct: 1.2,
+    purchasePrice: 170,
     priceUsd: 190,
     pnlUsd: 100,
     status: "active",
@@ -39,6 +40,7 @@ const baseHoldings: HoldingRow[] = [
     date: "January 2, 2024",
     volume: 5,
     changePct: -0.5,
+    purchasePrice: 95,
     priceUsd: 90,
     pnlUsd: -50,
     status: "active",
@@ -113,7 +115,14 @@ describe("Dashboard", () => {
     const user = userEvent.setup();
     renderWithProviders(<Dashboard />);
 
-    const headers = ["Date", "Volume", "Change", "Price/stock", "Profit/Loss"];
+    const headers = [
+      "Date",
+      "Volume",
+      "Change",
+      "Purchase price",
+      "Price/stock",
+      "Profit/Loss",
+    ];
 
     for (const label of headers) {
       const button = screen.getByRole("button", { name: label });

@@ -36,6 +36,7 @@ export type HoldingRow = {
   date: string;
   volume: number;
   changePct: number;
+  purchasePrice: number;
   priceUsd: number;
   pnlUsd: number;
   status: HoldingStatus;
@@ -47,6 +48,7 @@ export type SortKey =
   | "date"
   | "volume"
   | "changePct"
+  | "purchasePrice"
   | "priceUsd"
   | "pnlUsd"
   | "status";

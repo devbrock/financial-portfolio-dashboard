@@ -4,6 +4,7 @@ import type {
   PortfolioState,
   UserPreferences,
   WatchlistItem,
+  HistoricalStockCacheEntry,
 } from "@/types/portfolio";
 import { generateSeed } from "@/utils/generateSeed";
 import { generateMockHoldings } from "@/utils/generateMockHoldings";
@@ -27,6 +28,9 @@ const initialState: PortfolioState = {
   userSeed: {
     seed: "",
     initialized: false,
+  },
+  historicalCache: {
+    stocks: {},
   },
 };
 
@@ -128,6 +132,23 @@ const portfolioSlice = createSlice({
         seed: "",
         initialized: false,
       };
+      state.historicalCache.stocks = {};
+    },
+
+    /**
+     * Cache historical stock data to reduce API usage.
+     */
+    setStockHistoricalCache: (
+      state,
+      action: PayloadAction<{
+        symbol: string;
+        entry: HistoricalStockCacheEntry;
+      }>
+    ) => {
+      if (!state.historicalCache) {
+        state.historicalCache = { stocks: {} };
+      }
+      state.historicalCache.stocks[action.payload.symbol] = action.payload.entry;
     },
   },
 });
@@ -141,6 +162,7 @@ export const {
   updateHolding,
   updatePreferences,
   resetPortfolio,
+  setStockHistoricalCache,
 } = portfolioSlice.actions;
 
 export default portfolioSlice.reducer;

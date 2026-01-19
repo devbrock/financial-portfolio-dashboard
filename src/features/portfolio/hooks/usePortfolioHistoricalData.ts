@@ -1,8 +1,10 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { GetStockHistoricalDataQueryOptions } from "@/queryOptions/GetStockHistoricalDataQueryOptions";
 import { GetCryptoHistoricalDataQueryOptions } from "@/queryOptions/GetCryptoHistoricalDataQueryOptions";
 import { usePortfolioHoldings } from "./usePortfolioHoldings";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setStockHistoricalCache } from "@/features/portfolio/portfolioSlice";
 import type { AlphaVantageTimeSeriesDaily } from "@/types/alphaVantage";
 import type { CoinGeckoMarketChart } from "@/types/coinGecko";
 
@@ -14,6 +16,8 @@ const RANGE_DAYS: Record<Range, number> = {
   "90d": 90,
   "1y": 365,
 };
+
+const STOCK_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
 
@@ -59,6 +63,10 @@ const parseCryptoSeries = (data?: CoinGeckoMarketChart) => {
 
 export function usePortfolioHistoricalData(range: Range) {
   const holdings = usePortfolioHoldings();
+  const dispatch = useAppDispatch();
+  const stockCache = useAppSelector(
+    (state) => state.portfolio.historicalCache?.stocks ?? {}
+  );
   const rangeDays = RANGE_DAYS[range];
   const dateRange = useMemo(() => buildDateRange(rangeDays), [rangeDays]);
   const outputsize = range === "1y" ? "full" : "compact";
@@ -95,10 +103,43 @@ export function usePortfolioHistoricalData(range: Range) {
     [rangeDays]
   );
 
+  const cachedStockMeta = useMemo(() => {
+    const meta = new Map<
+      string,
+      { data: AlphaVantageTimeSeriesDaily; isFresh: boolean; fetchedAt: number }
+    >();
+    stockSymbols.forEach((symbol) => {
+      const entry = stockCache[symbol];
+      if (!entry) return;
+      const age = Date.now() - entry.fetchedAt;
+      const isFresh = age < STOCK_CACHE_TTL_MS;
+      const canUseForRange =
+        outputsize === "compact" || entry.outputsize === "full";
+      if (canUseForRange) {
+        meta.set(symbol, {
+          data: entry.data,
+          isFresh,
+          fetchedAt: entry.fetchedAt,
+        });
+      }
+    });
+    return meta;
+  }, [outputsize, stockCache, stockSymbols]);
+
   const stockQueries = useQueries({
-    queries: stockSymbols.map((symbol) =>
-      GetStockHistoricalDataQueryOptions(symbol, outputsize)
-    ),
+    queries: stockSymbols.map((symbol) => {
+      const cached = cachedStockMeta.get(symbol);
+      const baseOptions = GetStockHistoricalDataQueryOptions(
+        symbol,
+        outputsize
+      );
+      return {
+        ...baseOptions,
+        enabled: !cached?.isFresh,
+        initialData: cached?.data,
+        initialDataUpdatedAt: cached?.fetchedAt,
+      };
+    }),
   });
   const cryptoQueries = useQueries({
     queries: cryptoSymbols.map((coinId) =>
@@ -109,9 +150,12 @@ export function usePortfolioHistoricalData(range: Range) {
   const isLoading =
     stockQueries.some((query) => query.isLoading) ||
     cryptoQueries.some((query) => query.isLoading);
-  const hasMissingStockData = stockQueries.some(
-    (query) => query.data && !query.data["Time Series (Daily)"]
-  );
+  const hasMissingStockData = stockQueries.some((query, index) => {
+    const symbol = stockSymbols[index];
+    const fallback = cachedStockMeta.get(symbol)?.data;
+    const data = query.data ?? fallback;
+    return data ? !data["Time Series (Daily)"] : true;
+  });
   const hasMissingCryptoData = cryptoQueries.some(
     (query) => query.data && !query.data.prices?.length
   );
@@ -134,9 +178,11 @@ export function usePortfolioHistoricalData(range: Range) {
 
     const stockSeriesBySymbol = new Map<string, Map<string, number>>();
     stockQueries.forEach((query, index) => {
-      if (!query.data) return;
       const symbol = stockSymbols[index];
-      stockSeriesBySymbol.set(symbol, parseStockSeries(query.data));
+      const fallback = cachedStockMeta.get(symbol)?.data;
+      const data = query.data ?? fallback;
+      if (!data) return;
+      stockSeriesBySymbol.set(symbol, parseStockSeries(data));
     });
 
     const cryptoSeriesBySymbol = new Map<string, Map<string, number>>();
@@ -186,6 +232,7 @@ export function usePortfolioHistoricalData(range: Range) {
     cryptoQueries,
     stockSymbols,
     cryptoSymbols,
+    cachedStockMeta,
   ]);
 
   const refetch = useCallback(() => {
@@ -193,6 +240,26 @@ export function usePortfolioHistoricalData(range: Range) {
       [...stockQueries, ...cryptoQueries].map((query) => query.refetch())
     );
   }, [stockQueries, cryptoQueries]);
+
+  useEffect(() => {
+    stockQueries.forEach((query, index) => {
+      const symbol = stockSymbols[index];
+      const cached = cachedStockMeta.get(symbol);
+      const fetchedAt = query.dataUpdatedAt || Date.now();
+      if (!query.data) return;
+      if (cached && cached.fetchedAt >= fetchedAt) return;
+      dispatch(
+        setStockHistoricalCache({
+          symbol,
+          entry: {
+            data: query.data,
+            outputsize,
+            fetchedAt,
+          },
+        })
+      );
+    });
+  }, [cachedStockMeta, dispatch, outputsize, stockQueries, stockSymbols]);
 
   return {
     data: historicalData,

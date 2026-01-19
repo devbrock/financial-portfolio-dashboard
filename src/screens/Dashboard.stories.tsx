@@ -95,6 +95,7 @@ type HoldingRow = {
   date: string;
   volume: number;
   changePct: number;
+  purchasePrice: number;
   priceUsd: number;
   pnlUsd: number;
   status: HoldingStatus;
@@ -105,6 +106,7 @@ type SortKey =
   | "date"
   | "volume"
   | "changePct"
+  | "purchasePrice"
   | "priceUsd"
   | "pnlUsd"
   | "status";
@@ -438,6 +440,7 @@ function DashboardDemo(props: DashboardDemoProps) {
         date: "22 June 2024",
         volume: 8.2e9,
         changePct: 4.1,
+        purchasePrice: 84200,
         priceUsd: 87580,
         pnlUsd: 24.05,
         status: "active",
@@ -449,6 +452,7 @@ function DashboardDemo(props: DashboardDemoProps) {
         date: "24 June 2024",
         volume: 9.16e9,
         changePct: -3.6,
+        purchasePrice: 102300,
         priceUsd: 98478,
         pnlUsd: -32.05,
         status: "pending",
@@ -460,6 +464,7 @@ function DashboardDemo(props: DashboardDemoProps) {
         date: "26 June 2024",
         volume: 3.06e9,
         changePct: 2.2,
+        purchasePrice: 54300,
         priceUsd: 56749,
         pnlUsd: 18.7,
         status: "active",
@@ -493,6 +498,8 @@ function DashboardDemo(props: DashboardDemoProps) {
           return dir * (a.volume - b.volume);
         case "changePct":
           return dir * (a.changePct - b.changePct);
+        case "purchasePrice":
+          return dir * (a.purchasePrice - b.purchasePrice);
         case "priceUsd":
           return dir * (a.priceUsd - b.priceUsd);
         case "pnlUsd":
