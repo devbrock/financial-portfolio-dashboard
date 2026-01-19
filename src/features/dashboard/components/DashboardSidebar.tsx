@@ -10,7 +10,6 @@ import {
   SidebarMenuItem,
   Inline,
   Text,
-  Divider,
 } from '@components';
 import { BotMessageSquare, ChartLine, Folder, HelpCircle, Home, Newspaper } from 'lucide-react';
 import { cn } from '@/utils/cn';

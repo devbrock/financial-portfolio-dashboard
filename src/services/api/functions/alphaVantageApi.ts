@@ -4,7 +4,7 @@ import { ApiError } from '@/services/api/clients/apiError';
 
 const MIN_INTERVAL_MS = 1100;
 let lastRequestAt = 0;
-let requestQueue = Promise.resolve();
+let requestQueue: Promise<unknown> = Promise.resolve();
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

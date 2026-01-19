@@ -43,17 +43,24 @@ describe('query options', () => {
     ];
 
     optionsList.forEach(options => {
-      expect(options.retry?.(2, rateLimitError)).toBe(true);
-      expect(options.retry?.(3, rateLimitError)).toBe(false);
-      expect(options.retry?.(0, nonRateLimitError)).toBe(true);
-      expect(options.retry?.(1, nonRateLimitError)).toBe(false);
+      if (typeof options.retry !== 'function') {
+        throw new Error('Expected retry to be a function');
+      }
+      expect(options.retry(2, rateLimitError)).toBe(true);
+      expect(options.retry(3, rateLimitError)).toBe(false);
+      expect(options.retry(0, nonRateLimitError)).toBe(true);
+      expect(options.retry(1, nonRateLimitError)).toBe(false);
     });
   });
 
   it('builds retry delays with exponential backoff', () => {
     const options = GetStockQuoteQueryOptions('AAPL');
-    expect(options.retryDelay?.(0)).toBe(1000);
-    expect(options.retryDelay?.(1)).toBe(2000);
-    expect(options.retryDelay?.(4)).toBe(16000);
+    if (typeof options.retryDelay !== 'function') {
+      throw new Error('Expected retryDelay to be a function');
+    }
+    const retryError = new Error('retry');
+    expect(options.retryDelay(0, retryError)).toBe(1000);
+    expect(options.retryDelay(1, retryError)).toBe(2000);
+    expect(options.retryDelay(4, retryError)).toBe(16000);
   });
 });

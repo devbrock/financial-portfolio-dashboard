@@ -37,6 +37,9 @@ describe('usePortfolioData', () => {
           seed: 'seed',
           initialized: true,
         },
+        historicalCache: {
+          stocks: {},
+        },
       },
     };
     const store = createTestStore(preloadedState);

@@ -28,6 +28,13 @@ const state = {
       sortPreference: { key: 'name', direction: 'asc' },
     },
     userSeed: { seed: 'seed', initialized: true },
+    historicalCache: {
+      stocks: {},
+    },
+  },
+  _persist: {
+    version: 1,
+    rehydrated: true,
   },
 } satisfies RootState;
 

@@ -30,7 +30,6 @@ describe('DropdownMenu', () => {
   });
 
   it('supports keyboard navigation and escape to close', async () => {
-    const user = userEvent.setup();
     render(
       <DropdownMenu>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
@@ -59,7 +58,6 @@ describe('DropdownMenu', () => {
   });
 
   it('wraps focus on arrow up navigation', async () => {
-    const user = userEvent.setup();
     render(
       <DropdownMenu>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>

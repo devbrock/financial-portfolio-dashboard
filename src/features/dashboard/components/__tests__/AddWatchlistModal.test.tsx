@@ -7,6 +7,9 @@ import { addWatchlistItem } from '@/features/portfolio/portfolioSlice';
 import { useSymbolSearch } from '@/hooks/useSymbolSearch';
 import { useCryptoSearch } from '@/hooks/useCryptoSearch';
 import { toast } from 'sonner';
+import type { UseQueryResult } from '@tanstack/react-query';
+import type { FinnhubSymbolLookup } from '@/types/finnhub';
+import type { CoinGeckoSearchResponse } from '@/types/coinGecko';
 
 vi.mock('@/hooks/useSymbolSearch', () => ({
   useSymbolSearch: vi.fn(),
@@ -25,9 +28,13 @@ vi.mock('sonner', () => ({
 
 const mockUseSymbolSearch = vi.mocked(useSymbolSearch);
 const mockUseCryptoSearch = vi.mocked(useCryptoSearch);
-const mockToast = vi.mocked(toast);
+const mockToast = toast as unknown as {
+  success: ReturnType<typeof vi.fn>;
+  error: ReturnType<typeof vi.fn>;
+};
 
 const stockResults = {
+  count: 1,
   result: [
     {
       symbol: 'AAPL',
@@ -52,11 +59,11 @@ describe('AddWatchlistModal', () => {
     mockUseSymbolSearch.mockReturnValue({
       data: stockResults,
       isFetching: false,
-    });
+    } as UseQueryResult<FinnhubSymbolLookup, Error>);
     mockUseCryptoSearch.mockReturnValue({
       data: cryptoResults,
       isFetching: false,
-    });
+    } as UseQueryResult<CoinGeckoSearchResponse, Error>);
     mockToast.success.mockClear();
     mockToast.error.mockClear();
   });

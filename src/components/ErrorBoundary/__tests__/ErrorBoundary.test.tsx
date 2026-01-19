@@ -1,10 +1,10 @@
-import React from 'react';
+import type { ReactElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ErrorBoundary } from '../ErrorBoundary';
 
-function ProblemChild() {
+function ProblemChild(): ReactElement {
   throw new Error('boom');
 }
 

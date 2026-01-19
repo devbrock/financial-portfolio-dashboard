@@ -3,12 +3,28 @@ import { render, screen } from '@testing-library/react';
 
 vi.mock('recharts', async () => {
   const React = await import('react');
+  type ContentProps = {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    index?: number;
+    name?: string;
+    value?: number;
+    depth?: number;
+  };
   return {
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="responsive">{children}</div>
     ),
-    Treemap: ({ content, children }: { content: React.ReactElement }) => {
-      const leaf = React.cloneElement(content, {
+    Treemap: ({
+      content,
+      children,
+    }: {
+      content: React.ReactElement<ContentProps>;
+      children?: React.ReactNode;
+    }) => {
+      const leaf = React.cloneElement<ContentProps>(content, {
         x: 0,
         y: 0,
         width: 120,
@@ -18,7 +34,7 @@ vi.mock('recharts', async () => {
         value: 200,
         depth: 1,
       });
-      const tiny = React.cloneElement(content, {
+      const tiny = React.cloneElement<ContentProps>(content, {
         x: 0,
         y: 0,
         width: 40,
@@ -28,7 +44,7 @@ vi.mock('recharts', async () => {
         value: 5,
         depth: 1,
       });
-      const group = React.cloneElement(content, {
+      const group = React.cloneElement<ContentProps>(content, {
         x: 0,
         y: 0,
         width: 80,
@@ -38,7 +54,7 @@ vi.mock('recharts', async () => {
         value: 10,
         depth: 0,
       });
-      const missing = React.cloneElement(content, {
+      const missing = React.cloneElement<ContentProps>(content, {
         y: 0,
         index: 3,
         name: 'Missing',

@@ -2,15 +2,16 @@ import type { ReactElement, PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, type AnyAction, type Reducer } from '@reduxjs/toolkit';
 import portfolioReducer from '@/features/portfolio/portfolioSlice';
+import type { PortfolioState } from '@/types/portfolio';
 
 export function createTestStore(preloadedState?: {
   portfolio?: ReturnType<typeof portfolioReducer>;
 }) {
   return configureStore({
     reducer: {
-      portfolio: portfolioReducer,
+      portfolio: portfolioReducer as Reducer<PortfolioState, AnyAction, PortfolioState | undefined>,
     },
     preloadedState,
   });
