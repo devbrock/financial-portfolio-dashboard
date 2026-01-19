@@ -2,6 +2,7 @@ import type {
   FinnhubStockQuote,
   FinnhubCompanyProfile,
   FinnhubSymbolLookup,
+  FinnhubEarningsCalendar,
 } from '@/types/finnhub';
 import { finnhubClient } from '@/services/api/clients/finnhubClient';
 
@@ -22,6 +23,12 @@ export const finnhubApi = {
   searchSymbol: async (query: string, exchange?: string) => {
     return finnhubClient.get<FinnhubSymbolLookup>('/search', {
       params: { q: query, ...(exchange && { exchange }) },
+    });
+  },
+
+  getEarningsCalendar: async (from: string, to: string) => {
+    return finnhubClient.get<FinnhubEarningsCalendar>('/calendar/earnings', {
+      params: { from, to },
     });
   },
 };

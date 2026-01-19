@@ -180,7 +180,7 @@ function SortableTh(props: {
         type="button"
         onClick={onClick}
         className={cn(
-          'inline-flex items-center gap-2',
+          'inline-flex items-center gap-2 uppercase',
           'rounded-lg px-2 py-1',
           'hover:bg-(--ui-surface)',
           'focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg) focus-visible:outline-none'

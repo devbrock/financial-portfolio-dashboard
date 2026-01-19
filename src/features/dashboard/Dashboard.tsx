@@ -1,26 +1,20 @@
 import { useMemo, useEffect, useState, useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import {
   Button,
   Card,
   CardBody,
   CardHeader,
   Container,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
   Heading,
-  IconButton,
   Inline,
   Input,
   Modal,
-  SidebarProvider,
-  SidebarTrigger,
   Stack,
   Text,
 } from '@components';
-import { ChevronDown, Moon, Plus, Search, Sun } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { SortKey, SortDir, HoldingRow } from '@/types/dashboard';
 import { clampNumber } from '@utils/clampNumber';
@@ -31,7 +25,6 @@ import {
   AddAssetModal,
   AddWatchlistModal,
   DashboardHeader,
-  DashboardSidebar,
   PerformanceChart,
   AllocationChart,
   HoldingsTable,
@@ -45,9 +38,9 @@ import {
   addWatchlistItem,
   removeHolding,
   removeWatchlistItem,
-  updatePreferences,
 } from '@/features/portfolio/portfolioSlice';
-import type { DashboardNav } from './components/DashboardSidebar';
+import { DASHBOARD_NAV_ROUTES, getActiveNav } from '@/features/navigation/dashboardNav';
+import { AppShell } from '@/features/shell/AppShell';
 import {
   removeHoldingFromPortfolio,
   removeWatchlistItemFromPortfolio,
@@ -56,14 +49,15 @@ import {
 export function Dashboard() {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
-  const theme = useAppSelector(state => state.portfolio.preferences.theme);
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: state => state.location.pathname });
+  const activeNav = useMemo(() => getActiveNav(pathname), [pathname]);
   const rawHoldings = useAppSelector(state => state.portfolio.holdings);
   const rawWatchlist = useAppSelector(state => state.portfolio.watchlist);
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [holdingsQuery, setHoldingsQuery] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
-  const [activeNav, setActiveNav] = useState<DashboardNav>('Overview');
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
@@ -71,7 +65,12 @@ export function Dashboard() {
   const [flashPrices, setFlashPrices] = useState(false);
   const handleAddAsset = useCallback(() => setIsAddAssetOpen(true), []);
   const handleAddWatchlist = useCallback(() => setIsAddWatchlistOpen(true), []);
-  const handleLogout = useCallback(() => undefined, []);
+  const handleNavChange = useCallback(
+    (next: keyof typeof DASHBOARD_NAV_ROUTES) => {
+      navigate({ to: DASHBOARD_NAV_ROUTES[next] });
+    },
+    [navigate]
+  );
   const dataUpdatedAtRef = useRef(0);
   const lastResetRef = useRef(0);
 
@@ -215,22 +214,9 @@ export function Dashboard() {
     return sorted;
   }, [holdings, holdingsQuery, sortDir, sortKey]);
 
-  const toggleTheme = useCallback(() => {
-    dispatch(updatePreferences({ theme: theme === 'dark' ? 'light' : 'dark' }));
-  }, [dispatch, theme]);
-
   const handleRetry = useCallback(() => {
     queryClient.invalidateQueries();
   }, [queryClient]);
-
-  useEffect(() => {
-    // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    return () => {
-      root.classList.remove('dark');
-    };
-  }, [theme]);
 
   const triggerSort = (key: SortKey) => {
     setSortKey(prev => {
@@ -244,102 +230,16 @@ export function Dashboard() {
   };
 
   return (
-    <SidebarProvider defaultOpen>
-      <div
-        className={cn(
-          // Fixed app shell: sidebar stays pinned; main content scrolls.
-          'h-screen overflow-hidden',
-          // In dark mode `--ui-surface` is intentionally translucent; use a solid base
-          // so the page doesn't look "washed out" when the canvas/body behind is light.
-          theme === 'dark' ? 'bg-(--ui-bg)' : 'bg-(--ui-surface)',
-          theme === 'dark' && 'dark'
-        )}
-      >
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
-        >
-          Skip to main content
-        </a>
-        <div aria-live="polite" aria-atomic="true" className="sr-only">
-          {liveMessage}
-        </div>
-        <div aria-live="assertive" aria-atomic="true" className="sr-only">
-          {errorAnnounce}
-        </div>
-        {/* App shell */}
-        <div className="mx-auto flex h-full min-h-0 w-full gap-6 p-6">
-          <DashboardSidebar activeNav={activeNav} onNavChange={setActiveNav} />
-
-          {/* Main content */}
-          <main id="main-content" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
-            <Container className="max-w-none px-0">
-              <Stack gap="lg">
+    <AppShell
+      activeNav={activeNav}
+      onNavChange={handleNavChange}
+      liveMessage={liveMessage}
+      errorMessage={errorAnnounce}
+    >
+      <Container className="max-w-none px-0">
+        <Stack gap="lg">
                 {/* App header */}
-                <header
-                  className={cn(
-                    'rounded-2xl border border-(--ui-border) bg-(--ui-bg)',
-                    'px-4 py-3 shadow-sm shadow-black/5'
-                  )}
-                >
-                  <Inline align="center" justify="between" className="gap-3">
-                    <SidebarTrigger ariaLabel="Toggle sidebar" />
-                    <Inline align="center" className="w-full max-w-[420px] gap-2">
-                      <div className="relative w-full">
-                        <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
-                          <Search />
-                        </span>
-                        <Input aria-label="Search" placeholder="Search..." className="pl-9" />
-                      </div>
-                    </Inline>
-
-                    <Inline align="center" className="shrink-0 gap-2">
-                      <IconButton
-                        ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-                        variant="ghost"
-                        size="md"
-                        onClick={toggleTheme}
-                        icon={theme === 'dark' ? <Sun /> : <Moon />}
-                      />
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="md"
-                            className="h-auto rounded-2xl px-3 py-2"
-                            aria-label="Open profile menu"
-                            rightIcon={<ChevronDown />}
-                            leftIcon={
-                              <span
-                                aria-hidden="true"
-                                className="grid h-9 w-9 place-items-center rounded-2xl bg-(--ui-surface-2)"
-                              >
-                                <span className="text-sm font-semibold">BB</span>
-                              </span>
-                            }
-                          >
-                            <span className="hidden text-left sm:block">
-                              <Text as="div" className="text-sm leading-4 font-semibold">
-                                Brock Balducci
-                              </Text>
-                            </span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          className={cn(
-                            'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
-                          )}
-                        >
-                          <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </Inline>
-                  </Inline>
-                </header>
-
-                {isError ? (
+            {isError ? (
                   <Card className="border-amber-200 bg-amber-50/60">
                     <CardBody>
                       <Inline align="center" justify="between" className="gap-4">
@@ -503,47 +403,44 @@ export function Dashboard() {
                     </CardBody>
                   </Card>
                 </section>
-              </Stack>
-            </Container>
-          </main>
-        </div>
+        </Stack>
+      </Container>
 
-        {/* Confirm remove dialog */}
-        <Modal
-          open={confirmRemoveId !== null}
-          onOpenChange={open => {
-            if (!open) setConfirmRemoveId(null);
-          }}
-          title="Remove holding?"
-          description="This will remove the position from your dashboard. You can add it again later."
-          footer={
-            <>
-              <Button variant="secondary" onClick={() => setConfirmRemoveId(null)}>
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  if (confirmRemoveId) {
-                    removeHoldingMutation.mutate(confirmRemoveId);
-                  }
-                  setConfirmRemoveId(null);
-                }}
-              >
-                Remove
-              </Button>
-            </>
-          }
-        >
-          <Text as="p" size="sm" tone="muted">
-            Think of this like removing a sticky note from your desk: it doesn't change the company,
-            it just clears your view.
-          </Text>
-        </Modal>
+      {/* Confirm remove dialog */}
+      <Modal
+        open={confirmRemoveId !== null}
+        onOpenChange={open => {
+          if (!open) setConfirmRemoveId(null);
+        }}
+        title="Remove holding?"
+        description="This will remove the position from your dashboard. You can add it again later."
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setConfirmRemoveId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (confirmRemoveId) {
+                  removeHoldingMutation.mutate(confirmRemoveId);
+                }
+                setConfirmRemoveId(null);
+              }}
+            >
+              Remove
+            </Button>
+          </>
+        }
+      >
+        <Text as="p" size="sm" tone="muted">
+          Think of this like removing a sticky note from your desk: it doesn't change the company,
+          it just clears your view.
+        </Text>
+      </Modal>
 
-        <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
-        <AddWatchlistModal open={isAddWatchlistOpen} onOpenChange={setIsAddWatchlistOpen} />
-      </div>
-    </SidebarProvider>
+      <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
+      <AddWatchlistModal open={isAddWatchlistOpen} onOpenChange={setIsAddWatchlistOpen} />
+    </AppShell>
   );
 }

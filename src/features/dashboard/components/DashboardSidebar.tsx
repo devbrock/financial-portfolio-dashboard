@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -8,12 +9,24 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
+  IconButton,
   Inline,
   Text,
 } from '@components';
-import { BotMessageSquare, ChartLine, HelpCircle, Home, Newspaper } from 'lucide-react';
+import {
+  BotMessageSquare,
+  ChartLine,
+  Home,
+  LogOut,
+  Moon,
+  Newspaper,
+  Sun,
+} from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { updatePreferences } from '@/features/portfolio/portfolioSlice';
 
 export type DashboardNav = 'Overview' | 'Market' | 'News' | 'AI Assistant';
 
@@ -24,6 +37,16 @@ type DashboardSidebarProps = {
 
 export function DashboardSidebar(props: DashboardSidebarProps) {
   const { activeNav, onNavChange } = props;
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector(state => state.portfolio.preferences.theme);
+
+  const toggleTheme = useCallback(() => {
+    dispatch(updatePreferences({ theme: theme === 'dark' ? 'light' : 'dark' }));
+  }, [dispatch, theme]);
+
+  const handleLogout = useCallback(() => undefined, []);
+  const footerButtonClassName =
+    'group-data-[state=collapsed]/sidebar:w-full group-data-[state=collapsed]/sidebar:justify-center';
 
   return (
     <Sidebar collapsible="icon" width={260} className={cn('overflow-hidden rounded-2xl', 'h-full')}>
@@ -87,14 +110,31 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => undefined}>
-              <HelpCircle />
-              <span data-slot="label">Help &amp; Support</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <Inline
+          align="center"
+          className={cn(
+            'gap-2 px-1',
+            'group-data-[state=collapsed]/sidebar:flex-col group-data-[state=collapsed]/sidebar:items-stretch'
+          )}
+        >
+          <SidebarTrigger ariaLabel="Toggle sidebar" className={footerButtonClassName} />
+          <IconButton
+            ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            icon={theme === 'dark' ? <Sun /> : <Moon />}
+            className={footerButtonClassName}
+          />
+          <IconButton
+            ariaLabel="Log out"
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            icon={<LogOut />}
+            className={footerButtonClassName}
+          />
+        </Inline>
       </SidebarFooter>
     </Sidebar>
   );

@@ -34,3 +34,19 @@ export type FinnhubSymbolLookup = {
   count: number;
   result: FinnhubSymbolSearchResult[];
 };
+
+export type FinnhubEarningsCalendarEntry = {
+  symbol: string;
+  date: string;
+  epsActual?: number | null;
+  epsEstimate?: number | null;
+  hour?: string | null;
+  quarter?: number | null;
+  year?: number | null;
+  revenueActual?: number | null;
+  revenueEstimate?: number | null;
+};
+
+export type FinnhubEarningsCalendar = {
+  earningsCalendar: FinnhubEarningsCalendarEntry[];
+};
