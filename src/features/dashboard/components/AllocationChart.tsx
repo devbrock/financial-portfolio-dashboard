@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ChartContainer, Inline, PieDonutChart, Skeleton, Text } from '@components';
+import { BarChart, ChartContainer, Skeleton, Text } from '@components';
 import { cn } from '@/utils/cn';
 import type { AllocationSlice } from '@/types/dashboard';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
@@ -15,15 +15,16 @@ export function AllocationChart(props: AllocationChartProps) {
   const { data, totalInvested, loading = false, flash = false } = props;
   const { formatMoney } = useCurrencyFormatter();
   const chartColors = useMemo(() => data.map(slice => slice.color), [data]);
-  const legendItems = useMemo(
-    () => data.map(slice => ({ name: slice.name, color: slice.color })),
-    [data]
-  );
 
   return (
     <ChartContainer
       title="Diversification"
       subtitle="Current allocation"
+      actions={
+        <Text as="div" className="text-lg font-semibold">
+          {formatMoney(totalInvested)}
+        </Text>
+      }
       className={cn(
         flash && 'animate-pulse shadow-[0_0_0_2px_rgba(16,185,129,0.2)] ring-2 ring-emerald-200/80'
       )}
@@ -35,50 +36,27 @@ export function AllocationChart(props: AllocationChartProps) {
           <Skeleton className="mx-auto h-[260px] w-full" />
         </div>
       ) : (
-        <div className="relative">
-          <PieDonutChart<AllocationSlice>
-            data={data}
-            nameKey="name"
-            valueKey="value"
-            variant="donut"
-            colors={chartColors}
-            tooltipLabelFormatter={l => <span>{String(l)}</span>}
-            tooltipValueFormatter={v => <span>{String(v)}%</span>}
-          />
-
-          {/* Center label */}
-          <div
-            className={cn(
-              'pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-              'text-center'
-            )}
-          >
-            <Text as="div" className="text-lg font-semibold">
-              {formatMoney(totalInvested)}
-            </Text>
-            <Text as="div" size="sm" tone="muted">
-              Total invested
-            </Text>
-          </div>
-        </div>
+        <BarChart<AllocationSlice>
+          data={data}
+          xKey="name"
+          series={[
+            {
+              key: 'value',
+              name: 'Allocation',
+              color: chartColors[0] ?? 'var(--ui-primary)',
+            },
+          ]}
+          yTickFormatter={v => `${v}%`}
+          tooltipLabelFormatter={l => <span>{String(l)}</span>}
+          tooltipValueFormatter={v => <span>{String(v)}%</span>}
+        />
       )}
 
       {/* Legend */}
       {!loading ? (
-        <Inline wrap gap="sm" className="mt-3">
-          {legendItems.map(item => (
-            <Inline key={item.name} align="center" className="gap-2">
-              <span
-                aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ background: item.color }}
-              />
-              <Text as="span" size="sm" tone="muted">
-                {item.name}
-              </Text>
-            </Inline>
-          ))}
-        </Inline>
+        <Text as="div" size="sm" tone="muted" className="mt-3">
+          Total invested
+        </Text>
       ) : null}
     </ChartContainer>
   );

@@ -29,11 +29,16 @@ import {
   Settings,
   Sun,
   Check,
+  Download,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updatePreferences } from '@/features/portfolio/portfolioSlice';
+import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
+import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
+import { exportPortfolioReportCSV } from '@/utils/exportCSV';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 export type DashboardNav = 'Overview' | 'Market' | 'News' | 'OrionGPT';
 
@@ -47,6 +52,10 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
   const dispatch = useAppDispatch();
   const theme = useAppSelector(state => state.portfolio.preferences.theme);
   const currency = useAppSelector(state => state.portfolio.preferences.currency);
+  const chartRange = useAppSelector(state => state.portfolio.preferences.chartRange);
+  const { holdingsWithPrice, metrics } = usePortfolioData();
+  const { data: performanceData } = usePortfolioHistoricalData(chartRange);
+  const { rate } = useCurrencyFormatter();
 
   const handleThemeChange = useCallback(
     (nextTheme: 'light' | 'dark') => {
@@ -66,6 +75,34 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
   const footerButtonClassName =
     'group-data-[state=collapsed]/sidebar:w-full group-data-[state=collapsed]/sidebar:justify-center';
   const settingsItemClassName = 'flex items-center justify-between gap-3';
+
+  const handleExport = useCallback(() => {
+    const allocation = [
+      ...(metrics.stockPct > 0 ? [{ name: 'Stocks', valuePct: metrics.stockPct }] : []),
+      ...(metrics.cryptoPct > 0 ? [{ name: 'Crypto', valuePct: metrics.cryptoPct }] : []),
+    ];
+
+    const holdings = holdingsWithPrice.map(holding => ({
+      symbol: holding.symbol.toUpperCase(),
+      name: holding.companyName ?? holding.symbol,
+      quantity: holding.quantity,
+      purchasePrice: holding.purchasePrice,
+      currentPrice: holding.currentPrice,
+      totalValue: holding.currentPrice * holding.quantity,
+      pnl: holding.plUsd,
+      purchaseDate: holding.purchaseDate,
+    }));
+
+    exportPortfolioReportCSV({
+      generatedAt: new Date().toISOString(),
+      currency,
+      rangeLabel: chartRange,
+      rate,
+      performance: performanceData,
+      allocation,
+      holdings,
+    });
+  }, [chartRange, currency, holdingsWithPrice, metrics, performanceData, rate]);
 
   return (
     <Sidebar collapsible="icon" width={260} className={cn('overflow-hidden rounded-2xl', 'h-full')}>
@@ -195,6 +232,14 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <IconButton
+            ariaLabel="Download portfolio report"
+            variant="inverse"
+            size="sm"
+            onClick={handleExport}
+            icon={<Download />}
+            className={footerButtonClassName}
+          />
           <IconButton
             ariaLabel="Log out"
             variant="inverse"
