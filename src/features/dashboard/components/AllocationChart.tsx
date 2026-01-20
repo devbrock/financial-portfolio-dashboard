@@ -50,7 +50,9 @@ export function AllocationChart(props: AllocationChartProps) {
           height={260}
           yTickFormatter={v => `${v}%`}
           tooltipLabelFormatter={l => <span>{String(l)}</span>}
-          tooltipValueFormatter={v => <span>{String(v)}%</span>}
+          tooltipValueFormatter={v =>
+            typeof v === 'number' ? `${v.toFixed(2)}%` : `${String(v)}%`
+          }
         />
       )}
     </ChartContainer>

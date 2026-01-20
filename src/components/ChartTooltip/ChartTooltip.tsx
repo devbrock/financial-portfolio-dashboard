@@ -10,6 +10,9 @@ export function ChartTooltip(props: ChartTooltipProps) {
 
   if (!active || !items || items.length === 0) return null;
 
+  const formatValue = (value: string | number) =>
+    typeof value === 'number' ? value.toFixed(2) : value;
+
   return (
     <div
       className={cn(
@@ -36,7 +39,12 @@ export function ChartTooltip(props: ChartTooltipProps) {
               <span className="truncate">{it.name}</span>
             </div>
             <span className="font-semibold">
-              {valueFormatter ? valueFormatter(it.value) : it.value}
+              {valueFormatter
+                ? (() => {
+                    const formatted = valueFormatter(it.value);
+                    return typeof formatted === 'number' ? formatted.toFixed(2) : formatted;
+                  })()
+                : formatValue(it.value)}
             </span>
           </div>
         ))}
