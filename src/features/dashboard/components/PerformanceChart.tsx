@@ -11,10 +11,9 @@ import {
 } from '@components';
 import { cn } from '@/utils/cn';
 import type { PerformancePoint } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
-import { formatCompact } from '@utils/formatCompact';
 import { formatSignedPct } from '@utils/formatSignedPct';
 import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type PerformanceChartProps = {
   range: '7d' | '30d' | '90d' | '1y';
@@ -25,6 +24,7 @@ type PerformanceChartProps = {
 export function PerformanceChart(props: PerformanceChartProps) {
   const { range, onRangeChange, flash = false } = props;
   const { data, isLoading, isError, error, refetch } = usePortfolioHistoricalData(range);
+  const { formatMoney, formatCompactMoney } = useCurrencyFormatter();
 
   const { totalValue, changePct } = useMemo(() => {
     if (data.length === 0) return { totalValue: 0, changePct: 0 };
@@ -95,7 +95,7 @@ export function PerformanceChart(props: PerformanceChartProps) {
           <Inline align="end" justify="between" className="mb-3 gap-3">
             <div>
               <Text as="div" className="text-2xl font-semibold">
-                {formatMoneyUsd(totalValue)}
+                {formatMoney(totalValue)}
               </Text>
               <Text as="div" size="sm" tone="muted">
                 Portfolio value
@@ -118,7 +118,9 @@ export function PerformanceChart(props: PerformanceChartProps) {
                 color: 'var(--ui-primary)',
               },
             ]}
-            yTickFormatter={v => (typeof v === 'number' ? `$${formatCompact(v)}` : String(v))}
+            yTickFormatter={v =>
+              typeof v === 'number' ? formatCompactMoney(v) : String(v)
+            }
           />
         </>
       )}

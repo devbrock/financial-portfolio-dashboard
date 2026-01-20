@@ -14,8 +14,8 @@ import {
 import { EllipsisVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { AssetCardModel } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 import { formatSignedPct } from '@utils/formatSignedPct';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type AssetSummaryCardProps = {
   asset: AssetCardModel;
@@ -25,6 +25,7 @@ type AssetSummaryCardProps = {
 
 export function AssetSummaryCard(props: AssetSummaryCardProps) {
   const { asset, loading = false, flash = false } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   const deltaTone =
     asset.weeklyDeltaPct > 0
@@ -112,7 +113,7 @@ export function AssetSummaryCard(props: AssetSummaryCardProps) {
             <Skeleton className="h-8 w-28" />
           ) : (
             <Text as="div" className="text-2xl font-semibold">
-              {formatMoneyUsd(asset.valueUsd)}
+              {formatMoney(asset.valueUsd)}
             </Text>
           )}
 

@@ -2,8 +2,8 @@ import { Card, CardBody, DeltaPill, IconButton, Inline, Text } from '@components
 import { X } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { WatchlistCardModel } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 import { formatSignedPct } from '@utils/formatSignedPct';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type WatchlistCardProps = {
   item: WatchlistCardModel;
@@ -13,6 +13,7 @@ type WatchlistCardProps = {
 
 export function WatchlistCard(props: WatchlistCardProps) {
   const { item, onRemove, flash = false } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   return (
     <Card
@@ -63,7 +64,7 @@ export function WatchlistCard(props: WatchlistCardProps) {
         <Inline align="end" justify="between" className="gap-3">
           <div>
             <Text as="div" className="text-2xl font-semibold">
-              {formatMoneyUsd(item.priceUsd)}
+              {formatMoney(item.priceUsd)}
             </Text>
             <Text as="div" size="sm" tone="muted">
               Live price

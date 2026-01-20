@@ -15,8 +15,8 @@ import {
 import { EllipsisVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { HoldingRow } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 import { formatSignedPct } from '@utils/formatSignedPct';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type HoldingsMobileCardProps = {
   holding: HoldingRow;
@@ -26,6 +26,7 @@ type HoldingsMobileCardProps = {
 
 export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
   const { holding, onRemove, flash = false } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   return (
     <Card
@@ -98,7 +99,7 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
             Purchase price
           </Text>
           <Text as="div" className="font-semibold">
-            {formatMoneyUsd(holding.purchasePrice)}
+            {formatMoney(holding.purchasePrice)}
           </Text>
         </Inline>
         <Inline align="center" justify="between" className="gap-3">
@@ -106,7 +107,7 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
             Price
           </Text>
           <Text as="div" className="font-semibold">
-            {formatMoneyUsd(holding.priceUsd)}
+            {formatMoney(holding.priceUsd)}
           </Text>
         </Inline>
         <Inline align="center" justify="between" className="gap-3">
@@ -121,7 +122,7 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
             )}
           >
             {holding.pnlUsd >= 0 ? '+' : ''}
-            {formatMoneyUsd(holding.pnlUsd)}
+            {formatMoney(holding.pnlUsd)}
           </Text>
         </Inline>
       </CardBody>

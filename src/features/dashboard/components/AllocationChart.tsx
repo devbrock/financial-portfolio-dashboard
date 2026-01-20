@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { ChartContainer, Inline, PieDonutChart, Skeleton, Text } from '@components';
 import { cn } from '@/utils/cn';
 import type { AllocationSlice } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type AllocationChartProps = {
   data: readonly AllocationSlice[];
@@ -13,6 +13,7 @@ type AllocationChartProps = {
 
 export function AllocationChart(props: AllocationChartProps) {
   const { data, totalInvested, loading = false, flash = false } = props;
+  const { formatMoney } = useCurrencyFormatter();
   const chartColors = useMemo(() => data.map(slice => slice.color), [data]);
   const legendItems = useMemo(
     () => data.map(slice => ({ name: slice.name, color: slice.color })),
@@ -53,7 +54,7 @@ export function AllocationChart(props: AllocationChartProps) {
             )}
           >
             <Text as="div" className="text-lg font-semibold">
-              {formatMoneyUsd(totalInvested)}
+              {formatMoney(totalInvested)}
             </Text>
             <Text as="div" size="sm" tone="muted">
               Total invested

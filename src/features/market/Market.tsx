@@ -24,14 +24,8 @@ import { PageHeader } from '@/features/shell/PageHeader';
 import { useMarketQuotes } from './hooks/useMarketQuotes';
 import { useEarningsCalendar } from './hooks/useEarningsCalendar';
 import { INDEX_SYMBOLS, SECTOR_SYMBOLS } from './marketData';
-import { formatMoneyUsd } from '@/utils/formatMoneyUsd';
 import { formatSignedPct } from '@/utils/formatSignedPct';
-import { formatCompact } from '@/utils/formatCompact';
-
-const formatNumber = (value?: number | null, digits = 2) => {
-  if (typeof value !== 'number' || Number.isNaN(value)) return '--';
-  return value.toFixed(digits);
-};
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 const formatUpdatedAt = (timestamp: number) => {
   if (!timestamp) return 'Updated: --';
@@ -71,6 +65,7 @@ export function Market() {
   const indices = useMarketQuotes(INDEX_SYMBOLS);
   const sectors = useMarketQuotes(SECTOR_SYMBOLS);
   const earnings = useEarningsCalendar(7);
+  const { formatMoney, formatCompactMoney } = useCurrencyFormatter();
   const lastUpdatedAt = useMemo(
     () => Math.max(indices.dataUpdatedAt, sectors.dataUpdatedAt, earnings.dataUpdatedAt),
     [earnings.dataUpdatedAt, indices.dataUpdatedAt, sectors.dataUpdatedAt]
@@ -198,15 +193,13 @@ export function Market() {
                           <TableCell>
                             {item.epsActual == null && item.epsEstimate == null
                               ? '--'
-                              : `${formatNumber(item.epsActual)} / ${formatNumber(
-                                  item.epsEstimate
-                                )}`}
+                              : `${item.epsActual == null ? '--' : formatMoney(item.epsActual)} / ${item.epsEstimate == null ? '--' : formatMoney(item.epsEstimate)}`}
                           </TableCell>
                           <TableCell>
                             {item.revenueActual == null && item.revenueEstimate == null
                               ? '--'
-                              : `${item.revenueActual == null ? '--' : `$${formatCompact(item.revenueActual)}`}` +
-                                ` / ${item.revenueEstimate == null ? '--' : `$${formatCompact(item.revenueEstimate)}`}`}
+                              : `${item.revenueActual == null ? '--' : formatCompactMoney(item.revenueActual)}` +
+                                ` / ${item.revenueEstimate == null ? '--' : formatCompactMoney(item.revenueEstimate)}`}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -229,6 +222,7 @@ function MarketQuoteTile(props: {
   loading: boolean;
 }) {
   const { name, symbol, quote, loading } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   return (
     <div className="rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4">
@@ -247,7 +241,7 @@ function MarketQuoteTile(props: {
         quote ? (
           <Inline align="end" justify="between" className="mt-4 gap-2">
             <Text as="div" className="text-xl font-semibold">
-              {formatMoneyUsd(quote.c)}
+              {formatMoney(quote.c)}
             </Text>
             <DeltaPill
               direction={quote.dp > 0 ? 'up' : quote.dp < 0 ? 'down' : 'flat'}
@@ -273,6 +267,7 @@ function MarketQuoteRow(props: {
   loading: boolean;
 }) {
   const { name, symbol, quote, loading } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   return (
     <div className="flex items-center justify-between rounded-2xl border border-(--ui-border) bg-(--ui-bg) px-4 py-3">
@@ -289,7 +284,7 @@ function MarketQuoteRow(props: {
       ) : quote ? (
         <Inline align="center" className="gap-3">
           <Text as="div" className="text-sm font-semibold">
-            {formatMoneyUsd(quote.c)}
+            {formatMoney(quote.c)}
           </Text>
           <DeltaPill
             direction={quote.dp > 0 ? 'up' : quote.dp < 0 ? 'down' : 'flat'}

@@ -18,10 +18,10 @@ import {
 import { ChevronUp, EllipsisVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { HoldingRow, SortKey, SortDir } from '@/types/dashboard';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 import { formatCompact } from '@utils/formatCompact';
 import { formatSignedPct } from '@utils/formatSignedPct';
 import { ariasort } from '@utils/ariasort';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type HoldingsTableProps = {
   holdings: readonly HoldingRow[];
@@ -34,6 +34,7 @@ type HoldingsTableProps = {
 
 export function HoldingsTable(props: HoldingsTableProps) {
   const { holdings, onSort, sortKey, sortDir, onRemove, flash = false } = props;
+  const { formatMoney } = useCurrencyFormatter();
 
   return (
     <Table tableProps={{ 'aria-label': 'Holdings table' }}>
@@ -128,15 +129,15 @@ export function HoldingsTable(props: HoldingsTableProps) {
                 {formatSignedPct(h.changePct)}
               </DeltaPill>
             </TableCell>
-            <TableCell>{formatMoneyUsd(h.purchasePrice)}</TableCell>
-            <TableCell>{formatMoneyUsd(h.priceUsd)}</TableCell>
+            <TableCell>{formatMoney(h.purchasePrice)}</TableCell>
+            <TableCell>{formatMoney(h.priceUsd)}</TableCell>
             <TableCell>
               <Text
                 as="span"
                 className={cn('font-semibold', h.pnlUsd >= 0 ? 'text-emerald-700' : 'text-red-700')}
               >
                 {h.pnlUsd >= 0 ? '+' : ''}
-                {formatMoneyUsd(h.pnlUsd)}
+                {formatMoney(h.pnlUsd)}
               </Text>
             </TableCell>
             <TableCell className="text-right">

@@ -1,7 +1,8 @@
 import { Heading, Inline, Skeleton, Text } from '@components';
-import { formatMoneyUsd } from '@utils/formatMoneyUsd';
 import { formatLastUpdated } from '@utils/formatLastUpdated';
 import { formatSignedPct } from '@utils/formatSignedPct';
+import { CurrencySelector } from './CurrencySelector';
+import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type DashboardHeaderProps = {
   userName: string;
@@ -16,9 +17,11 @@ export function DashboardHeader(props: DashboardHeaderProps) {
   const { userName, portfolioValue, lastUpdated, dailyChangeUsd, dailyChangePct, loading = false } =
     props;
 
+  const { formatMoney } = useCurrencyFormatter();
+
   const formatSignedMoney = (value: number) => {
     const absValue = Math.abs(value);
-    const formatted = formatMoneyUsd(absValue);
+    const formatted = formatMoney(absValue);
     return value >= 0 ? `+${formatted}` : `-${formatted}`;
   };
 
@@ -42,8 +45,11 @@ export function DashboardHeader(props: DashboardHeaderProps) {
           <Skeleton className="h-8 w-40" />
         ) : (
           <>
+            <div className="flex items-center justify-end">
+              <CurrencySelector />
+            </div>
             <Text as="div" className="text-2xl font-semibold">
-              {formatMoneyUsd(portfolioValue)}
+              {formatMoney(portfolioValue)}
             </Text>
             <Text as="div" size="sm" tone="muted" className="mt-1">
               Last updated {formatLastUpdated(lastUpdated)}
