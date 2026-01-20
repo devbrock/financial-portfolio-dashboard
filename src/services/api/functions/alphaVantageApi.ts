@@ -1,4 +1,4 @@
-import type { AlphaVantageTimeSeriesDaily } from '@/types/alphaVantage';
+import type { AlphaVantageTimeSeriesDaily, AlphaVantageTimeSeriesMonthly } from '@/types/alphaVantage';
 import { alphaVantageClient } from '@/services/api/clients/alphaVantageClient';
 import { ApiError } from '@/services/api/clients/apiError';
 
@@ -38,6 +38,23 @@ export const alphaVantageApi = {
           function: 'TIME_SERIES_DAILY',
           symbol,
           outputsize,
+        },
+      });
+
+      if (isRateLimitResponse(response.data)) {
+        throw new ApiError('Alpha Vantage rate limit reached. Retrying shortly.', 429);
+      }
+
+      return response;
+    });
+  },
+
+  getTimeSeriesMonthly: async (symbol: string) => {
+    return enqueueAlphaVantage(async () => {
+      const response = await alphaVantageClient.get<AlphaVantageTimeSeriesMonthly>('', {
+        params: {
+          function: 'TIME_SERIES_MONTHLY',
+          symbol,
         },
       });
 

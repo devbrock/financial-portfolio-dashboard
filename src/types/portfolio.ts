@@ -1,4 +1,4 @@
-import type { AlphaVantageTimeSeriesDaily } from './alphaVantage';
+import type { AlphaVantageTimeSeriesDaily, AlphaVantageTimeSeriesMonthly } from './alphaVantage';
 
 export type AssetType = 'stock' | 'crypto';
 
@@ -72,7 +72,7 @@ export type PortfolioMetrics = {
 };
 
 export type HistoricalStockCacheEntry = {
-  data: AlphaVantageTimeSeriesDaily;
+  data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
   outputsize: 'compact' | 'full';
   fetchedAt: number;
 };

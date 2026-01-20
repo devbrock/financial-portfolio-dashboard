@@ -18,3 +18,8 @@ export type AlphaVantageTimeSeriesDaily = {
   'Meta Data': AlphaVantageMetaData;
   'Time Series (Daily)': Record<string, AlphaVantageDailyData>;
 };
+
+export type AlphaVantageTimeSeriesMonthly = {
+  'Meta Data': AlphaVantageMetaData;
+  'Time Series (Monthly)': Record<string, AlphaVantageDailyData>;
+};
