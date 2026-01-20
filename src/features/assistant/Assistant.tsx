@@ -95,9 +95,9 @@ export function Assistant() {
 
           <Inline align="center" className="flex-wrap gap-2">
             {[
-              "What were today's biggest gainers?",
               'Summarize my portfolio performance.',
-              'Which holdings moved the most today?',
+              'Which holdings are my top gainers and top losers today?',
+              'What are the biggest movers in my watchlist right now?',
             ].map(prompt => (
               <Button
                 key={prompt}
