@@ -1,7 +1,6 @@
 import { Heading, Inline, Skeleton, Text } from '@components';
 import { formatLastUpdated } from '@utils/formatLastUpdated';
 import { formatSignedPct } from '@utils/formatSignedPct';
-import { CurrencySelector } from './CurrencySelector';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 
 type DashboardHeaderProps = {
@@ -45,9 +44,6 @@ export function DashboardHeader(props: DashboardHeaderProps) {
           <Skeleton className="h-8 w-40" />
         ) : (
           <>
-            <div className="flex items-center justify-end">
-              <CurrencySelector />
-            </div>
             <Text as="div" className="text-2xl font-semibold">
               {formatMoney(portfolioValue)}
             </Text>

@@ -128,6 +128,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     top: number;
     left: number;
     width: number;
+    side: 'top' | 'bottom';
   } | null>(null);
 
   React.useLayoutEffect(() => {
@@ -138,9 +139,35 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     const trigger = triggerAnchorRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
-    setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width });
+    setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width, side: 'bottom' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  React.useLayoutEffect(() => {
+    if (!open || !pos) return;
+    const trigger = triggerAnchorRef.current;
+    const content = contentRef.current;
+    if (!trigger || !content) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const padding = 8;
+    const offset = 8;
+
+    if (contentRect.bottom > viewportHeight - padding) {
+      const nextTop = Math.max(padding, triggerRect.top - contentRect.height - offset);
+      if (nextTop !== pos.top || pos.side !== 'top') {
+        setPos(current => (current ? { ...current, top: nextTop, side: 'top' } : current));
+      }
+      return;
+    }
+
+    if (pos.side !== 'bottom') {
+      setPos(current =>
+        current ? { ...current, top: triggerRect.bottom + offset, side: 'bottom' } : current
+      );
+    }
+  }, [open, pos]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -148,7 +175,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
       const trigger = triggerAnchorRef.current;
       if (!trigger) return;
       const rect = trigger.getBoundingClientRect();
-      setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width });
+      setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width, side: 'bottom' });
     };
     window.addEventListener('scroll', onReflow, true);
     window.addEventListener('resize', onReflow);
@@ -177,9 +204,15 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
         ref={contentRef}
         role="menu"
         aria-orientation="vertical"
-        className={cn(dropdownMenuContentClassName, className)}
+        data-side={pos.side}
+        className={cn(
+          dropdownMenuContentClassName,
+          'origin-top-left data-[side=top]:origin-bottom-left',
+          className
+        )}
         style={{
           position: 'fixed',
+          zIndex: 60,
           top: pos.top,
           left: pos.left,
           minWidth: minWidth ?? undefined,

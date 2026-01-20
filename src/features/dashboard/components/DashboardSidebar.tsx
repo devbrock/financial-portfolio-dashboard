@@ -6,6 +6,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,7 +26,9 @@ import {
   LogOut,
   Moon,
   Newspaper,
+  Settings,
   Sun,
+  Check,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
@@ -39,14 +46,26 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
   const { activeNav, onNavChange } = props;
   const dispatch = useAppDispatch();
   const theme = useAppSelector(state => state.portfolio.preferences.theme);
+  const currency = useAppSelector(state => state.portfolio.preferences.currency);
 
-  const toggleTheme = useCallback(() => {
-    dispatch(updatePreferences({ theme: theme === 'dark' ? 'light' : 'dark' }));
-  }, [dispatch, theme]);
+  const handleThemeChange = useCallback(
+    (nextTheme: 'light' | 'dark') => {
+      dispatch(updatePreferences({ theme: nextTheme }));
+    },
+    [dispatch]
+  );
+
+  const handleCurrencyChange = useCallback(
+    (nextCurrency: 'USD' | 'EUR' | 'GBP' | 'JPY') => {
+      dispatch(updatePreferences({ currency: nextCurrency }));
+    },
+    [dispatch]
+  );
 
   const handleLogout = useCallback(() => undefined, []);
   const footerButtonClassName =
     'group-data-[state=collapsed]/sidebar:w-full group-data-[state=collapsed]/sidebar:justify-center';
+  const settingsItemClassName = 'flex items-center justify-between gap-3';
 
   return (
     <Sidebar collapsible="icon" width={260} className={cn('overflow-hidden rounded-2xl', 'h-full')}>
@@ -124,14 +143,58 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               'h-9 w-9 rounded-xl border border-white/10 bg-white/10 text-white hover:bg-white/15'
             )}
           />
-          <IconButton
-            ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-            variant="inverse"
-            size="sm"
-            onClick={toggleTheme}
-            icon={theme === 'dark' ? <Sun /> : <Moon />}
-            className={footerButtonClassName}
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <IconButton
+                ariaLabel="Open settings"
+                variant="inverse"
+                size="sm"
+                icon={<Settings />}
+                className={footerButtonClassName}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent minWidth={220}>
+              <Text as="div" size="xs" className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)">
+                Theme
+              </Text>
+              <DropdownMenuItem
+                className={settingsItemClassName}
+                onClick={() => handleThemeChange('light')}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Sun className="h-4 w-4" />
+                  Light
+                </span>
+                {theme === 'light' ? <Check className="h-4 w-4" /> : null}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={settingsItemClassName}
+                onClick={() => handleThemeChange('dark')}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Moon className="h-4 w-4" />
+                  Dark
+                </span>
+                {theme === 'dark' ? <Check className="h-4 w-4" /> : null}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Text as="div" size="xs" className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)">
+                Currency
+              </Text>
+              {(['USD', 'EUR', 'GBP', 'JPY'] as const).map(code => (
+                <DropdownMenuItem
+                  key={code}
+                  className={settingsItemClassName}
+                  onClick={() => handleCurrencyChange(code)}
+                >
+                  <span className="inline-flex items-center gap-2">
+                    {code}
+                  </span>
+                  {currency === code ? <Check className="h-4 w-4" /> : null}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <IconButton
             ariaLabel="Log out"
             variant="inverse"
