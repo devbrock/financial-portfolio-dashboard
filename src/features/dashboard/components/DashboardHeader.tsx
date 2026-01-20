@@ -15,7 +15,11 @@ export function DashboardHeader(props: DashboardHeaderProps) {
   const { userName, portfolioValue, lastUpdated, dailyChangePct, loading = false } = props;
 
   return (
-    <Inline align="center" justify="between" className="gap-3 py-4">
+    <Inline
+      align="center"
+      justify="between"
+      className="gap-3 py-4 animate-in fade-in slide-in-from-top-1 duration-300 motion-reduce:animate-none"
+    >
       <div className="min-w-0">
         <Heading as="h1" className="text-xl">
           Welcome back, {userName}!

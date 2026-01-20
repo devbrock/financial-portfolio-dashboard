@@ -3,7 +3,9 @@ import { cva } from 'class-variance-authority';
 /**
  * Spec: `design_system.json` -> components.primitives.Card.classes
  */
-export const cardStyles = cva('rounded-2xl border border-(--ui-border) p-6', {
+export const cardStyles = cva(
+  'rounded-2xl border border-(--ui-border) p-6 animate-in fade-in slide-in-from-bottom-2 duration-300 motion-reduce:animate-none',
+  {
   variants: {
     tone: {
       default: 'bg-(--ui-bg) text-(--ui-text)',
@@ -20,7 +22,8 @@ export const cardStyles = cva('rounded-2xl border border-(--ui-border) p-6', {
     tone: 'default',
     elevation: 'sm',
   },
-});
+  }
+);
 
 export const cardHeaderStyles = cva('flex items-start justify-between gap-4 pb-4');
 export const cardBodyStyles = cva('space-y-4');
