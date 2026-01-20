@@ -39,6 +39,7 @@ export function AllocationChart(props: AllocationChartProps) {
         <BarChart<AllocationSlice>
           data={data}
           xKey="name"
+          barColorKey="color"
           series={[
             {
               key: 'value',
@@ -46,18 +47,12 @@ export function AllocationChart(props: AllocationChartProps) {
               color: chartColors[0] ?? 'var(--ui-primary)',
             },
           ]}
+          height={260}
           yTickFormatter={v => `${v}%`}
           tooltipLabelFormatter={l => <span>{String(l)}</span>}
           tooltipValueFormatter={v => <span>{String(v)}%</span>}
         />
       )}
-
-      {/* Legend */}
-      {!loading ? (
-        <Text as="div" size="sm" tone="muted" className="mt-3">
-          Total invested
-        </Text>
-      ) : null}
     </ChartContainer>
   );
 }

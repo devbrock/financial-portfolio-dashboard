@@ -3,6 +3,7 @@ import {
   Bar,
   BarChart as RechartsBarChart,
   CartesianGrid,
+  Cell,
   Legend,
   ResponsiveContainer,
   Tooltip,
@@ -27,6 +28,7 @@ export function BarChart<TDatum extends Record<string, unknown>>(props: BarChart
     height = 260,
     grid = true,
     legend = false,
+    barColorKey,
     xTickFormatter,
     yTickFormatter,
     tooltipLabelFormatter,
@@ -86,7 +88,16 @@ export function BarChart<TDatum extends Record<string, unknown>>(props: BarChart
               name={s.name}
               fill={s.color ?? 'var(--ui-primary)'}
               radius={[8, 8, 0, 0]}
-            />
+            >
+              {barColorKey
+                ? chartData.map((datum, index) => (
+                    <Cell
+                      key={`cell-${s.key}-${index}`}
+                      fill={(datum[barColorKey] as string) ?? s.color ?? 'var(--ui-primary)'}
+                    />
+                  ))
+                : null}
+            </Bar>
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>

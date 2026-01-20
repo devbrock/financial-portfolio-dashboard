@@ -8,6 +8,7 @@ export type BarChartProps<TDatum extends Record<string, unknown>> = {
   height?: number;
   grid?: boolean;
   legend?: boolean;
+  barColorKey?: DatumKey<TDatum>;
   xTickFormatter?: ChartAxisTickFormatter;
   yTickFormatter?: ChartAxisTickFormatter;
   tooltipLabelFormatter?: (label: string | number) => React.ReactNode;
