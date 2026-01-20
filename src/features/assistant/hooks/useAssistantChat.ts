@@ -74,10 +74,16 @@ export function useAssistantChat() {
       requestIdRef.current = requestId;
 
       try {
-        const toolContext = buildAssistantToolContext({
-          question: trimmed,
-          ...toolData,
-        });
+        let toolContext: string | null = null;
+        try {
+          toolContext = await buildAssistantToolContext({
+            question: trimmed,
+            ...toolData,
+          });
+        } catch (toolError) {
+          toolContext = null;
+          console.warn('Assistant tool context failed.', toolError);
+        }
 
         const response = await createChatCompletion({
           model: MODEL,
