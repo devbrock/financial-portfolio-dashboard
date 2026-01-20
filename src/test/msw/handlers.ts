@@ -54,6 +54,53 @@ export const handlers = [
       finnhubIndustry: 'Technology',
     });
   }),
+  http.get(`${FINNHUB_BASE}/calendar/earnings`, () => {
+    return HttpResponse.json({
+      earningsCalendar: [
+        {
+          date: '2024-01-10',
+          epsActual: 1.2,
+          epsEstimate: 1.1,
+          hour: 'bmo',
+          quarter: 1,
+          revenueActual: 1000000,
+          revenueEstimate: 950000,
+          symbol: 'AAPL',
+          year: 2024,
+        },
+      ],
+    });
+  }),
+  http.get(`${FINNHUB_BASE}/news`, () => {
+    return HttpResponse.json([
+      {
+        category: 'general',
+        id: 1,
+        datetime: 1704412800,
+        headline: 'Markets open higher',
+        image: 'https://example.com/news.jpg',
+        related: 'SPY',
+        source: 'Example News',
+        summary: 'Stocks open higher ahead of earnings.',
+        url: 'https://example.com/news/1',
+      },
+    ]);
+  }),
+  http.get(`${FINNHUB_BASE}/company-news`, () => {
+    return HttpResponse.json([
+      {
+        category: 'company',
+        id: 2,
+        datetime: 1704499200,
+        headline: 'Company earnings preview',
+        image: 'https://example.com/company-news.jpg',
+        related: 'AAPL',
+        source: 'Example News',
+        summary: 'Previewing upcoming earnings.',
+        url: 'https://example.com/news/2',
+      },
+    ]);
+  }),
   http.get(`${COINGECKO_BASE}/search`, ({ request }) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query') ?? '';

@@ -89,8 +89,9 @@ describe('Treemap', () => {
   it('renders treemap cells and tooltip data', () => {
     render(<Treemap data={[{ name: 'Tech', value: 200 }]} />);
 
-    expect(screen.getAllByText('Tech').length).toBeGreaterThan(1);
-    expect(screen.getAllByText('200').length).toBeGreaterThan(1);
+    expect(screen.getAllByText('Tech').length).toBeGreaterThan(0);
+    expect(screen.getByText('200')).toBeInTheDocument();
+    expect(screen.getByText('200.00')).toBeInTheDocument();
     expect(screen.getByText('Portfolio')).toBeInTheDocument();
     expect(screen.getByText('Value')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();

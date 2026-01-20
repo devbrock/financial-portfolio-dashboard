@@ -17,15 +17,13 @@ describe('query options', () => {
       'cryptoPrice',
       { ids: 'bitcoin', vs_currencies: 'usd' },
     ]);
-    expect(
-      GetCryptoCoinQueryOptions('bitcoin', { localization: false }).queryKey
-    ).toEqual(['cryptoCoin', 'bitcoin', { localization: false }]);
-    expect(SearchCryptoQueryOptions('btc').queryKey).toEqual(['cryptoSearch', 'btc']);
-    expect(SearchSymbolQueryOptions('aapl', 'US').queryKey).toEqual([
-      'symbolSearch',
-      'aapl',
-      'US',
+    expect(GetCryptoCoinQueryOptions('bitcoin', { localization: false }).queryKey).toEqual([
+      'cryptoCoin',
+      'bitcoin',
+      { localization: false },
     ]);
+    expect(SearchCryptoQueryOptions('btc').queryKey).toEqual(['cryptoSearch', 'btc']);
+    expect(SearchSymbolQueryOptions('aapl', 'US').queryKey).toEqual(['symbolSearch', 'aapl', 'US']);
   });
 
   it('retries on rate limit errors', () => {

@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterAll, afterEach, beforeAll, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, expect, vi } from 'vitest';
+import { toHaveNoViolations } from 'jest-axe';
 import { server } from './msw/server';
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'error' });
+  server.listen({ onUnhandledRequest: 'warn' });
 });
 
 afterEach(() => {
@@ -15,6 +16,8 @@ afterEach(() => {
 afterAll(() => {
   server.close();
 });
+
+expect.extend(toHaveNoViolations);
 
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({

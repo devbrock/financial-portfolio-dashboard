@@ -8,9 +8,7 @@ export async function removeHoldingFromPortfolio(holdingId: string): Promise<str
   return holdingId;
 }
 
-export async function addWatchlistItemToPortfolio(
-  item: WatchlistItem
-): Promise<WatchlistItem> {
+export async function addWatchlistItemToPortfolio(item: WatchlistItem): Promise<WatchlistItem> {
   return item;
 }
 

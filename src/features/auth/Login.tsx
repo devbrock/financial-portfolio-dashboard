@@ -75,7 +75,7 @@ export function Login() {
   });
 
   return (
-    <div className="overflow-auto flex justify-center items-center">
+    <div className="flex items-center justify-center overflow-auto">
       <Container className="relative h-full w-full sm:py-14">
         <div className="flex h-full items-center">
           <div className="grid w-full items-start gap-6 lg:grid-cols-2 lg:gap-10">
@@ -137,7 +137,7 @@ export function Login() {
 
               <CardBody className="space-y-5">
                 {submitError ? (
-                  <Alert tone="danger" className='mb-4!'>
+                  <Alert tone="danger" className="mb-4!">
                     <Stack gap="sm">
                       <Text as="div" className="font-semibold">
                         We couldn’t sign you in
@@ -149,10 +149,9 @@ export function Login() {
                   </Alert>
                 ) : null}
 
-
                 <Divider />
 
-                <form onSubmit={onSubmit} className="space-y-4! mt-4!">
+                <form onSubmit={onSubmit} className="mt-4! space-y-4!">
                   <Stack gap="sm">
                     <Text as="label" htmlFor="login-email" className="font-semibold">
                       Email

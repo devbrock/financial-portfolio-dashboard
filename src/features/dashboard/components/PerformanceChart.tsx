@@ -118,9 +118,7 @@ export function PerformanceChart(props: PerformanceChartProps) {
                 color: 'var(--ui-primary)',
               },
             ]}
-            yTickFormatter={v =>
-              typeof v === 'number' ? formatCompactMoney(v) : String(v)
-            }
+            yTickFormatter={v => (typeof v === 'number' ? formatCompactMoney(v) : String(v))}
           />
         </>
       )}

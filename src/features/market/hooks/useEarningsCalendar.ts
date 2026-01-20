@@ -6,7 +6,6 @@ const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
 
 export function useEarningsCalendar(days: number) {
   const range = useMemo(() => {
-    // eslint-disable-next-line react-hooks/purity
     const start = new Date();
     start.setUTCHours(0, 0, 0, 0);
     const end = new Date(start);

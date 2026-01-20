@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 import { GetStockHistoricalDataQueryOptions } from '@/queryOptions/GetStockHistoricalDataQueryOptions';
 import { GetCryptoHistoricalDataQueryOptions } from '@/queryOptions/GetCryptoHistoricalDataQueryOptions';
 import { usePortfolioHoldings } from './usePortfolioHoldings';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setStockHistoricalCache } from '@/features/portfolio/portfolioSlice';
-import type { AlphaVantageTimeSeriesDaily, AlphaVantageTimeSeriesMonthly } from '@/types/alphaVantage';
+import type {
+  AlphaVantageTimeSeriesDaily,
+  AlphaVantageTimeSeriesMonthly,
+} from '@/types/alphaVantage';
 import type { CoinGeckoMarketChart } from '@/types/coinGecko';
 import { alphaVantageApi } from '@/services/api/functions/alphaVantageApi';
 
@@ -35,8 +38,23 @@ const buildDateRange = (days: number) => {
   return dates;
 };
 
+const isDailySeries = (
+  data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly
+): data is AlphaVantageTimeSeriesDaily => 'Time Series (Daily)' in data;
+
+const isMonthlySeries = (
+  data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly
+): data is AlphaVantageTimeSeriesMonthly => 'Time Series (Monthly)' in data;
+
+const getStockSeries = (data?: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly) => {
+  if (!data) return null;
+  if (isDailySeries(data)) return data['Time Series (Daily)'];
+  if (isMonthlySeries(data)) return data['Time Series (Monthly)'];
+  return null;
+};
+
 const parseStockSeries = (data?: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly) => {
-  const series = data?.['Time Series (Daily)'] ?? data?.['Time Series (Monthly)'];
+  const series = getStockSeries(data);
   const map = new Map<string, number>();
   if (!series) return map;
 
@@ -115,7 +133,11 @@ export function usePortfolioHistoricalData(range: Range) {
     const now = Date.now();
     const meta = new Map<
       string,
-      { data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly; isFresh: boolean; fetchedAt: number }
+      {
+        data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
+        isFresh: boolean;
+        fetchedAt: number;
+      }
     >();
     stockSymbols.forEach(symbol => {
       const entry = stockCache[symbol];
@@ -158,7 +180,7 @@ export function usePortfolioHistoricalData(range: Range) {
         initialDataUpdatedAt: cached?.fetchedAt,
       };
     }),
-  });
+  }) as UseQueryResult<AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly, unknown>[];
   const cryptoQueries = useQueries({
     queries: cryptoSymbols.map(coinId => GetCryptoHistoricalDataQueryOptions(coinId, cryptoParams)),
   });
@@ -169,9 +191,8 @@ export function usePortfolioHistoricalData(range: Range) {
     const symbol = stockSymbols[index];
     const fallback = cachedStockMeta.get(symbol)?.data;
     const data = query.data ?? fallback;
-    return data
-      ? !data['Time Series (Daily)'] && !data['Time Series (Monthly)']
-      : true;
+    const series = getStockSeries(data);
+    return series ? !Object.keys(series).length : true;
   });
   const hasMissingCryptoData = cryptoQueries.some(
     query => query.data && !query.data.prices?.length

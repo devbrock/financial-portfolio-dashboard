@@ -66,7 +66,7 @@ export function useAssistantChat() {
         content: trimmed,
       };
 
-      const pendingMessages = [...messages, userMessage];
+      const pendingMessages: AssistantMessage[] = [...messages, userMessage];
       dispatch(addMessage(userMessage));
       setIsLoading(true);
       setError(null);
@@ -92,7 +92,10 @@ export function useAssistantChat() {
             ...(toolContext ? [{ role: 'system', content: toolContext }] : []),
             ...pendingMessages
               .filter(msg => msg.role !== 'system')
-              .map(msg => ({ role: msg.role, content: msg.content })),
+              .map(msg => ({
+                role: msg.role as 'user' | 'assistant',
+                content: msg.content,
+              })),
           ],
           temperature: 0.2,
         });
@@ -120,7 +123,7 @@ export function useAssistantChat() {
         }
       }
     },
-    [dispatch, messages, systemPrompt]
+    [dispatch, messages, systemPrompt, toolData]
   );
 
   return {

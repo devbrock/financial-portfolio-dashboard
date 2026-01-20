@@ -140,8 +140,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
     setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width, side: 'bottom' });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, triggerAnchorRef]);
 
   React.useLayoutEffect(() => {
     if (!open || !pos) return;
@@ -167,7 +166,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
         current ? { ...current, top: triggerRect.bottom + offset, side: 'bottom' } : current
       );
     }
-  }, [open, pos]);
+  }, [contentRef, open, pos, triggerAnchorRef]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -183,8 +182,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
       window.removeEventListener('scroll', onReflow, true);
       window.removeEventListener('resize', onReflow);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, triggerAnchorRef]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -192,8 +190,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     if (!content) return;
     const focusables = getFocusableElements(content);
     focusables[0]?.focus();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [contentRef, open]);
 
   if (!open) return null;
   if (!pos) return null;

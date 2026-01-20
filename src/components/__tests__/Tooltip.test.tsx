@@ -74,8 +74,9 @@ describe('ChartTooltip', () => {
 
     expect(screen.getByText('Today')).toBeInTheDocument();
     expect(screen.getByText('Revenue')).toBeInTheDocument();
-    expect(screen.getByText('120')).toBeInTheDocument();
+    expect(screen.getByText('120.00')).toBeInTheDocument();
     expect(screen.getByText('Cost')).toBeInTheDocument();
+    expect(screen.getByText('40.00')).toBeInTheDocument();
   });
 
   it('returns null when inactive', () => {

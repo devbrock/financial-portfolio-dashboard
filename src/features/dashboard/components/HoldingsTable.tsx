@@ -190,7 +190,7 @@ function SortableTh(props: {
             className={cn('h-3 w-3', !active && 'opacity-40', dir === 'desc' && 'opacity-30')}
           />
           <ChevronDown
-            className={cn('h-3 w-3 -mt-1', !active && 'opacity-40', dir === 'asc' && 'opacity-30')}
+            className={cn('-mt-1 h-3 w-3', !active && 'opacity-40', dir === 'asc' && 'opacity-30')}
           />
         </span>
       </button>

@@ -1,4 +1,7 @@
-import type { AlphaVantageTimeSeriesDaily, AlphaVantageTimeSeriesMonthly } from '@/types/alphaVantage';
+import type {
+  AlphaVantageTimeSeriesDaily,
+  AlphaVantageTimeSeriesMonthly,
+} from '@/types/alphaVantage';
 import { alphaVantageClient } from '@/services/api/clients/alphaVantageClient';
 import { ApiError } from '@/services/api/clients/apiError';
 

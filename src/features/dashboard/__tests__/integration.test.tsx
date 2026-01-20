@@ -67,7 +67,7 @@ describe('dashboard flows', () => {
 
     const actionButtons = screen.getAllByLabelText('Row actions for AAPL');
     await user.click(actionButtons[0]);
-    await user.click(screen.getAllByText('Remove…')[0]);
+    await user.click(screen.getAllByRole('menuitem', { name: 'Remove' })[0]);
     await screen.findByText('Remove holding?');
     await user.click(screen.getByRole('button', { name: 'Remove' }));
 

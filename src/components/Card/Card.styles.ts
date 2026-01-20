@@ -6,22 +6,22 @@ import { cva } from 'class-variance-authority';
 export const cardStyles = cva(
   'rounded-2xl border border-(--ui-border) p-6 animate-in fade-in slide-in-from-bottom-2 duration-300 motion-reduce:animate-none',
   {
-  variants: {
-    tone: {
-      default: 'bg-(--ui-bg) text-(--ui-text)',
-      soft: 'bg-(--ui-surface) text-(--ui-text)',
-      inverse: 'bg-(--ui-inverse-bg) text-(--ui-inverse-text) border-white/10',
+    variants: {
+      tone: {
+        default: 'bg-(--ui-bg) text-(--ui-text)',
+        soft: 'bg-(--ui-surface) text-(--ui-text)',
+        inverse: 'bg-(--ui-inverse-bg) text-(--ui-inverse-text) border-white/10',
+      },
+      elevation: {
+        none: 'shadow-none',
+        sm: 'shadow-sm shadow-black/5',
+        md: 'shadow-md shadow-black/10',
+      },
     },
-    elevation: {
-      none: 'shadow-none',
-      sm: 'shadow-sm shadow-black/5',
-      md: 'shadow-md shadow-black/10',
+    defaultVariants: {
+      tone: 'default',
+      elevation: 'sm',
     },
-  },
-  defaultVariants: {
-    tone: 'default',
-    elevation: 'sm',
-  },
   }
 );
 

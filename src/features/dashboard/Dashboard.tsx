@@ -15,7 +15,6 @@ import {
   Text,
 } from '@components';
 import { Plus, Search } from 'lucide-react';
-import { cn } from '@/utils/cn';
 import type { SortKey, SortDir, HoldingRow } from '@/types/dashboard';
 import { clampNumber } from '@utils/clampNumber';
 import { compareStrings } from '@utils/compareStrings';
@@ -241,172 +240,172 @@ export function Dashboard() {
     >
       <Container className="max-w-none px-0">
         <Stack gap="lg">
-                {/* App header */}
-            {isError ? (
-                  <Card className="border-amber-200 bg-amber-50/60">
-                    <CardBody>
-                      <Inline align="center" justify="between" className="gap-4">
-                        <div className="min-w-0">
-                          <Text as="div" className="font-semibold text-amber-900">
-                            Market data is temporarily unavailable.
-                          </Text>
-                          <Text as="div" size="sm" className="text-amber-800">
-                            {errorMessage}
-                          </Text>
-                        </div>
-                        <Button variant="secondary" className="shrink-0" onClick={handleRetry}>
-                          Retry
-                        </Button>
-                      </Inline>
-                    </CardBody>
-                  </Card>
-                ) : null}
+          {/* App header */}
+          {isError ? (
+            <Card className="border-amber-200 bg-amber-50/60">
+              <CardBody>
+                <Inline align="center" justify="between" className="gap-4">
+                  <div className="min-w-0">
+                    <Text as="div" className="font-semibold text-amber-900">
+                      Market data is temporarily unavailable.
+                    </Text>
+                    <Text as="div" size="sm" className="text-amber-800">
+                      {errorMessage}
+                    </Text>
+                  </div>
+                  <Button variant="secondary" className="shrink-0" onClick={handleRetry}>
+                    Retry
+                  </Button>
+                </Inline>
+              </CardBody>
+            </Card>
+          ) : null}
 
-                {/* Welcome + top actions */}
-                <DashboardHeader
-                  userName={user?.firstName || 'Investor'}
-                  portfolioValue={metrics.totalValue}
-                  lastUpdated={lastUpdatedSeconds}
-                  dailyChangeUsd={dailyPlUsd}
-                  dailyChangePct={dailyPlPct}
-                />
+          {/* Welcome + top actions */}
+          <DashboardHeader
+            userName={user?.firstName || 'Investor'}
+            portfolioValue={metrics.totalValue}
+            lastUpdated={lastUpdatedSeconds}
+            dailyChangeUsd={dailyPlUsd}
+            dailyChangePct={dailyPlPct}
+          />
 
-                {/* Watchlist */}
-                <section aria-label="My watchlist">
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <Inline align="center" justify="between" className="w-full gap-3">
-                        <div className="min-w-0">
-                          <Heading as="h3" className="text-base">
-                            My Watchlist
-                          </Heading>
-                          <Text as="div" size="sm" tone="muted">
-                            Track live prices for assets you care about.
-                          </Text>
-                        </div>
-                        <Button variant="secondary" size="sm" onClick={handleAddWatchlist}>
-                          Add to Watchlist
-                        </Button>
-                      </Inline>
-                    </CardHeader>
-                    <CardBody>
-                      {watchlist.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-(--ui-border) px-6 py-10 text-center">
-                          <Text as="div" className="text-sm font-semibold">
-                            Your watchlist is empty
-                          </Text>
-                          <Text as="div" size="sm" tone="muted">
-                            Add a stock or crypto to start tracking live prices.
-                          </Text>
-                          <Button variant="primary" size="sm" onClick={handleAddWatchlist}>
-                            Add your first asset
-                          </Button>
-                        </div>
-                      ) : (
-                        <div
-                          className="flex gap-3 overflow-x-auto pb-2"
-                          aria-label="Watchlist ticker list"
-                        >
-                          {watchlist.map(item => (
-                            <WatchlistCard
-                              key={item.id}
-                              item={item}
-                              flash={flashPrices}
-                              onRemove={id => {
-                                removeWatchlistMutation.mutate(id);
-                              }}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </CardBody>
-                  </Card>
-                </section>
+          {/* Watchlist */}
+          <section aria-label="My watchlist">
+            <Card>
+              <CardHeader className="pb-3">
+                <Inline align="center" justify="between" className="w-full gap-3">
+                  <div className="min-w-0">
+                    <Heading as="h3" className="text-base">
+                      My Watchlist
+                    </Heading>
+                    <Text as="div" size="sm" tone="muted">
+                      Track live prices for assets you care about.
+                    </Text>
+                  </div>
+                  <Button variant="secondary" size="sm" onClick={handleAddWatchlist}>
+                    Add to Watchlist
+                  </Button>
+                </Inline>
+              </CardHeader>
+              <CardBody>
+                {watchlist.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-(--ui-border) px-6 py-10 text-center">
+                    <Text as="div" className="text-sm font-semibold">
+                      Your watchlist is empty
+                    </Text>
+                    <Text as="div" size="sm" tone="muted">
+                      Add a stock or crypto to start tracking live prices.
+                    </Text>
+                    <Button variant="primary" size="sm" onClick={handleAddWatchlist}>
+                      Add your first asset
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    className="flex gap-3 overflow-x-auto pb-2"
+                    aria-label="Watchlist ticker list"
+                  >
+                    {watchlist.map(item => (
+                      <WatchlistCard
+                        key={item.id}
+                        item={item}
+                        flash={flashPrices}
+                        onRemove={id => {
+                          removeWatchlistMutation.mutate(id);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </section>
 
-                {/* Charts */}
-                <section aria-label="Charts" className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                  <PerformanceChart range={range} onRangeChange={setRange} flash={flashPrices} />
-                  <AllocationChart
-                    data={allocation}
-                    totalInvested={metrics.totalCostBasis}
-                    flash={flashPrices}
-                  />
-                </section>
+          {/* Charts */}
+          <section aria-label="Charts" className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <PerformanceChart range={range} onRangeChange={setRange} flash={flashPrices} />
+            <AllocationChart
+              data={allocation}
+              totalInvested={metrics.totalCostBasis}
+              flash={flashPrices}
+            />
+          </section>
 
-                {/* Holdings */}
-                <section aria-label="Holdings">
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <Inline align="center" justify="between" className="w-full gap-3">
-                        <div className="min-w-0 flex-1">
-                          <Heading as="h3" className="text-base">
-                            My Holdings
-                          </Heading>
-                          <Text as="div" size="sm" tone="muted">
-                            Track transactions, positions, performance and status.
-                          </Text>
-                        </div>
+          {/* Holdings */}
+          <section aria-label="Holdings">
+            <Card>
+              <CardHeader className="pb-3">
+                <Inline align="center" justify="between" className="w-full gap-3">
+                  <div className="min-w-0 flex-1">
+                    <Heading as="h3" className="text-base">
+                      My Holdings
+                    </Heading>
+                    <Text as="div" size="sm" tone="muted">
+                      Track transactions, positions, performance and status.
+                    </Text>
+                  </div>
 
-                        <div className="flex w-full flex-1 justify-center">
-                          <div className="relative w-full max-w-[280px]">
-                            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
-                              <Search />
-                            </span>
-                            <Input
-                              aria-label="Search holdings"
-                              placeholder="Search..."
-                              value={holdingsQuery}
-                              onChange={e => setHoldingsQuery(e.currentTarget.value)}
-                              className="pl-9"
-                            />
-                          </div>
-                        </div>
+                  <div className="flex w-full flex-1 justify-center">
+                    <div className="relative w-full max-w-[280px]">
+                      <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--ui-text-muted)">
+                        <Search />
+                      </span>
+                      <Input
+                        aria-label="Search holdings"
+                        placeholder="Search..."
+                        value={holdingsQuery}
+                        onChange={e => setHoldingsQuery(e.currentTarget.value)}
+                        className="pl-9"
+                      />
+                    </div>
+                  </div>
 
-                        <div className="flex flex-1 justify-end">
-                          <Button variant="primary" leftIcon={<Plus />} onClick={handleAddAsset}>
-                            Add Asset
-                          </Button>
-                        </div>
-                      </Inline>
-                    </CardHeader>
+                  <div className="flex flex-1 justify-end">
+                    <Button variant="primary" leftIcon={<Plus />} onClick={handleAddAsset}>
+                      Add Asset
+                    </Button>
+                  </div>
+                </Inline>
+              </CardHeader>
 
-                    <CardBody className="space-y-4">
-                      {/* Desktop table */}
-                      <div className="hidden md:block">
-                        {visibleHoldings.length === 0 ? (
-                          <EmptyHoldings onAddHolding={handleAddAsset} />
-                        ) : (
-                          <HoldingsTable
-                            holdings={visibleHoldings}
-                            onSort={triggerSort}
-                            sortKey={sortKey}
-                            sortDir={sortDir}
-                            onRemove={setConfirmRemoveId}
-                            flash={flashPrices}
-                          />
-                        )}
-                      </div>
+              <CardBody className="space-y-4">
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  {visibleHoldings.length === 0 ? (
+                    <EmptyHoldings onAddHolding={handleAddAsset} />
+                  ) : (
+                    <HoldingsTable
+                      holdings={visibleHoldings}
+                      onSort={triggerSort}
+                      sortKey={sortKey}
+                      sortDir={sortDir}
+                      onRemove={setConfirmRemoveId}
+                      flash={flashPrices}
+                    />
+                  )}
+                </div>
 
-                      {/* Mobile cards */}
-                      <div className="md:hidden">
-                        {visibleHoldings.length === 0 ? (
-                          <EmptyHoldings onAddHolding={handleAddAsset} />
-                        ) : (
-                          <div className="space-y-3">
-                            {visibleHoldings.map(h => (
-                              <HoldingsMobileCard
-                                key={h.id}
-                                holding={h}
-                                onRemove={setConfirmRemoveId}
-                                flash={flashPrices}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </CardBody>
-                  </Card>
-                </section>
+                {/* Mobile cards */}
+                <div className="md:hidden">
+                  {visibleHoldings.length === 0 ? (
+                    <EmptyHoldings onAddHolding={handleAddAsset} />
+                  ) : (
+                    <div className="space-y-3">
+                      {visibleHoldings.map(h => (
+                        <HoldingsMobileCard
+                          key={h.id}
+                          holding={h}
+                          onRemove={setConfirmRemoveId}
+                          flash={flashPrices}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </CardBody>
+            </Card>
+          </section>
         </Stack>
       </Container>
 

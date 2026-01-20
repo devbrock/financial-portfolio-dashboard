@@ -204,51 +204,49 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
             <DropdownMenuContent minWidth={220}>
               <Text
                 as="div"
-                size="xs"
-                className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)"
+                size="caption"
+                className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
               >
                 Theme
-                </Text>
+              </Text>
+              <DropdownMenuItem
+                className={settingsItemClassName}
+                onClick={() => handleThemeChange('light')}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Sun className="h-4 w-4" />
+                  Light
+                </span>
+                {theme === 'light' ? <Check className="h-4 w-4" /> : null}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={settingsItemClassName}
+                onClick={() => handleThemeChange('dark')}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Moon className="h-4 w-4" />
+                  Dark
+                </span>
+                {theme === 'dark' ? <Check className="h-4 w-4" /> : null}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Text
+                as="div"
+                size="caption"
+                className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
+              >
+                Currency
+              </Text>
+              {(['USD', 'EUR', 'GBP', 'JPY'] as const).map(code => (
                 <DropdownMenuItem
+                  key={code}
                   className={settingsItemClassName}
-                  onClick={() => handleThemeChange('light')}
+                  onClick={() => handleCurrencyChange(code)}
                 >
-                  <span className="inline-flex items-center gap-2">
-                    <Sun className="h-4 w-4" />
-                    Light
-                  </span>
-                  {theme === 'light' ? <Check className="h-4 w-4" /> : null}
+                  <span className="inline-flex items-center gap-2">{code}</span>
+                  {currency === code ? <Check className="h-4 w-4" /> : null}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={settingsItemClassName}
-                  onClick={() => handleThemeChange('dark')}
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <Moon className="h-4 w-4" />
-                    Dark
-                  </span>
-                  {theme === 'dark' ? <Check className="h-4 w-4" /> : null}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <Text
-                  as="div"
-                  size="xs"
-                  className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)"
-                >
-                  Currency
-                </Text>
-                {(['USD', 'EUR', 'GBP', 'JPY'] as const).map(code => (
-                  <DropdownMenuItem
-                    key={code}
-                    className={settingsItemClassName}
-                    onClick={() => handleCurrencyChange(code)}
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      {code}
-                    </span>
-                    {currency === code ? <Check className="h-4 w-4" /> : null}
-                  </DropdownMenuItem>
-                ))}
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
           <Tooltip content="Download report">

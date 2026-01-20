@@ -71,13 +71,9 @@ describe('AddWatchlistModal', () => {
   it('adds a stock to the watchlist', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
-    const { store } = renderWithProviders(
-      <AddWatchlistModal open onOpenChange={onOpenChange} />
-    );
+    const { store } = renderWithProviders(<AddWatchlistModal open onOpenChange={onOpenChange} />);
 
-    const searchInput = screen.getByPlaceholderText(
-      'Search RBLX, Adobe, BTC, Ethereum...'
-    );
+    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
     await user.type(searchInput, 'AA');
 
     const option = await screen.findByText('Stock · AAPL — Apple Inc.');
@@ -96,13 +92,9 @@ describe('AddWatchlistModal', () => {
   it('adds a crypto to the watchlist with normalized symbol', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
-    const { store } = renderWithProviders(
-      <AddWatchlistModal open onOpenChange={onOpenChange} />
-    );
+    const { store } = renderWithProviders(<AddWatchlistModal open onOpenChange={onOpenChange} />);
 
-    const searchInput = screen.getByPlaceholderText(
-      'Search RBLX, Adobe, BTC, Ethereum...'
-    );
+    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
     await user.type(searchInput, 'bit');
 
     const option = await screen.findByText('Crypto · BTC — Bitcoin');
@@ -133,17 +125,13 @@ describe('AddWatchlistModal', () => {
       store,
     });
 
-    const searchInput = screen.getByPlaceholderText(
-      'Search RBLX, Adobe, BTC, Ethereum...'
-    );
+    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
     await user.type(searchInput, 'AA');
 
     const option = await screen.findByText('Stock · AAPL — Apple Inc.');
     await user.click(option);
 
-    expect(
-      await screen.findByText('This asset is already in your watchlist.')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('This asset is already in your watchlist.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add to Watchlist' })).toBeDisabled();
   });
 
@@ -153,11 +141,7 @@ describe('AddWatchlistModal', () => {
 
     await user.click(screen.getByRole('button', { name: 'Add to Watchlist' }));
 
-    expect(
-      await screen.findByText('Select an asset from search')
-    ).toBeInTheDocument();
-    expect(mockToast.error).toHaveBeenCalledWith(
-      'Select an asset to add to your watchlist.'
-    );
+    expect(await screen.findByText('Select an asset from search')).toBeInTheDocument();
+    expect(mockToast.error).toHaveBeenCalledWith('Select an asset to add to your watchlist.');
   });
 });

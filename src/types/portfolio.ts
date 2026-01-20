@@ -20,7 +20,7 @@ export type WatchlistItem = {
 
 export type UserPreferences = {
   theme: 'light' | 'dark';
-  currency: 'USD';
+  currency: 'USD' | 'EUR' | 'GBP' | 'JPY';
   chartRange: '7d' | '30d' | '90d' | '1y';
   sidebarOpen: boolean;
   sortPreference: {

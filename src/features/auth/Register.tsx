@@ -62,7 +62,7 @@ export function Register() {
   });
 
   return (
-    <div className="overflow-auto flex justify-center items-center">
+    <div className="flex items-center justify-center overflow-auto">
       <Container className="relative h-full w-full sm:py-14">
         <div className="flex h-full items-center justify-center">
           <div className="grid w-full max-w-5xl items-start gap-6 lg:grid-cols-2 lg:gap-10">
@@ -78,7 +78,7 @@ export function Register() {
 
               <Stack gap="lg" className="relative">
                 <Stack gap="sm" className="p-6">
-                <img src={OrionLogoLight} alt="Orion" className="h-16 mb-4!" />
+                  <img src={OrionLogoLight} alt="Orion" className="mb-4! h-16" />
                   <Heading as="h2" tone="inverse">
                     Join Orion Wealth
                   </Heading>
@@ -122,8 +122,8 @@ export function Register() {
                   <Text tone="muted">Set up your profile to get started.</Text>
                 </Stack>
               </CardHeader>
-                <Divider />
-              <CardBody className="space-y-5 mt-4!">
+              <Divider />
+              <CardBody className="mt-4! space-y-5">
                 <form onSubmit={onSubmit} className="space-y-5">
                   <Stack gap="sm">
                     <Text as="label" htmlFor="register-first-name" className="font-semibold">

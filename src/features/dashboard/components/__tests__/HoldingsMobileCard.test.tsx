@@ -9,6 +9,7 @@ const holding: HoldingRow = {
   name: 'Apple',
   ticker: 'AAPL',
   date: 'January 1, 2024',
+  dateIso: '2024-01-01',
   volume: 10,
   changePct: 1.2,
   purchasePrice: 150,

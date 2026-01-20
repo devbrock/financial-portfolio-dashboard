@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WatchlistCard } from '../WatchlistCard';
 import type { WatchlistCardModel } from '@/types/dashboard';
+import { renderWithProviders } from '@/test/test-utils';
 
 const item: WatchlistCardModel = {
   id: '1',
@@ -17,10 +18,10 @@ describe('WatchlistCard', () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
 
-    render(<WatchlistCard item={item} onRemove={onRemove} flash />);
+    renderWithProviders(<WatchlistCard item={item} onRemove={onRemove} flash />);
 
     expect(screen.getByText('Bitcoin')).toBeInTheDocument();
-    expect(screen.getByText('$50,000')).toBeInTheDocument();
+    expect(screen.getByText('$50,000.00')).toBeInTheDocument();
     expect(screen.getByText('-2.1%')).toBeInTheDocument();
     expect(screen.getByText('Live price')).toBeInTheDocument();
 

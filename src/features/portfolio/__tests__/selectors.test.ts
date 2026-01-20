@@ -33,6 +33,13 @@ const state = {
       stocks: {},
     },
   },
+  assistant: {
+    messages: [],
+  },
+  auth: {
+    user: null,
+    sessionId: null,
+  },
   _persist: {
     version: 1,
     rehydrated: true,

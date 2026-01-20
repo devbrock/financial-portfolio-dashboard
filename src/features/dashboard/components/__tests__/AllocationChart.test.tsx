@@ -13,6 +13,7 @@ describe('AllocationChart', () => {
   it('renders chart metadata', () => {
     renderWithProviders(<AllocationChart data={data} totalInvested={1000} />);
     expect(screen.getByText('Diversification')).toBeInTheDocument();
-    expect(screen.getByText('Total invested')).toBeInTheDocument();
+    expect(screen.getByText('Current allocation')).toBeInTheDocument();
+    expect(screen.getByText('$1,000.00')).toBeInTheDocument();
   });
 });

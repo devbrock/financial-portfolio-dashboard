@@ -25,11 +25,7 @@ const formatUpdatedAt = (timestamp: number) => {
 
 const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
 
-const getTopMovers = (
-  holdings: HoldingWithPrice[],
-  direction: 'gainers' | 'losers',
-  count = 3
-) => {
+const getTopMovers = (holdings: HoldingWithPrice[], direction: 'gainers' | 'losers', count = 3) => {
   const sorted = holdings
     .filter(holding => Number.isFinite(holding.plPct))
     .slice()
@@ -303,10 +299,7 @@ const getStockWeeklySummary = async (
   return summary;
 };
 
-const getPortfolioRangeSummary = async (
-  question: string,
-  holdings: HoldingWithPrice[]
-) => {
+const getPortfolioRangeSummary = async (question: string, holdings: HoldingWithPrice[]) => {
   if (!wantsRangePerformance(question)) return null;
 
   const days = extractRangeDays(question);
@@ -362,9 +355,7 @@ const getPortfolioRangeSummary = async (
   const deltaPct = (delta / startTotal) * 100;
   const summary = `Portfolio change over last ${days} days: ${formatCurrency(
     delta
-  )} (${formatPct(deltaPct)}) from ${formatCurrency(startTotal)} to ${formatCurrency(
-    endTotal
-  )}.`;
+  )} (${formatPct(deltaPct)}) from ${formatCurrency(startTotal)} to ${formatCurrency(endTotal)}.`;
 
   portfolioRangeCache.set(cacheKey, { summary, fetchedAt: Date.now() });
   return summary;

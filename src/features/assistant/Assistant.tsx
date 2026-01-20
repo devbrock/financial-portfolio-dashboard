@@ -55,20 +55,10 @@ export function Assistant() {
             <CardBody className="flex h-[60vh] flex-col gap-4">
               <div className="flex-1 space-y-4 overflow-y-auto pr-1">
                 {messages.map(message => (
-                  <MessageBubble
-                    key={message.id}
-                    role={message.role}
-                    content={message.content}
-                  />
+                  <MessageBubble key={message.id} role={message.role} content={message.content} />
                 ))}
-                {isLoading ? (
-                  <div className="text-sm text-(--ui-text-muted)">Thinking…</div>
-                ) : null}
-                {error ? (
-                  <div className="text-sm text-red-600">
-                    {error}
-                  </div>
-                ) : null}
+                {isLoading ? <div className="text-sm text-(--ui-text-muted)">Thinking…</div> : null}
+                {error ? <div className="text-sm text-red-600">{error}</div> : null}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -83,10 +73,15 @@ export function Assistant() {
                     }
                   }}
                   placeholder="Ask about your portfolio or the market..."
-                  className="h-[44px] flex-1 resize-none rounded-2xl border border-(--ui-border) bg-(--ui-bg) px-4 py-3 text-sm text-(--ui-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-focus)"
+                  className="h-[44px] flex-1 resize-none rounded-2xl border border-(--ui-border) bg-(--ui-bg) px-4 py-3 text-sm text-(--ui-text) focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:outline-none"
                   rows={1}
                 />
-                <Button type="submit" disabled={isLoading} className="h-[44px]" rightIcon={<Send />}>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="h-[44px]"
+                  rightIcon={<Send />}
+                >
                   Send
                 </Button>
               </form>
@@ -126,18 +121,10 @@ export function Assistant() {
 
 function formatMessageContent(role: AssistantMessage['role'], content: string) {
   if (role !== 'assistant') return content;
-  return content
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/^\s*-\s+/gm, '• ');
+  return content.replace(/\*\*(.*?)\*\*/g, '$1').replace(/^\s*-\s+/gm, '• ');
 }
 
-function MessageBubble({
-  role,
-  content,
-}: {
-  role: AssistantMessage['role'];
-  content: string;
-}) {
+function MessageBubble({ role, content }: { role: AssistantMessage['role']; content: string }) {
   const isUser = role === 'user';
   const formattedContent = formatMessageContent(role, content);
 

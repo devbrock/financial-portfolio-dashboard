@@ -23,13 +23,8 @@ export function Tooltip(props: TooltipProps) {
     left: 0,
   });
 
-  const {
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
-    ...restProps
-  } = rest as React.HTMLAttributes<Element>;
+  const { onMouseEnter, onMouseLeave, onFocus, onBlur, ...restProps } =
+    rest as React.HTMLAttributes<Element>;
 
   const timeoutRef = React.useRef<number | null>(null);
 
