@@ -22,6 +22,7 @@ export type UserPreferences = {
   theme: 'light' | 'dark';
   currency: 'USD';
   chartRange: '7d' | '30d' | '90d' | '1y';
+  sidebarOpen: boolean;
   sortPreference: {
     key: string;
     direction: 'asc' | 'desc';

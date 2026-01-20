@@ -20,6 +20,7 @@ const initialState: PortfolioState = {
     theme: 'light',
     currency: 'USD',
     chartRange: '30d',
+    sidebarOpen: true,
     sortPreference: {
       key: 'name',
       direction: 'asc',

@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { SidebarProvider } from '@components';
 import { cn } from '@/utils/cn';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { DashboardSidebar } from '@/features/dashboard/components/DashboardSidebar';
 import type { DashboardNav } from '@/features/dashboard/components/DashboardSidebar';
+import { updatePreferences } from '@/features/portfolio/portfolioSlice';
 
 type AppShellProps = {
   activeNav: DashboardNav;
@@ -24,7 +25,16 @@ export function AppShell(props: AppShellProps) {
     errorMessage,
     mainId = 'main-content',
   } = props;
+  const dispatch = useAppDispatch();
   const theme = useAppSelector(state => state.portfolio.preferences.theme);
+  const sidebarOpen = useAppSelector(state => state.portfolio.preferences.sidebarOpen);
+
+  const handleSidebarChange = useCallback(
+    (nextOpen: boolean) => {
+      dispatch(updatePreferences({ sidebarOpen: nextOpen }));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     // Ensure theme also applies to Portals (DropdownMenu/Modal) which render at document.body.
@@ -36,7 +46,7 @@ export function AppShell(props: AppShellProps) {
   }, [theme]);
 
   return (
-    <SidebarProvider defaultOpen>
+    <SidebarProvider open={sidebarOpen} onOpenChange={handleSidebarChange}>
       <div
         className={cn(
           // Fixed app shell: sidebar stays pinned; main content scrolls.

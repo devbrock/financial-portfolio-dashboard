@@ -25,6 +25,7 @@ const state = {
       theme: 'light',
       currency: 'USD',
       chartRange: '30d',
+      sidebarOpen: true,
       sortPreference: { key: 'name', direction: 'asc' },
     },
     userSeed: { seed: 'seed', initialized: true },

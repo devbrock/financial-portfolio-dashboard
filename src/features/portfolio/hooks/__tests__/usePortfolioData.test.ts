@@ -31,6 +31,7 @@ describe('usePortfolioData', () => {
           theme: 'light',
           currency: 'USD',
           chartRange: '30d',
+          sidebarOpen: true,
           sortPreference: { key: 'name', direction: 'asc' },
         },
         userSeed: {
