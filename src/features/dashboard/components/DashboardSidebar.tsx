@@ -28,7 +28,7 @@ import OrionLogoLight from '@assets/orion_logo_light.svg';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updatePreferences } from '@/features/portfolio/portfolioSlice';
 
-export type DashboardNav = 'Overview' | 'Market' | 'News' | 'AI Assistant';
+export type DashboardNav = 'Overview' | 'Market' | 'News' | 'OrionGPT';
 
 type DashboardSidebarProps = {
   activeNav: DashboardNav;
@@ -97,11 +97,11 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={activeNav === 'AI Assistant'}
-                  onClick={() => onNavChange('AI Assistant')}
+                  isActive={activeNav === 'OrionGPT'}
+                  onClick={() => onNavChange('OrionGPT')}
                 >
                   <BotMessageSquare />
-                  <span data-slot="label">AI Assistant</span>
+                  <span data-slot="label">OrionGPT</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

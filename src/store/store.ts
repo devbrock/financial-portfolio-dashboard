@@ -10,6 +10,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import portfolioReducer from '@/features/portfolio/portfolioSlice';
+import assistantReducer from '@/features/assistant/assistantSlice';
 import { safeStorage } from '@/store/safeStorage';
 
 /**
@@ -19,7 +20,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: safeStorage,
-  whitelist: ['portfolio'], // Only persist portfolio state
+  whitelist: ['portfolio', 'assistant'],
 };
 
 /**
@@ -27,6 +28,7 @@ const persistConfig = {
  */
 const rootReducer = combineReducers({
   portfolio: portfolioReducer,
+  assistant: assistantReducer,
 });
 
 /**
