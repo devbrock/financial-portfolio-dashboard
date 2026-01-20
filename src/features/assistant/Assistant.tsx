@@ -108,6 +108,11 @@ export function Assistant() {
               </Button>
             ))}
           </Inline>
+
+          <Text as="div" size="sm" tone="muted">
+            OrionGPT can make mistakes. Verify responses independently. OrionGPT is not liable for
+            any losses or decisions based on its responses.
+          </Text>
         </Stack>
       </Container>
     </AppShell>

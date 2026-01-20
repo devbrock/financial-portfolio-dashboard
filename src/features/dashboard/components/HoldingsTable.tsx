@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   IconButton,
   Inline,
@@ -155,9 +154,7 @@ export function HoldingsTable(props: HoldingsTableProps) {
                     'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
                   )}
                 >
-                  <DropdownMenuItem onClick={() => undefined}>View details</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => onRemove(h.id)}>Remove…</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onRemove(h.id)}>Remove</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
