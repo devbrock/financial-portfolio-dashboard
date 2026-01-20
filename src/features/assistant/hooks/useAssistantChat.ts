@@ -5,6 +5,9 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMessage } from '@/features/assistant/assistantSlice';
 import type { AssistantMessage } from '@/types/assistant';
 import type { HoldingWithPrice } from '@/types/portfolio';
+import { useMarketQuotes } from '@/features/market/hooks/useMarketQuotes';
+import { INDEX_SYMBOLS } from '@/features/market/marketData';
+import { buildAssistantToolContext } from '@/features/assistant/tools/assistantTools';
 
 const MODEL = 'gpt-oss-20b';
 
@@ -20,17 +23,31 @@ const formatHoldingsSummary = (holdings: HoldingWithPrice[]) => {
 };
 
 export function useAssistantChat() {
-  const { holdingsWithPrice, metrics } = usePortfolioData();
+  const { holdingsWithPrice, watchlistWithPrice, metrics, dataUpdatedAt } = usePortfolioData();
+  const { data: marketIndices, dataUpdatedAt: marketUpdatedAt } = useMarketQuotes(INDEX_SYMBOLS);
   const dispatch = useAppDispatch();
   const messages = useAppSelector(state => state.assistant.messages);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const requestIdRef = useRef(0);
+  const toolData = useMemo(
+    () => ({
+      holdings: holdingsWithPrice,
+      watchlist: watchlistWithPrice,
+      metrics,
+      portfolioUpdatedAt: dataUpdatedAt,
+      marketIndices,
+      marketUpdatedAt,
+    }),
+    [holdingsWithPrice, watchlistWithPrice, metrics, dataUpdatedAt, marketIndices, marketUpdatedAt]
+  );
 
   const systemPrompt = useMemo(() => {
     const holdingsSummary = formatHoldingsSummary(holdingsWithPrice);
     return [
       'You are Orion, a concise market assistant.',
+      'Use the provided context data to answer portfolio and market questions.',
+      'Respond in plain text only. Do not use markdown or bullet formatting.',
       `Portfolio total value: $${metrics.totalValue.toFixed(2)}.`,
       `Total P/L: $${metrics.totalPL.toFixed(2)} (${metrics.totalPLPct.toFixed(2)}%).`,
       `Holdings: ${holdingsSummary}`,
@@ -57,10 +74,16 @@ export function useAssistantChat() {
       requestIdRef.current = requestId;
 
       try {
+        const toolContext = buildAssistantToolContext({
+          question: trimmed,
+          ...toolData,
+        });
+
         const response = await createChatCompletion({
           model: MODEL,
           messages: [
             { role: 'system', content: systemPrompt },
+            ...(toolContext ? [{ role: 'system', content: toolContext }] : []),
             ...pendingMessages
               .filter(msg => msg.role !== 'system')
               .map(msg => ({ role: msg.role, content: msg.content })),

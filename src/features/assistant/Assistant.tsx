@@ -50,7 +50,11 @@ export function Assistant() {
             <CardBody className="flex h-[60vh] flex-col gap-4">
               <div className="flex-1 space-y-4 overflow-y-auto pr-1">
                 {messages.map(message => (
-                  <MessageBubble key={message.id} role={message.role} content={message.content} />
+                  <MessageBubble
+                    key={message.id}
+                    role={message.role}
+                    content={message.content}
+                  />
                 ))}
                 {isLoading ? (
                   <div className="text-sm text-(--ui-text-muted)">Thinking…</div>
@@ -96,7 +100,8 @@ export function Assistant() {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  setInputValue(prompt);
+                  setInputValue('');
+                  void sendMessage(prompt);
                 }}
               >
                 {prompt}
@@ -109,8 +114,22 @@ export function Assistant() {
   );
 }
 
-function MessageBubble({ role, content }: { role: AssistantMessage['role']; content: string }) {
+function formatMessageContent(role: AssistantMessage['role'], content: string) {
+  if (role !== 'assistant') return content;
+  return content
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/^\s*-\s+/gm, '• ');
+}
+
+function MessageBubble({
+  role,
+  content,
+}: {
+  role: AssistantMessage['role'];
+  content: string;
+}) {
   const isUser = role === 'user';
+  const formattedContent = formatMessageContent(role, content);
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -122,7 +141,7 @@ function MessageBubble({ role, content }: { role: AssistantMessage['role']; cont
         }`}
       >
         <Text as="p" className="whitespace-pre-wrap">
-          {content}
+          {formattedContent}
         </Text>
       </div>
     </div>
