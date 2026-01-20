@@ -14,7 +14,7 @@ import { tooltipContentClassName } from './Tooltip.styles';
  * - Must not contain interactive content.
  */
 export function Tooltip(props: TooltipProps) {
-  const { content, children, side = 'top', delayMs = 0 } = props;
+  const { content, children, side = 'top', delayMs = 0, ...rest } = props;
   const child = children as React.ReactElement<React.HTMLAttributes<Element>>;
   const id = React.useId();
   const [open, setOpen] = React.useState(false);
@@ -22,6 +22,14 @@ export function Tooltip(props: TooltipProps) {
     top: 0,
     left: 0,
   });
+
+  const {
+    onMouseEnter,
+    onMouseLeave,
+    onFocus,
+    onBlur,
+    ...restProps
+  } = rest as React.HTMLAttributes<Element>;
 
   const timeoutRef = React.useRef<number | null>(null);
 
@@ -50,22 +58,27 @@ export function Tooltip(props: TooltipProps) {
   };
 
   const childProps = {
+    ...restProps,
     'aria-describedby': open ? id : undefined,
     onMouseEnter: (e: React.MouseEvent<Element>) => {
+      onMouseEnter?.(e);
       child.props.onMouseEnter?.(e);
       if (e.defaultPrevented) return;
       scheduleOpen(e.currentTarget as HTMLElement);
     },
     onMouseLeave: (e: React.MouseEvent<Element>) => {
+      onMouseLeave?.(e);
       child.props.onMouseLeave?.(e);
       close();
     },
     onFocus: (e: React.FocusEvent<Element>) => {
+      onFocus?.(e);
       child.props.onFocus?.(e);
       if (e.defaultPrevented) return;
       scheduleOpen(e.currentTarget as HTMLElement);
     },
     onBlur: (e: React.FocusEvent<Element>) => {
+      onBlur?.(e);
       child.props.onBlur?.(e);
       close();
     },

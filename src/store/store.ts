@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import portfolioReducer from '@/features/portfolio/portfolioSlice';
 import assistantReducer from '@/features/assistant/assistantSlice';
+import authReducer from '@/features/auth/authSlice';
 import { safeStorage } from '@/store/safeStorage';
 
 /**
@@ -20,7 +21,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: safeStorage,
-  whitelist: ['portfolio', 'assistant'],
+  whitelist: ['portfolio', 'assistant', 'auth'],
 };
 
 /**
@@ -29,6 +30,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   portfolio: portfolioReducer,
   assistant: assistantReducer,
+  auth: authReducer,
 });
 
 /**

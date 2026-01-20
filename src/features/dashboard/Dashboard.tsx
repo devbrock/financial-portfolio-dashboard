@@ -54,6 +54,7 @@ export function Dashboard() {
   const activeNav = useMemo(() => getActiveNav(pathname), [pathname]);
   const rawHoldings = useAppSelector(state => state.portfolio.holdings);
   const rawWatchlist = useAppSelector(state => state.portfolio.watchlist);
+  const user = useAppSelector(state => state.auth.user);
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [holdingsQuery, setHoldingsQuery] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('name');
@@ -262,7 +263,7 @@ export function Dashboard() {
 
                 {/* Welcome + top actions */}
                 <DashboardHeader
-                  userName="Brock"
+                  userName={user?.firstName || 'Investor'}
                   portfolioValue={metrics.totalValue}
                   lastUpdated={lastUpdatedSeconds}
                   dailyChangeUsd={dailyPlUsd}

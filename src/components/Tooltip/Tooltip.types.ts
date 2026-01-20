@@ -1,6 +1,6 @@
 import type * as React from 'react';
 
-export type TooltipProps = {
+export type TooltipProps = React.HTMLAttributes<Element> & {
   /**
    * Tooltip content. Keep it short and non-interactive (spec).
    */

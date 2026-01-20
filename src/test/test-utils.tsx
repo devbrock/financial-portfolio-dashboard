@@ -4,14 +4,18 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureStore, type AnyAction, type Reducer } from '@reduxjs/toolkit';
 import portfolioReducer from '@/features/portfolio/portfolioSlice';
+import authReducer from '@/features/auth/authSlice';
 import type { PortfolioState } from '@/types/portfolio';
+import type { AuthState } from '@/types/auth';
 
 export function createTestStore(preloadedState?: {
   portfolio?: ReturnType<typeof portfolioReducer>;
+  auth?: AuthState;
 }) {
   return configureStore({
     reducer: {
       portfolio: portfolioReducer as Reducer<PortfolioState, AnyAction, PortfolioState | undefined>,
+      auth: authReducer as Reducer<AuthState, AnyAction, AuthState | undefined>,
     },
     preloadedState,
   });
