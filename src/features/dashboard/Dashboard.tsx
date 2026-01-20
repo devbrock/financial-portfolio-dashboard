@@ -126,6 +126,7 @@ export function Dashboard() {
     allocation,
     holdings,
     metrics,
+    dailyPlUsd,
     dailyPlPct,
     isLoading,
     isError,
@@ -264,6 +265,7 @@ export function Dashboard() {
                   userName="Brock"
                   portfolioValue={metrics.totalValue}
                   lastUpdated={lastUpdatedSeconds}
+                  dailyChangeUsd={dailyPlUsd}
                   dailyChangePct={dailyPlPct}
                 />
 
@@ -339,7 +341,7 @@ export function Dashboard() {
                             My Holdings
                           </Heading>
                           <Text as="div" size="sm" tone="muted">
-                            Track positions, performance, and status.
+                            Track transactions, positions, performance and status.
                           </Text>
                         </div>
 

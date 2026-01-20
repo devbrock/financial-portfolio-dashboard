@@ -7,12 +7,20 @@ type DashboardHeaderProps = {
   userName: string;
   portfolioValue: number;
   lastUpdated: number;
+  dailyChangeUsd: number;
   dailyChangePct: number;
   loading?: boolean;
 };
 
 export function DashboardHeader(props: DashboardHeaderProps) {
-  const { userName, portfolioValue, lastUpdated, dailyChangePct, loading = false } = props;
+  const { userName, portfolioValue, lastUpdated, dailyChangeUsd, dailyChangePct, loading = false } =
+    props;
+
+  const formatSignedMoney = (value: number) => {
+    const absValue = Math.abs(value);
+    const formatted = formatMoneyUsd(absValue);
+    return value >= 0 ? `+${formatted}` : `-${formatted}`;
+  };
 
   return (
     <Inline
@@ -41,7 +49,11 @@ export function DashboardHeader(props: DashboardHeaderProps) {
               Last updated {formatLastUpdated(lastUpdated)}
             </Text>
             <Text as="div" size="sm" tone="muted" className="mt-1">
-              Daily P/L {formatSignedPct(dailyChangePct)}
+              Daily P/L{' '}
+              <span className={dailyChangeUsd >= 0 ? 'text-emerald-500' : 'text-red-500'}>
+                {formatSignedMoney(dailyChangeUsd)}
+              </span>{' '}
+              ({formatSignedPct(dailyChangePct)})
             </Text>
           </>
         )}

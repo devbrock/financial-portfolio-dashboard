@@ -77,11 +77,11 @@ export function useDashboardData() {
     return slices;
   }, [metrics]);
 
+  const dailyPlUsd = useMemo(() => metrics.totalPL * 0.03, [metrics.totalPL]);
   const dailyPlPct = useMemo(() => {
     if (metrics.totalCostBasis === 0) return 0;
-    const dailyPlUsd = metrics.totalPL * 0.03;
     return (dailyPlUsd / metrics.totalCostBasis) * 100;
-  }, [metrics.totalCostBasis, metrics.totalPL]);
+  }, [dailyPlUsd, metrics.totalCostBasis]);
 
   return {
     allocation,
@@ -90,6 +90,7 @@ export function useDashboardData() {
     isError,
     errorMessage,
     metrics, // Expose metrics for header (total value, P/L)
+    dailyPlUsd,
     dailyPlPct,
     watchlist,
     dataUpdatedAt, // Timestamp of last data update

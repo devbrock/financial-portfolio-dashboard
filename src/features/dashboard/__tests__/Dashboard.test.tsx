@@ -64,6 +64,7 @@ const baseDashboardData = {
     stockPct: 100,
     cryptoPct: 0,
   },
+  dailyPlUsd: 3,
   dailyPlPct: 0.3,
   isLoading: false,
   isError: false,
