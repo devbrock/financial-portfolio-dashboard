@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { createChatCompletion } from '@/services/api/clients/openRouterClient';
 import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addMessage } from '@/features/assistant/assistantSlice';
+import { addMessage, resetAssistant } from '@/features/assistant/assistantSlice';
 import type { AssistantMessage } from '@/types/assistant';
 import type { HoldingWithPrice } from '@/types/portfolio';
 import { useMarketQuotes } from '@/features/market/hooks/useMarketQuotes';
@@ -128,5 +128,6 @@ export function useAssistantChat() {
     isLoading,
     error,
     sendMessage,
+    resetChat: () => dispatch(resetAssistant()),
   };
 }

@@ -10,16 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as OriongptRouteImport } from './routes/oriongpt'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as IndexRouteImport } from './routes/index'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OriongptRoute = OriongptRouteImport.update({
+  id: '/oriongpt',
+  path: '/oriongpt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -42,11 +47,6 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssistantRoute = AssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,69 +55,69 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/market': typeof MarketRoute
   '/news': typeof NewsRoute
+  '/oriongpt': typeof OriongptRoute
   '/register': typeof RegisterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/market': typeof MarketRoute
   '/news': typeof NewsRoute
+  '/oriongpt': typeof OriongptRoute
   '/register': typeof RegisterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/market': typeof MarketRoute
   '/news': typeof NewsRoute
+  '/oriongpt': typeof OriongptRoute
   '/register': typeof RegisterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/assistant'
     | '/dashboard'
     | '/login'
     | '/market'
     | '/news'
+    | '/oriongpt'
     | '/register'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/assistant'
     | '/dashboard'
     | '/login'
     | '/market'
     | '/news'
+    | '/oriongpt'
     | '/register'
   id:
     | '__root__'
     | '/'
-    | '/assistant'
     | '/dashboard'
     | '/login'
     | '/market'
     | '/news'
+    | '/oriongpt'
     | '/register'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AssistantRoute: typeof AssistantRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   MarketRoute: typeof MarketRoute
   NewsRoute: typeof NewsRoute
+  OriongptRoute: typeof OriongptRoute
   RegisterRoute: typeof RegisterRoute
 }
 
@@ -128,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oriongpt': {
+      id: '/oriongpt'
+      path: '/oriongpt'
+      fullPath: '/oriongpt'
+      preLoaderRoute: typeof OriongptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -158,13 +165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assistant': {
-      id: '/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AssistantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -177,11 +177,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AssistantRoute: AssistantRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   MarketRoute: MarketRoute,
   NewsRoute: NewsRoute,
+  OriongptRoute: OriongptRoute,
   RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport

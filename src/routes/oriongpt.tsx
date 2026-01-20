@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Assistant } from '@/features/assistant/Assistant';
 import { RequireAuth } from '@/features/auth/RequireAuth';
 
-export const Route = createFileRoute('/assistant')({
+export const Route = createFileRoute('/oriongpt')({
   component: AssistantComponent,
 });
 

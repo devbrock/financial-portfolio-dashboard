@@ -4,12 +4,12 @@ export const DASHBOARD_NAV_ROUTES: Record<DashboardNav, string> = {
   Overview: '/dashboard',
   Market: '/market',
   News: '/news',
-  OrionGPT: '/assistant',
+  OrionGPT: '/oriongpt',
 };
 
 export const getActiveNav = (pathname: string): DashboardNav => {
   if (pathname.startsWith('/market')) return 'Market';
   if (pathname.startsWith('/news')) return 'News';
-  if (pathname.startsWith('/assistant')) return 'OrionGPT';
+  if (pathname.startsWith('/oriongpt')) return 'OrionGPT';
   return 'Overview';
 };

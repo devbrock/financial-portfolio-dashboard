@@ -18,7 +18,7 @@ export function Assistant() {
     [navigate]
   );
 
-  const { messages, isLoading, error, sendMessage } = useAssistantChat();
+  const { messages, isLoading, error, sendMessage, resetChat } = useAssistantChat();
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -44,6 +44,11 @@ export function Assistant() {
           <PageHeader
             title="OrionGPT"
             subtitle="Ask about market movers, holdings, or portfolio performance."
+            rightSlot={
+              <Button variant="secondary" size="sm" onClick={resetChat} disabled={isLoading}>
+                Clear chat
+              </Button>
+            }
           />
 
           <Card className="border border-(--ui-border) bg-(--ui-bg)">
