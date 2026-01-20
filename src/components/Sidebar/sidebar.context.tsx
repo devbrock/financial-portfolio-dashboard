@@ -26,9 +26,25 @@ export function useSidebar(): SidebarContextValue {
 export function SidebarProvider(props: SidebarProviderProps) {
   const { children, open, defaultOpen = true, onOpenChange } = props;
 
+  const [initialOpen] = React.useState(() => {
+    if (open !== undefined) {
+      return defaultOpen;
+    }
+    if (typeof window === 'undefined') {
+      return defaultOpen;
+    }
+    try {
+      const stored = window.localStorage.getItem('orion.sidebar.open');
+      if (stored === null) return defaultOpen;
+      return stored === 'true';
+    } catch {
+      return defaultOpen;
+    }
+  });
+
   const [isOpen, setIsOpen] = useControllableState<boolean>({
     value: open,
-    defaultValue: defaultOpen,
+    defaultValue: initialOpen,
     onChange: onOpenChange,
   });
 
@@ -38,6 +54,16 @@ export function SidebarProvider(props: SidebarProviderProps) {
     () => ({ open: isOpen, setOpen: setIsOpen, toggle }),
     [isOpen, setIsOpen, toggle]
   );
+
+  React.useEffect(() => {
+    if (open !== undefined) return;
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem('orion.sidebar.open', String(isOpen));
+    } catch {
+      // Ignore persistence failures.
+    }
+  }, [isOpen, open]);
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
 }
