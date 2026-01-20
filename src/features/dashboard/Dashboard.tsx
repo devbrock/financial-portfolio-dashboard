@@ -197,7 +197,7 @@ export function Dashboard() {
         case 'name':
           return dir * compareStrings(a.name, b.name);
         case 'date':
-          return dir * compareStrings(a.date, b.date);
+          return dir * compareStrings(a.dateIso, b.dateIso);
         case 'status':
           return dir * compareStrings(a.status, b.status);
         case 'volume':
@@ -220,16 +220,17 @@ export function Dashboard() {
     queryClient.invalidateQueries();
   }, [queryClient]);
 
-  const triggerSort = (key: SortKey) => {
-    setSortKey(prev => {
-      if (prev !== key) {
-        setSortDir('asc');
-        return key;
+  const triggerSort = useCallback(
+    (key: SortKey) => {
+      if (key === sortKey) {
+        setSortDir(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        return;
       }
-      setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
-      return prev;
-    });
-  };
+      setSortKey(key);
+      setSortDir('asc');
+    },
+    [sortKey]
+  );
 
   return (
     <AppShell

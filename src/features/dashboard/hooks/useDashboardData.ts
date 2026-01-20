@@ -43,6 +43,7 @@ export function useDashboardData() {
       name: holding.companyName || holding.symbol,
       ticker: holding.symbol.toUpperCase(),
       date: formatDate(holding.purchaseDate),
+      dateIso: holding.purchaseDate,
       volume: holding.quantity,
       changePct: holding.plPct,
       purchasePrice: holding.purchasePrice,

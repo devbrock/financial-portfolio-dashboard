@@ -34,6 +34,7 @@ export type HoldingRow = {
   name: string;
   ticker: string;
   date: string;
+  dateIso: string;
   volume: number;
   changePct: number;
   purchasePrice: number;

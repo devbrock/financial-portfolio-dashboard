@@ -14,7 +14,7 @@ import {
   TableRow,
   Text,
 } from '@components';
-import { ChevronUp, EllipsisVertical } from 'lucide-react';
+import { ChevronDown, ChevronUp, EllipsisVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { HoldingRow, SortKey, SortDir } from '@/types/dashboard';
 import { formatCompact } from '@utils/formatCompact';
@@ -185,8 +185,13 @@ function SortableTh(props: {
         )}
       >
         <span>{label}</span>
-        <span aria-hidden="true" className={cn('inline-flex', !active && 'opacity-40')}>
-          <ChevronUp />
+        <span aria-hidden="true" className="inline-flex flex-col leading-none">
+          <ChevronUp
+            className={cn('h-3 w-3', !active && 'opacity-40', dir === 'desc' && 'opacity-30')}
+          />
+          <ChevronDown
+            className={cn('h-3 w-3 -mt-1', !active && 'opacity-40', dir === 'asc' && 'opacity-30')}
+          />
         </span>
       </button>
     </TableHeadCell>
