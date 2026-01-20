@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { useQueries, type UseQueryResult } from '@tanstack/react-query';
+import { useQueries, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
 import { GetStockHistoricalDataQueryOptions } from '@/queryOptions/GetStockHistoricalDataQueryOptions';
 import { GetCryptoHistoricalDataQueryOptions } from '@/queryOptions/GetCryptoHistoricalDataQueryOptions';
 import { usePortfolioHoldings } from './usePortfolioHoldings';
@@ -81,6 +81,9 @@ const parseCryptoSeries = (data?: CoinGeckoMarketChart) => {
 };
 
 export function usePortfolioHistoricalData(range: Range) {
+  type StockSeries = AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
+  type StockQueryOptions = UseQueryOptions<StockSeries, Error, StockSeries, readonly unknown[]>;
+
   const holdings = usePortfolioHoldings();
   const dispatch = useAppDispatch();
   const stockCache = useAppSelector(state => state.portfolio.historicalCache?.stocks ?? {});
@@ -158,29 +161,33 @@ export function usePortfolioHistoricalData(range: Range) {
   const stockQueries = useQueries({
     queries: stockSymbols.map(symbol => {
       const cached = cachedStockMeta.get(symbol);
-      if (useMonthly) {
-        return {
-          queryKey: ['stockHistoricalMonthly', symbol] as const,
-          queryFn: async () => {
-            const response = await alphaVantageApi.getTimeSeriesMonthly(symbol);
-            return response.data;
-          },
-          enabled: !cached?.isFresh,
-          initialData: cached?.data,
-          initialDataUpdatedAt: cached?.fetchedAt,
-          staleTime: STOCK_CACHE_TTL_MS,
-        };
-      }
-
-      const baseOptions = GetStockHistoricalDataQueryOptions(symbol, outputsize);
-      return {
-        ...baseOptions,
+      const baseOptions: StockQueryOptions = {
+        queryKey: ['stockHistoricalMonthly', symbol] as const,
+        queryFn: async () => {
+          const response = await alphaVantageApi.getTimeSeriesMonthly(symbol);
+          return response.data;
+        },
         enabled: !cached?.isFresh,
         initialData: cached?.data,
         initialDataUpdatedAt: cached?.fetchedAt,
+        staleTime: STOCK_CACHE_TTL_MS,
       };
-    }),
-  }) as UseQueryResult<AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly, unknown>[];
+
+      if (useMonthly) {
+        return baseOptions;
+      }
+
+      const dailyOptions = GetStockHistoricalDataQueryOptions(symbol, outputsize);
+      return {
+        ...baseOptions,
+        ...dailyOptions,
+        queryFn: async () => {
+          const response = await alphaVantageApi.getTimeSeriesDaily(symbol, outputsize);
+          return response.data;
+        },
+      };
+    }) as StockQueryOptions[],
+  }) as UseQueryResult<StockSeries, Error>[];
   const cryptoQueries = useQueries({
     queries: cryptoSymbols.map(coinId => GetCryptoHistoricalDataQueryOptions(coinId, cryptoParams)),
   });

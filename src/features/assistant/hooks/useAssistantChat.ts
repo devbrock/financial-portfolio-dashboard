@@ -10,6 +10,7 @@ import { INDEX_SYMBOLS } from '@/features/market/marketData';
 import { buildAssistantToolContext } from '@/features/assistant/tools/assistantTools';
 
 const MODEL = 'gpt-oss-20b';
+type OpenRouterMessage = { role: 'system' | 'user' | 'assistant'; content: string };
 
 const formatHoldingsSummary = (holdings: HoldingWithPrice[]) => {
   if (holdings.length === 0) return 'No holdings.';
@@ -85,18 +86,24 @@ export function useAssistantChat() {
           console.warn('Assistant tool context failed.', toolError);
         }
 
+        const toolMessages: OpenRouterMessage[] = toolContext
+          ? [{ role: 'system', content: toolContext }]
+          : [];
+        const userMessages: OpenRouterMessage[] = pendingMessages
+          .filter(msg => msg.role !== 'system')
+          .map<OpenRouterMessage>(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+          }));
+        const requestMessages: OpenRouterMessage[] = [
+          { role: 'system', content: systemPrompt },
+          ...toolMessages,
+          ...userMessages,
+        ];
+
         const response = await createChatCompletion({
           model: MODEL,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            ...(toolContext ? [{ role: 'system', content: toolContext }] : []),
-            ...pendingMessages
-              .filter(msg => msg.role !== 'system')
-              .map(msg => ({
-                role: msg.role as 'user' | 'assistant',
-                content: msg.content,
-              })),
-          ],
+          messages: requestMessages,
           temperature: 0.2,
         });
 

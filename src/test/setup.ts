@@ -17,7 +17,7 @@ afterAll(() => {
   server.close();
 });
 
-expect.extend(toHaveNoViolations);
+expect.extend({ toHaveNoViolations });
 
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({

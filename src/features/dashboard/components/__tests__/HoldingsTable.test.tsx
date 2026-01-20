@@ -4,9 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { HoldingsTable } from '../HoldingsTable';
 import { renderWithProviders } from '@/test/test-utils';
 import type { HoldingRow, SortDir, SortKey } from '@/types/dashboard';
-import { axe, toHaveNoViolations } from 'jest-axe';
-
-expect.extend(toHaveNoViolations);
+import { axe } from 'jest-axe';
 
 const holdings: HoldingRow[] = [
   {

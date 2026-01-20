@@ -1,13 +1,13 @@
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('recharts', async () => {
-  const React = await import('react');
   return {
-    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    ResponsiveContainer: ({ children }: { children: ReactNode }) => (
       <div data-testid="responsive">{children}</div>
     ),
-    PieChart: ({ children }: { children: React.ReactNode }) => (
+    PieChart: ({ children }: { children: ReactNode }) => (
       <div data-testid="piechart">{children}</div>
     ),
     Tooltip: ({ content }: { content: (props: unknown) => React.ReactNode }) => (

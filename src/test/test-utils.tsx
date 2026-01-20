@@ -40,7 +40,7 @@ export function createTestQueryClient() {
 type RenderOptions = {
   store?: ReturnType<typeof createTestStore>;
   queryClient?: QueryClient;
-  router?: ReturnType<typeof createRouter>;
+  router?: ReturnType<typeof createTestRouter>;
 };
 
 export function createTestRouter(initialEntries: string[] = ['/']) {

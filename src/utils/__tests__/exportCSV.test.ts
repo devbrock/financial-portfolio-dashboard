@@ -8,6 +8,7 @@ describe('exportPortfolioReportCSV', () => {
   const originalBlob = globalThis.Blob;
   let link: HTMLAnchorElement | null = null;
   let clickSpy: ReturnType<typeof vi.fn>;
+  let createObjectURLSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -27,17 +28,8 @@ describe('exportPortfolioReportCSV', () => {
       return originalCreateElement(tagName);
     });
 
-    if (originalCreateObjectURL) {
-      vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock');
-    } else {
-      URL.createObjectURL = vi.fn(() => 'blob:mock');
-    }
-
-    if (originalRevokeObjectURL) {
-      vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
-    } else {
-      URL.revokeObjectURL = vi.fn();
-    }
+    createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock');
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
 
     globalThis.Blob = class MockBlob {
       private readonly parts: unknown[];
@@ -93,7 +85,7 @@ describe('exportPortfolioReportCSV', () => {
     expect(link?.download).toBe('portfolio-report-2024-02-01.csv');
     expect(clickSpy).toHaveBeenCalled();
 
-    const blobArg = (URL.createObjectURL as unknown as vi.Mock).mock.calls[0]?.[0] as Blob;
+    const blobArg = createObjectURLSpy.mock.calls[0]?.[0] as Blob;
     const csvText = await blobArg.text();
 
     expect(csvText).toContain('Portfolio Report');
