@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AddAssetModal } from '../AddAssetModal';
-import { renderWithProviders } from '@/test/test-utils';
+import { createTestStore, renderWithProviders } from '@/test/test-utils';
+import type { PortfolioState } from '@/types/portfolio';
 
 describe('AddAssetModal', () => {
   it('submits a new asset', async () => {
@@ -52,5 +53,43 @@ describe('AddAssetModal', () => {
     await user.type(searchInput, 'aapl');
 
     expect(searchInput).toHaveValue('AAPL');
+  });
+
+  it('prevents adding duplicate symbols', async () => {
+    const user = userEvent.setup();
+    const preloadedState: { portfolio: PortfolioState } = {
+      portfolio: {
+        holdings: [
+          {
+            id: 'h1',
+            symbol: 'AAPL',
+            assetType: 'stock',
+            quantity: 1,
+            purchasePrice: 100,
+            purchaseDate: '2024-01-01',
+          },
+        ],
+        watchlist: [],
+        preferences: {
+          theme: 'light',
+          currency: 'USD',
+          chartRange: '30d',
+          sidebarOpen: true,
+          sortPreference: { key: 'name', direction: 'asc' },
+        },
+        userSeed: { seed: 'seed', initialized: true },
+        historicalCache: { stocks: {} },
+      },
+    };
+    const store = createTestStore(preloadedState);
+    renderWithProviders(<AddAssetModal open onOpenChange={() => undefined} />, { store });
+
+    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
+    await user.type(searchInput, 'AAPL');
+    const option = await screen.findByText(/Stock · AAPL — Apple Inc/i);
+    await user.click(option);
+
+    expect(screen.getByText('You already have this asset in your portfolio.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add Asset' })).toBeDisabled();
   });
 });

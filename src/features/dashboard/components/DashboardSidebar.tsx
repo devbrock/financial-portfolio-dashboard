@@ -2,36 +2,16 @@ import { useCallback } from 'react';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
-  IconButton,
   Inline,
   Text,
-  Tooltip,
 } from '@components';
-import {
-  BotMessageSquare,
-  ChartLine,
-  Home,
-  LogOut,
-  Moon,
-  Newspaper,
-  Settings,
-  Sun,
-  Check,
-  Download,
-} from 'lucide-react';
+import { BotMessageSquare, ChartLine, Home, Newspaper } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -42,6 +22,7 @@ import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
 import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
 import { exportPortfolioReportCSV } from '@/utils/exportCSV';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
+import { DashboardSidebarFooter } from './DashboardSidebarFooter';
 
 export type DashboardNav = 'Overview' | 'Market' | 'News' | 'OrionGPT';
 
@@ -79,9 +60,6 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
     dispatch(logoutUser());
     navigate({ to: '/login' });
   }, [dispatch, navigate]);
-  const footerButtonClassName =
-    'group-data-[state=collapsed]/sidebar:w-full group-data-[state=collapsed]/sidebar:justify-center';
-  const settingsItemClassName = 'flex items-center justify-between gap-3';
 
   const handleExport = useCallback(() => {
     const allocation = [
@@ -172,105 +150,14 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <Inline
-          align="center"
-          className={cn(
-            'gap-2 px-1',
-            'group-data-[state=collapsed]/sidebar:flex-col group-data-[state=collapsed]/sidebar:items-stretch'
-          )}
-        >
-          <Tooltip content="Toggle sidebar">
-            <SidebarTrigger
-              ariaLabel="Toggle sidebar"
-              className={cn(
-                footerButtonClassName,
-                'h-9 w-9 rounded-xl border border-white/10 bg-white/10 text-white hover:bg-white/15'
-              )}
-            />
-          </Tooltip>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Tooltip content="Settings">
-                <IconButton
-                  ariaLabel="Open settings"
-                  variant="inverse"
-                  size="sm"
-                  icon={<Settings />}
-                  className={footerButtonClassName}
-                />
-              </Tooltip>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent minWidth={220}>
-              <Text
-                as="div"
-                size="caption"
-                className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
-              >
-                Theme
-              </Text>
-              <DropdownMenuItem
-                className={settingsItemClassName}
-                onClick={() => handleThemeChange('light')}
-              >
-                <span className="inline-flex items-center gap-2">
-                  <Sun className="h-4 w-4" />
-                  Light
-                </span>
-                {theme === 'light' ? <Check className="h-4 w-4" /> : null}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={settingsItemClassName}
-                onClick={() => handleThemeChange('dark')}
-              >
-                <span className="inline-flex items-center gap-2">
-                  <Moon className="h-4 w-4" />
-                  Dark
-                </span>
-                {theme === 'dark' ? <Check className="h-4 w-4" /> : null}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Text
-                as="div"
-                size="caption"
-                className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
-              >
-                Currency
-              </Text>
-              {(['USD', 'EUR', 'GBP', 'JPY'] as const).map(code => (
-                <DropdownMenuItem
-                  key={code}
-                  className={settingsItemClassName}
-                  onClick={() => handleCurrencyChange(code)}
-                >
-                  <span className="inline-flex items-center gap-2">{code}</span>
-                  {currency === code ? <Check className="h-4 w-4" /> : null}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Tooltip content="Download report">
-            <IconButton
-              ariaLabel="Download portfolio report"
-              variant="inverse"
-              size="sm"
-              onClick={handleExport}
-              icon={<Download />}
-              className={footerButtonClassName}
-            />
-          </Tooltip>
-          <Tooltip content="Log out">
-            <IconButton
-              ariaLabel="Log out"
-              variant="inverse"
-              size="sm"
-              onClick={handleLogout}
-              icon={<LogOut />}
-              className={footerButtonClassName}
-            />
-          </Tooltip>
-        </Inline>
-      </SidebarFooter>
+      <DashboardSidebarFooter
+        theme={theme}
+        currency={currency}
+        onThemeChange={handleThemeChange}
+        onCurrencyChange={handleCurrencyChange}
+        onExport={handleExport}
+        onLogout={handleLogout}
+      />
     </Sidebar>
   );
 }

@@ -7,7 +7,7 @@ export type InlineVariants = VariantProps<typeof inlineStyles>;
 export type InlineProps = React.HTMLAttributes<HTMLDivElement> &
   InlineVariants & {
     /**
-     * When true, renders the underlying element via Radix `Slot`,
+     * When true, renders the underlying element via the Slot helper,
      * allowing polymorphic composition without losing styles.
      */
     asChild?: boolean;

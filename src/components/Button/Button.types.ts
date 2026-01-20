@@ -21,7 +21,7 @@ export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'd
      */
     rightIcon?: React.ReactNode;
     /**
-     * When true, renders the underlying element via Radix `Slot`,
+     * When true, renders the underlying element via the Slot helper,
      * allowing polymorphic composition without losing styles.
      */
     asChild?: boolean;

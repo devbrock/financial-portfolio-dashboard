@@ -9,7 +9,7 @@ export type DropdownMenuProps = {
 
 export type DropdownMenuTriggerProps = {
   /**
-   * Render trigger via Radix Slot (recommended so you can use Button/IconButton).
+   * Render trigger via Slot (recommended so you can use Button/IconButton).
    */
   asChild?: boolean;
   children: React.ReactNode;

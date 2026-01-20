@@ -1,11 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import { useCallback, useMemo } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Combobox, Inline, Input, Modal, Text } from '@components';
-import type { ComboboxItem } from '@components';
-import { useSymbolSearch } from '@/hooks/useSymbolSearch';
-import { useCryptoSearch } from '@/hooks/useCryptoSearch';
+import { Button, Modal } from '@components';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addHolding, removeHolding } from '@/features/portfolio/portfolioSlice';
 import type { AssetType, Holding } from '@/types/portfolio';
@@ -13,8 +9,9 @@ import { toast } from 'sonner';
 import { addAssetFormSchema } from '@/schemas/addAssetFormSchema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addHoldingToPortfolio } from '@/services/api/functions/portfolioApi';
-
-type AddAssetFormValues = z.infer<typeof addAssetFormSchema>;
+import { AddAssetFormFields } from './AddAssetFormFields';
+import type { AddAssetFormValues } from './AddAssetForm.types';
+import { useAssetSearchOptions } from './useAssetSearchOptions';
 
 type AddAssetModalProps = {
   open: boolean;
@@ -31,19 +28,10 @@ export function AddAssetModal(props: AddAssetModalProps) {
   const dispatch = useAppDispatch();
   const holdings = useAppSelector(state => state.portfolio.holdings);
   const queryClient = useQueryClient();
-  const [assetQuery, setAssetQuery] = useState('');
-  const [selectedAssetLabel, setSelectedAssetLabel] = useState('');
 
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-    setValue,
-    control,
-  } = useForm<AddAssetFormValues>({
+  const form = useForm<AddAssetFormValues>({
     resolver: zodResolver(addAssetFormSchema),
     defaultValues: {
       assetSelection: '',
@@ -56,15 +44,15 @@ export function AddAssetModal(props: AddAssetModalProps) {
   });
 
   const selectedAssetValue = useWatch({
-    control,
+    control: form.control,
     name: 'assetSelection',
   });
   const selectedSymbol = useWatch({
-    control,
+    control: form.control,
     name: 'symbol',
   });
   const selectedAssetType = useWatch({
-    control,
+    control: form.control,
     name: 'assetType',
   });
 
@@ -77,47 +65,17 @@ export function AddAssetModal(props: AddAssetModalProps) {
     );
   }, [holdings, selectedAssetType, selectedSymbol]);
 
-  const handleAssetQueryChange = useCallback(
-    (nextQuery: string) => {
-      if (selectedAssetLabel && nextQuery === selectedAssetLabel) return;
-      const trimmed = nextQuery.trim();
-      setAssetQuery(trimmed.length >= 2 ? trimmed : '');
-    },
-    [selectedAssetLabel]
-  );
-
-  const { data: stockSearch, isFetching: isStockSearchLoading } = useSymbolSearch(assetQuery);
-  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } = useCryptoSearch(assetQuery);
-
-  const assetOptions: ComboboxItem[] = useMemo(() => {
-    const stockItems = (stockSearch?.result ?? [])
-      .filter(result => result.symbol)
-      .slice(0, 6)
-      .map(result => ({
-        value: `stock:${result.symbol.toUpperCase()}`,
-        label: `Stock · ${result.displaySymbol} — ${result.description}`,
-      }));
-    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map(coin => ({
-      value: `crypto:${coin.id.toLowerCase()}`,
-      label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
-    }));
-    const merged = [...stockItems, ...cryptoItems];
-    if (
-      selectedAssetValue &&
-      selectedAssetLabel &&
-      !merged.some(item => item.value === selectedAssetValue)
-    ) {
-      return [{ value: selectedAssetValue, label: selectedAssetLabel }, ...merged];
-    }
-    return merged;
-  }, [stockSearch, cryptoSearch, selectedAssetLabel, selectedAssetValue]);
-
-  const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
+  const {
+    assetOptions,
+    isAssetSearchLoading,
+    handleAssetQueryChange,
+    setSelectedAssetLabel: setAssetLabel,
+    resetAssetSearch,
+  } = useAssetSearchOptions(selectedAssetValue ?? '');
 
   const resetForm = useCallback(() => {
-    setAssetQuery('');
-    setSelectedAssetLabel('');
-    reset({
+    resetAssetSearch();
+    form.reset({
       assetSelection: '',
       assetType: 'stock',
       symbol: '',
@@ -125,7 +83,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
       purchasePrice: 0,
       purchaseDate: today,
     });
-  }, [reset, today]);
+  }, [form, resetAssetSearch, today]);
 
   const handleClose = useCallback(
     (nextOpen: boolean) => {
@@ -197,130 +155,28 @@ export function AddAssetModal(props: AddAssetModalProps) {
             variant="primary"
             type="submit"
             form="add-asset-form"
-            disabled={isSubmitting || addHoldingMutation.isPending || isDuplicateAsset}
+            disabled={form.formState.isSubmitting || addHoldingMutation.isPending || isDuplicateAsset}
           >
             Add Asset
           </Button>
         </>
       }
     >
-      <form
-        id="add-asset-form"
-        onSubmit={handleSubmit(onSubmitAddAsset, handleInvalid)}
-        className="space-y-3"
-      >
-        <div>
-          <Text as="label" htmlFor="assetSearch" size="sm">
-            Search asset
-          </Text>
-          <Controller
-            control={control}
-            name="assetSelection"
-            render={({ field }) => (
-              <Combobox
-                id="assetSearch"
-                placeholder="Search RBLX, Adobe, BTC, Ethereum..."
-                items={assetOptions}
-                value={field.value}
-                onValueChange={nextValue => {
-                  field.onChange(nextValue);
-                  const selectedItem = assetOptions.find(item => item.value === nextValue);
-                  setSelectedAssetLabel(selectedItem?.label ?? '');
-                  const isStock = nextValue.startsWith('stock:');
-                  const rawSymbol = nextValue.replace(isStock ? 'stock:' : 'crypto:', '');
-                  setValue('assetType', isStock ? 'stock' : 'crypto', {
-                    shouldValidate: true,
-                  });
-                  setValue('symbol', isStock ? rawSymbol.toUpperCase() : rawSymbol.toLowerCase(), {
-                    shouldValidate: true,
-                  });
-                }}
-                onInputChange={() => {
-                  if (field.value) {
-                    field.onChange('');
-                    setSelectedAssetLabel('');
-                    setValue('assetType', 'stock', {
-                      shouldValidate: true,
-                    });
-                    setValue('symbol', '', { shouldValidate: true });
-                  }
-                }}
-                onQueryChange={handleAssetQueryChange}
-                inputTransform={value => value.toUpperCase()}
-                loading={isAssetSearchLoading}
-                minChars={2}
-                debounceMs={300}
-                inputClassName="mt-1"
-              />
-            )}
+      <FormProvider {...form}>
+        <form
+          id="add-asset-form"
+          onSubmit={form.handleSubmit(onSubmitAddAsset, handleInvalid)}
+          className="space-y-3"
+        >
+          <AddAssetFormFields
+            assetOptions={assetOptions}
+            isAssetSearchLoading={isAssetSearchLoading}
+            onAssetQueryChange={handleAssetQueryChange}
+            onAssetLabelChange={setAssetLabel}
+            isDuplicateAsset={isDuplicateAsset}
           />
-          <Text as="div" size="sm" tone="muted" className="mt-1">
-            Results include stocks and crypto. Pick one to continue.
-          </Text>
-          {errors.assetSelection ? (
-            <Text as="div" size="sm" className="mt-1 text-red-600">
-              {errors.assetSelection.message}
-            </Text>
-          ) : null}
-          {isDuplicateAsset ? (
-            <Text as="div" size="sm" className="mt-1 text-amber-600">
-              You already have this asset in your portfolio.
-            </Text>
-          ) : null}
-        </div>
-
-        <input type="hidden" {...register('assetType')} />
-        <input type="hidden" {...register('symbol')} />
-
-        <Inline align="start" className="gap-3">
-          <div className="w-full">
-            <Text as="label" htmlFor="quantity" size="sm">
-              Quantity
-            </Text>
-            <Input
-              id="quantity"
-              type="number"
-              step="any"
-              className="mt-1"
-              {...register('quantity', { valueAsNumber: true })}
-            />
-            {errors.quantity ? (
-              <Text as="div" size="sm" className="mt-1 text-red-600">
-                {errors.quantity.message}
-              </Text>
-            ) : null}
-          </div>
-          <div className="w-full">
-            <Text as="label" htmlFor="purchasePrice" size="sm">
-              Purchase price (USD)
-            </Text>
-            <Input
-              id="purchasePrice"
-              type="number"
-              step="any"
-              className="mt-1"
-              {...register('purchasePrice', { valueAsNumber: true })}
-            />
-            {errors.purchasePrice ? (
-              <Text as="div" size="sm" className="mt-1 text-red-600">
-                {errors.purchasePrice.message}
-              </Text>
-            ) : null}
-          </div>
-        </Inline>
-
-        <div>
-          <Text as="label" htmlFor="purchaseDate" size="sm">
-            Purchase date
-          </Text>
-          <Input id="purchaseDate" type="date" className="mt-1" {...register('purchaseDate')} />
-          {errors.purchaseDate ? (
-            <Text as="div" size="sm" className="mt-1 text-red-600">
-              {errors.purchaseDate.message}
-            </Text>
-          ) : null}
-        </div>
-      </form>
+        </form>
+      </FormProvider>
     </Modal>
   );
 }

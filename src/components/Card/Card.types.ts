@@ -7,7 +7,7 @@ export type CardVariants = VariantProps<typeof cardStyles>;
 export type CardProps = React.HTMLAttributes<HTMLDivElement> &
   CardVariants & {
     /**
-     * When true, renders the underlying element via Radix `Slot`,
+     * When true, renders the underlying element via the Slot helper,
      * allowing polymorphic composition without losing styles.
      */
     asChild?: boolean;

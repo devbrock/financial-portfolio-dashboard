@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/components/_internal/Slot';
 import { cn } from '@utils/cn';
 import type { CardProps, CardSectionProps } from './Card.types';
 import { cardBodyStyles, cardFooterStyles, cardHeaderStyles, cardStyles } from './Card.styles';

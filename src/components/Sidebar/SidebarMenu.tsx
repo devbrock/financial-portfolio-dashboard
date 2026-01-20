@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/components/_internal/Slot';
 import { cn } from '@utils/cn';
 
 export function SidebarGroup(props: React.HTMLAttributes<HTMLDivElement>) {

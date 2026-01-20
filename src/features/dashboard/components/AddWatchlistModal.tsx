@@ -1,11 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import { useCallback, useMemo } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Combobox, Modal, Text } from '@components';
-import type { ComboboxItem } from '@components';
-import { useSymbolSearch } from '@/hooks/useSymbolSearch';
-import { useCryptoSearch } from '@/hooks/useCryptoSearch';
+import { Button, Modal } from '@components';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addWatchlistItem, removeWatchlistItem } from '@/features/portfolio/portfolioSlice';
 import type { AssetType, WatchlistItem } from '@/types/portfolio';
@@ -13,8 +9,9 @@ import { toast } from 'sonner';
 import { watchlistFormSchema } from '@/schemas/watchlistFormSchema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addWatchlistItemToPortfolio } from '@/services/api/functions/portfolioApi';
-
-type WatchlistFormValues = z.infer<typeof watchlistFormSchema>;
+import { AddWatchlistFormFields } from './AddWatchlistFormFields';
+import type { WatchlistFormValues } from './AddWatchlistForm.types';
+import { useAssetSearchOptions } from './useAssetSearchOptions';
 
 type AddWatchlistModalProps = {
   open: boolean;
@@ -30,17 +27,8 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
   const dispatch = useAppDispatch();
   const watchlist = useAppSelector(state => state.portfolio.watchlist);
   const queryClient = useQueryClient();
-  const [assetQuery, setAssetQuery] = useState('');
-  const [selectedAssetLabel, setSelectedAssetLabel] = useState('');
 
-  const {
-    handleSubmit,
-    reset,
-    setValue,
-    control,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<WatchlistFormValues>({
+  const form = useForm<WatchlistFormValues>({
     resolver: zodResolver(watchlistFormSchema),
     defaultValues: {
       assetSelection: '',
@@ -50,15 +38,15 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
   });
 
   const selectedAssetValue = useWatch({
-    control,
+    control: form.control,
     name: 'assetSelection',
   });
   const selectedSymbol = useWatch({
-    control,
+    control: form.control,
     name: 'symbol',
   });
   const selectedAssetType = useWatch({
-    control,
+    control: form.control,
     name: 'assetType',
   });
 
@@ -71,52 +59,22 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
     );
   }, [selectedAssetType, selectedSymbol, watchlist]);
 
-  const handleAssetQueryChange = useCallback(
-    (nextQuery: string) => {
-      if (selectedAssetLabel && nextQuery === selectedAssetLabel) return;
-      const trimmed = nextQuery.trim();
-      setAssetQuery(trimmed.length >= 2 ? trimmed : '');
-    },
-    [selectedAssetLabel]
-  );
-
-  const { data: stockSearch, isFetching: isStockSearchLoading } = useSymbolSearch(assetQuery);
-  const { data: cryptoSearch, isFetching: isCryptoSearchLoading } = useCryptoSearch(assetQuery);
-
-  const assetOptions: ComboboxItem[] = useMemo(() => {
-    const stockItems = (stockSearch?.result ?? [])
-      .filter(result => result.symbol)
-      .slice(0, 6)
-      .map(result => ({
-        value: `stock:${result.symbol.toUpperCase()}`,
-        label: `Stock · ${result.displaySymbol} — ${result.description}`,
-      }));
-    const cryptoItems = (cryptoSearch?.coins ?? []).slice(0, 6).map(coin => ({
-      value: `crypto:${coin.id.toLowerCase()}`,
-      label: `Crypto · ${coin.symbol.toUpperCase()} — ${coin.name}`,
-    }));
-    const merged = [...stockItems, ...cryptoItems];
-    if (
-      selectedAssetValue &&
-      selectedAssetLabel &&
-      !merged.some(item => item.value === selectedAssetValue)
-    ) {
-      return [{ value: selectedAssetValue, label: selectedAssetLabel }, ...merged];
-    }
-    return merged;
-  }, [stockSearch, cryptoSearch, selectedAssetLabel, selectedAssetValue]);
-
-  const isAssetSearchLoading = isStockSearchLoading || isCryptoSearchLoading;
+  const {
+    assetOptions,
+    isAssetSearchLoading,
+    handleAssetQueryChange,
+    setSelectedAssetLabel,
+    resetAssetSearch,
+  } = useAssetSearchOptions(selectedAssetValue ?? '');
 
   const resetForm = useCallback(() => {
-    setAssetQuery('');
-    setSelectedAssetLabel('');
-    reset({
+    resetAssetSearch();
+    form.reset({
       assetSelection: '',
       assetType: 'stock',
       symbol: '',
     });
-  }, [reset]);
+  }, [form, resetAssetSearch]);
 
   const handleClose = useCallback(
     (nextOpen: boolean) => {
@@ -184,80 +142,28 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
             variant="primary"
             type="submit"
             form="add-watchlist-form"
-            disabled={isSubmitting || addWatchlistMutation.isPending || isDuplicateAsset}
+            disabled={form.formState.isSubmitting || addWatchlistMutation.isPending || isDuplicateAsset}
           >
             Add to Watchlist
           </Button>
         </>
       }
     >
-      <form
-        id="add-watchlist-form"
-        onSubmit={handleSubmit(onSubmitAddWatchlist, handleInvalid)}
-        className="space-y-3"
-      >
-        <div>
-          <Text as="label" htmlFor="watchlistSearch" size="sm">
-            Search asset
-          </Text>
-          <Controller
-            control={control}
-            name="assetSelection"
-            render={({ field }) => (
-              <Combobox
-                id="watchlistSearch"
-                placeholder="Search RBLX, Adobe, BTC, Ethereum..."
-                items={assetOptions}
-                value={field.value}
-                onValueChange={nextValue => {
-                  field.onChange(nextValue);
-                  const selectedItem = assetOptions.find(item => item.value === nextValue);
-                  setSelectedAssetLabel(selectedItem?.label ?? '');
-                  const isStock = nextValue.startsWith('stock:');
-                  const rawSymbol = nextValue.replace(isStock ? 'stock:' : 'crypto:', '');
-                  setValue('assetType', isStock ? 'stock' : 'crypto', {
-                    shouldValidate: true,
-                  });
-                  setValue('symbol', isStock ? rawSymbol.toUpperCase() : rawSymbol.toLowerCase(), {
-                    shouldValidate: true,
-                  });
-                }}
-                onInputChange={() => {
-                  if (field.value) {
-                    field.onChange('');
-                    setSelectedAssetLabel('');
-                    setValue('assetType', 'stock', {
-                      shouldValidate: true,
-                    });
-                    setValue('symbol', '', { shouldValidate: true });
-                  }
-                }}
-                onQueryChange={handleAssetQueryChange}
-                loading={isAssetSearchLoading}
-                minChars={2}
-                debounceMs={300}
-                inputClassName="mt-1"
-              />
-            )}
+      <FormProvider {...form}>
+        <form
+          id="add-watchlist-form"
+          onSubmit={form.handleSubmit(onSubmitAddWatchlist, handleInvalid)}
+          className="space-y-3"
+        >
+          <AddWatchlistFormFields
+            assetOptions={assetOptions}
+            isAssetSearchLoading={isAssetSearchLoading}
+            onAssetQueryChange={handleAssetQueryChange}
+            onAssetLabelChange={setSelectedAssetLabel}
+            isDuplicateAsset={isDuplicateAsset}
           />
-          <Text as="div" size="sm" tone="muted" className="mt-1">
-            Results include stocks and crypto. Pick one to continue.
-          </Text>
-          {errors.assetSelection ? (
-            <Text as="div" size="sm" className="mt-1 text-red-600">
-              {errors.assetSelection.message}
-            </Text>
-          ) : null}
-          {isDuplicateAsset ? (
-            <Text as="div" size="sm" className="mt-1 text-amber-600">
-              This asset is already in your watchlist.
-            </Text>
-          ) : null}
-        </div>
-
-        <input type="hidden" {...register('assetType')} />
-        <input type="hidden" {...register('symbol')} />
-      </form>
+        </form>
+      </FormProvider>
     </Modal>
   );
 }

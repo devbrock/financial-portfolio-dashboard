@@ -3,13 +3,8 @@ import { cn } from '@utils/cn';
 import { Input } from '../Input/Input';
 import { useControllableState } from '../_internal/useControllableState';
 import type { ComboboxItem, ComboboxProps } from './Combobox.types';
-import { comboboxOptionClassName, comboboxPanelClassName } from './Combobox.styles';
-
-function findLabel(items: readonly ComboboxItem[], value: string | undefined): string {
-  if (!value) return '';
-  return items.find(i => i.value === value)?.label ?? '';
-}
-
+import { ComboboxList } from './ComboboxList';
+import { findLabel } from './comboboxUtils';
 /**
  * Combobox
  * Searchable select for symbols; supports debounced input and keyboard navigation.
@@ -190,43 +185,15 @@ export function Combobox(props: ComboboxProps) {
       </div>
 
       {open && (loading || filtered.length > 0) && (
-        <div
-          id={listboxId}
-          role="listbox"
-          className={cn('absolute z-10 mt-2 w-full', comboboxPanelClassName)}
-        >
-          {loading ? (
-            <div className="px-3 py-2 text-sm text-(--ui-text-muted)">Loading…</div>
-          ) : (
-            filtered.map((item, idx) => {
-              const selected = item.value === selectedValue;
-              const active = idx === activeIndex;
-              return (
-                <div
-                  key={item.value}
-                  id={`${listboxId}-opt-${idx}`}
-                  role="option"
-                  aria-selected={selected}
-                  data-active={active ? 'true' : 'false'}
-                  className={cn(
-                    comboboxOptionClassName,
-                    'cursor-pointer',
-                    item.disabled && 'cursor-not-allowed opacity-50',
-                    active && 'bg-(--ui-surface)'
-                  )}
-                  onMouseEnter={() => setActiveIndex(idx)}
-                  onMouseDown={e => {
-                    // Prevent input blur before selection.
-                    e.preventDefault();
-                  }}
-                  onClick={() => handleSelect(item)}
-                >
-                  {item.label}
-                </div>
-              );
-            })
-          )}
-        </div>
+        <ComboboxList
+          listboxId={listboxId}
+          items={filtered}
+          loading={loading}
+          selectedValue={selectedValue}
+          activeIndex={activeIndex}
+          onActiveIndexChange={setActiveIndex}
+          onSelect={handleSelect}
+        />
       )}
     </div>
   );

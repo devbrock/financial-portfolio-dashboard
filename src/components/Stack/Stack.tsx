@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/components/_internal/Slot';
 import { cn } from '@utils/cn';
 import type { StackProps } from './Stack.types';
 import { stackStyles } from './Stack.styles';

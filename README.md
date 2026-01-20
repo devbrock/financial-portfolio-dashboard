@@ -79,6 +79,7 @@ This application requires API keys from:
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
+- `npm run typecheck` - Run TypeScript in build mode without emitting files
 - `npm run preview` - Preview production build
 - `npm run test` - Run tests
 - `npm run test:coverage` - Run tests with coverage report
@@ -111,11 +112,23 @@ src/
 - **React Query:** Server state (live prices, company profiles)
 - **Redux Persist:** Persists Redux state to localStorage
 
+### Architecture Decisions
+
+- Redux is used for user-owned, offline-safe state (holdings, preferences) because it needs
+  predictable persistence and cross-feature access.
+- React Query is reserved for market data because it benefits from caching, retries, and
+  automatic background refetching without polluting the global store.
+- Feature modules keep UI, hooks, and API calls together to reduce cross-feature coupling.
+- Shared components live in `src/components` to keep visual styles consistent and reusable.
+
 ### API Integration
 
 - **Finnhub:** Stock quotes, profiles, and symbol search for equities.
+  Chosen for breadth of US equity coverage and a generous free tier.
 - **Alpha Vantage:** Daily historical stock data for performance charts.
+  Chosen for historical depth and predictable response shapes.
 - **CoinGecko:** Crypto prices, profiles, search, and historical charts.
+  Chosen for reliable crypto coverage without API key requirements.
 
 ## Testing
 
@@ -132,8 +145,13 @@ npm run test -- src/path/to/test.test.ts
 
 ## Known Limitations
 
-- Alpha Vantage free tier limited to 25 requests/day and 1 request/second.
-- Historical data availability depends on third-party API rate limits.
+- Alpha Vantage free tier is limited to 25 requests/day and 1 request/second, so historical
+  charts can be delayed or show partial data.
+- Market data is pulled via polling (no WebSocket streaming), so updates are not truly real-time.
+- Data freshness depends on third-party APIs and can be delayed during rate limiting.
+- Portfolio persistence relies on `localStorage`, which can be unavailable in strict
+  privacy modes or cleared by the user.
+- Currency conversion and benchmarking features are not implemented yet.
 
 ## Future Improvements
 

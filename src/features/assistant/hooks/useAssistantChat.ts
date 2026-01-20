@@ -87,12 +87,15 @@ export function useAssistantChat() {
         }
 
         const toolMessages: OpenRouterMessage[] = toolContext
-          ? [{ role: 'system', content: toolContext }]
+          ? [{ role: 'system' as const, content: toolContext }]
           : [];
         const userMessages: OpenRouterMessage[] = pendingMessages
-          .filter(msg => msg.role !== 'system')
-          .map<OpenRouterMessage>(msg => ({
-            role: msg.role as 'user' | 'assistant',
+          .filter(
+            (msg): msg is AssistantMessage & { role: 'user' | 'assistant' } =>
+              msg.role !== 'system'
+          )
+          .map(msg => ({
+            role: msg.role,
             content: msg.content,
           }));
         const requestMessages: OpenRouterMessage[] = [

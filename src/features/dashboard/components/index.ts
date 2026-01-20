@@ -1,8 +1,13 @@
 export { AssetSummaryCard } from './AssetSummaryCard';
 export { AddAssetModal } from './AddAssetModal';
 export { AddWatchlistModal } from './AddWatchlistModal';
+export { DashboardChartsSection } from './DashboardChartsSection';
+export { DashboardErrorBanner } from './DashboardErrorBanner';
 export { DashboardHeader } from './DashboardHeader';
+export { DashboardHoldingsSection } from './DashboardHoldingsSection';
+export { DashboardRemoveModal } from './DashboardRemoveModal';
 export { DashboardSidebar } from './DashboardSidebar';
+export { DashboardWatchlistSection } from './DashboardWatchlistSection';
 export { PerformanceChart } from './PerformanceChart';
 export { AllocationChart } from './AllocationChart';
 export { HoldingsTable } from './HoldingsTable';

@@ -8,103 +8,11 @@ import {
   type KeyboardEvent,
 } from 'react';
 import { cn } from '@utils/cn';
-import type { CarouselProps, CarouselSlideProps, CarouselDotsProps } from './Carousel.types';
-import {
-  carouselStyles,
-  carouselTrackStyles,
-  carouselSlideStyles,
-  carouselArrowStyles,
-  carouselDotsContainerStyles,
-  carouselDotStyles,
-} from './Carousel.styles';
-
-function ChevronLeftIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      className="h-5 w-5"
-      fill="none"
-    >
-      <path
-        d="M12 5l-5 5 5 5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      className="h-5 w-5"
-      fill="none"
-    >
-      <path
-        d="M8 5l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-/**
- * CarouselDots
- * Pagination dots for carousel navigation.
- */
-function CarouselDots(props: CarouselDotsProps) {
-  const { total, current, onSelect, className } = props;
-
-  return (
-    <div
-      className={cn(carouselDotsContainerStyles(), className)}
-      role="tablist"
-      aria-label="Carousel pagination"
-    >
-      {Array.from({ length: total }, (_, index) => (
-        <button
-          key={index}
-          type="button"
-          role="tab"
-          aria-selected={index === current}
-          aria-label={`Go to slide ${index + 1}`}
-          className={carouselDotStyles({ active: index === current })}
-          onClick={() => onSelect(index)}
-        />
-      ))}
-    </div>
-  );
-}
-
-/**
- * CarouselSlide
- * Individual slide wrapper component.
- */
-export function CarouselSlide(props: CarouselSlideProps) {
-  const { className, isActive, children, ...rest } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      aria-hidden={!isActive}
-      className={cn(carouselSlideStyles(), className)}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-}
-
+import type { CarouselProps } from './Carousel.types';
+import { carouselStyles, carouselTrackStyles, carouselArrowStyles } from './Carousel.styles';
+import { ChevronLeftIcon, ChevronRightIcon } from './CarouselIcons';
+import { CarouselDots } from './CarouselDots';
+import { CarouselSlide } from './CarouselSlide';
 /**
  * Carousel
  * An accessible carousel/slider component for displaying content in a rotating view.

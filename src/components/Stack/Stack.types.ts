@@ -7,7 +7,7 @@ export type StackVariants = VariantProps<typeof stackStyles>;
 export type StackProps = React.HTMLAttributes<HTMLDivElement> &
   StackVariants & {
     /**
-     * When true, renders the underlying element via Radix `Slot`,
+     * When true, renders the underlying element via the Slot helper,
      * allowing polymorphic composition without losing styles.
      */
     asChild?: boolean;
