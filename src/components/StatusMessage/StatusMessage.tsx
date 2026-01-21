@@ -11,6 +11,22 @@ import type { StatusMessageProps } from './StatusMessage.types';
 export function StatusMessage(props: StatusMessageProps) {
   const { title, message, tone = 'info', actionLabel, onAction, className } = props;
   const showAction = Boolean(actionLabel && onAction);
+  const titleClassName =
+    tone === 'danger'
+      ? 'text-red-900 dark:text-red-100'
+      : tone === 'warning'
+        ? 'text-amber-900 dark:text-amber-100'
+        : tone === 'success'
+          ? 'text-emerald-900 dark:text-emerald-100'
+          : 'text-(--ui-text)';
+  const messageClassName =
+    tone === 'danger'
+      ? 'text-red-800 dark:text-red-200'
+      : tone === 'warning'
+        ? 'text-amber-800 dark:text-amber-200'
+        : tone === 'success'
+          ? 'text-emerald-800 dark:text-emerald-200'
+          : 'text-(--ui-text-muted)';
 
   return (
     <Alert
@@ -19,11 +35,11 @@ export function StatusMessage(props: StatusMessageProps) {
       aria-live={tone === 'danger' ? 'assertive' : 'polite'}
     >
       <div className="min-w-0">
-        <Text as="div" className="text-sm font-semibold">
+        <Text as="div" className={cn('text-sm font-semibold', titleClassName)}>
           {title}
         </Text>
         {message ? (
-          <Text as="div" size="sm" tone="muted" className="mt-1">
+          <Text as="div" size="sm" className={cn('mt-1', messageClassName)}>
             {message}
           </Text>
         ) : null}
