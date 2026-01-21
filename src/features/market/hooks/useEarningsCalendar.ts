@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GetEarningsCalendarQueryOptions } from '@/queryOptions/GetEarningsCalendarQueryOptions';
+import { QUERY_TIMINGS } from '@/queryOptions/queryTimings';
 
 const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
 
@@ -18,8 +19,9 @@ export function useEarningsCalendar(days: number) {
 
   const query = useQuery({
     ...GetEarningsCalendarQueryOptions(range.from, range.to),
-    refetchInterval: 60 * 60 * 1000,
-    staleTime: 55 * 60 * 1000,
+    refetchInterval: QUERY_TIMINGS.hourly.refetchInterval,
+    staleTime: QUERY_TIMINGS.hourly.staleTime,
+    gcTime: QUERY_TIMINGS.hourly.gcTime,
   });
 
   return {
@@ -28,5 +30,6 @@ export function useEarningsCalendar(days: number) {
     isError: query.isError,
     error: query.error ?? null,
     dataUpdatedAt: query.dataUpdatedAt ?? 0,
+    refetch: query.refetch,
   };
 }

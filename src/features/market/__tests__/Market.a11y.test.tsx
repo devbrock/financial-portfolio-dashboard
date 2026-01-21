@@ -8,7 +8,9 @@ vi.mock('../hooks/useMarketQuotes', () => ({
     data: [{ symbol: 'SPY', name: 'S&P 500', quote: { c: 450, dp: 1.2 } }],
     isLoading: false,
     isError: false,
+    error: null,
     dataUpdatedAt: 0,
+    refetch: vi.fn(),
   }),
 }));
 
@@ -19,6 +21,7 @@ vi.mock('../hooks/useEarningsCalendar', () => ({
     isError: false,
     error: null,
     dataUpdatedAt: 0,
+    refetch: vi.fn(),
   }),
 }));
 

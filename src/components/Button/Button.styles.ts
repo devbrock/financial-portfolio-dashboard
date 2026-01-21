@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
  */
 export const buttonStyles = cva(
   [
-    'inline-flex items-center justify-center gap-2 rounded-xl',
+    'inline-flex items-center justify-center gap-2 rounded-xl min-h-11',
     'font-(--font-brand-secondary) font-semibold select-none',
     'disabled:opacity-50 disabled:pointer-events-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ui-focus)',
@@ -15,9 +15,9 @@ export const buttonStyles = cva(
   {
     variants: {
       size: {
-        sm: 'h-9 px-3 text-sm',
-        md: 'h-10 px-4 text-sm',
-        lg: 'h-12 px-5 text-base',
+        sm: 'h-11 px-3 text-sm',
+        md: 'h-12 px-4 text-sm',
+        lg: 'h-14 px-5 text-base',
       },
       variant: {
         primary: 'bg-(--ui-primary) text-(--ui-primary-ink) hover:brightness-95',

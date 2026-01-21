@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { exchangeRateClient } from '@/services/api/exchangeRateClient';
 import type { ExchangeRateResponse } from '@/types/exchangeRates';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type GetExchangeRateQueryKey = readonly ['exchangeRates', 'USD'];
 
@@ -13,6 +14,7 @@ export const GetExchangeRateQueryOptions = () =>
   queryOptions({
     queryKey: ['exchangeRates', 'USD'] as GetExchangeRateQueryKey,
     queryFn: getExchangeRates,
-    staleTime: 55 * 60 * 1000,
-    refetchInterval: 60 * 60 * 1000,
+    staleTime: QUERY_TIMINGS.hourly.staleTime,
+    refetchInterval: QUERY_TIMINGS.hourly.refetchInterval,
+    gcTime: QUERY_TIMINGS.hourly.gcTime,
   });

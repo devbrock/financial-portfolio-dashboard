@@ -8,6 +8,7 @@ import { useStockProfiles } from './useStockProfiles';
 import { useCryptoPrices } from './useCryptoPrices';
 import { useCryptoProfiles } from './useCryptoProfiles';
 import { enrichHoldingWithPrice, calculatePortfolioMetrics } from '@/utils/portfolioCalculations';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 import type { HoldingWithPrice, WatchlistItemWithPrice } from '@/types/portfolio';
 
 /**
@@ -138,8 +139,10 @@ export function usePortfolioData() {
   const isError = stocksError || profilesError || cryptoError || cryptoProfilesError;
   const firstError =
     stocksErrorObj || profilesErrorObj || cryptoErrorObj || cryptoProfilesErrorObj || null;
-  const errorMessage =
-    firstError instanceof Error ? firstError.message : "We couldn't load your latest market data.";
+  const errorMessage = getErrorMessage(
+    firstError,
+    "We couldn't load your latest market data."
+  );
 
   return {
     holdings,

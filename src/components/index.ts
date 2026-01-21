@@ -28,6 +28,7 @@ export * from './Skeleton';
 export * from './Stack';
 export * from './StackedBarChart';
 export * from './Stat';
+export * from './StatusMessage';
 export * from './Table';
 export * from './Tabs';
 export * from './Text';

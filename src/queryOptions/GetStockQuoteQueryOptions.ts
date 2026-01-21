@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { finnhubApi } from '@/services/api/functions/finnhubApi';
 import { ApiError } from '@/services/api/clients/apiError';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type GetStockQuoteQueryKey = readonly ['stockPrice', string];
 
@@ -20,8 +21,9 @@ const GetStockQuoteQueryOptions = (symbol: string) => {
       return failureCount < 1;
     },
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    refetchInterval: 60000,
-    staleTime: 50000,
+    refetchInterval: QUERY_TIMINGS.realtime.refetchInterval,
+    staleTime: QUERY_TIMINGS.realtime.staleTime,
+    gcTime: QUERY_TIMINGS.realtime.gcTime,
   });
 };
 

@@ -14,7 +14,7 @@ export function MarketQuoteTile(props: QuoteProps) {
   const { formatMoney } = useCurrencyFormatter();
 
   return (
-    <div className="rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4">
+    <div className="rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4 transition-shadow duration-200 hover:shadow-sm motion-reduce:transition-none">
       <Inline align="center" justify="between" className="gap-2">
         <div>
           <Text as="div" className="text-sm font-semibold">
@@ -54,7 +54,7 @@ export function MarketQuoteRow(props: QuoteProps) {
   const { formatMoney } = useCurrencyFormatter();
 
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-(--ui-border) bg-(--ui-bg) px-4 py-3">
+    <div className="flex items-center justify-between rounded-2xl border border-(--ui-border) bg-(--ui-bg) px-4 py-3 transition-colors duration-200 hover:border-(--ui-primary) motion-reduce:transition-none">
       <div>
         <Text as="div" className="text-sm font-semibold">
           {name}

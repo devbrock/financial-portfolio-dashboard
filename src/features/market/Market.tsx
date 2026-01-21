@@ -7,6 +7,7 @@ import {
   Heading,
   Skeleton,
   Stack,
+  StatusMessage,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +26,7 @@ import { INDEX_SYMBOLS, SECTOR_SYMBOLS } from './marketData';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
 import { MarketQuoteRow, MarketQuoteTile } from './components/MarketQuotes';
 import { formatDate, formatEarningsTime, formatUpdatedAt } from './marketFormatters';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 export function Market() {
   const navigate = useNavigate();
@@ -70,9 +72,21 @@ export function Market() {
               </CardHeader>
               <CardBody>
                 {indices.isError ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Unable to load index data right now.
-                  </Text>
+                  <StatusMessage
+                    tone="danger"
+                    title="Unable to load index data."
+                    message={getErrorMessage(indices.error, 'Please try again in a moment.')}
+                    actionLabel="Retry"
+                    onAction={() => {
+                      void indices.refetch();
+                    }}
+                  />
+                ) : indices.data.length === 0 ? (
+                  <StatusMessage
+                    title="No index data available."
+                    message="Check back later for the latest benchmarks."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     {indices.data.map(item => (
@@ -102,9 +116,21 @@ export function Market() {
               </CardHeader>
               <CardBody>
                 {sectors.isError ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Unable to load sector data right now.
-                  </Text>
+                  <StatusMessage
+                    tone="danger"
+                    title="Unable to load sector data."
+                    message={getErrorMessage(sectors.error, 'Please try again in a moment.')}
+                    actionLabel="Retry"
+                    onAction={() => {
+                      void sectors.refetch();
+                    }}
+                  />
+                ) : sectors.data.length === 0 ? (
+                  <StatusMessage
+                    title="No sector data available."
+                    message="Check back later for the latest sector moves."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {sectors.data.map(item => (
@@ -134,18 +160,26 @@ export function Market() {
               </CardHeader>
               <CardBody>
                 {earnings.isError ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Unable to load earnings calendar right now.
-                  </Text>
+                  <StatusMessage
+                    tone="danger"
+                    title="Unable to load the earnings calendar."
+                    message={getErrorMessage(earnings.error, 'Please try again in a moment.')}
+                    actionLabel="Retry"
+                    onAction={() => {
+                      void earnings.refetch();
+                    }}
+                  />
                 ) : earnings.isLoading ? (
                   <div className="space-y-2">
                     <Skeleton className="h-6 w-40" />
                     <Skeleton className="h-24 w-full" />
                   </div>
                 ) : earnings.data.length === 0 ? (
-                  <Text as="div" size="sm" tone="muted">
-                    No earnings scheduled for this period.
-                  </Text>
+                  <StatusMessage
+                    title="No earnings scheduled."
+                    message="Check back later for upcoming results."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : (
                   <Table tableProps={{ 'aria-label': 'Earnings calendar' }}>
                     <TableHead>

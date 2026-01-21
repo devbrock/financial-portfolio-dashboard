@@ -71,7 +71,7 @@ export function AppShell(props: AppShellProps) {
             {errorMessage}
           </div>
         ) : null}
-        <div className="mx-auto flex h-full min-h-0 w-full gap-6 p-6">
+        <div className="mx-auto flex h-full min-h-0 w-full flex-col gap-4 p-4 sm:gap-6 sm:p-6 lg:flex-row">
           <DashboardSidebar activeNav={activeNav} onNavChange={onNavChange} />
           <main id={mainId} className="min-h-0 min-w-0 flex-1 overflow-y-auto">
             {children}

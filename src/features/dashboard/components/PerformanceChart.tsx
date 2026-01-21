@@ -6,14 +6,15 @@ import {
   DeltaPill,
   Inline,
   Skeleton,
+  StatusMessage,
   Text,
-  Button,
 } from '@components';
 import { cn } from '@/utils/cn';
 import type { PerformancePoint } from '@/types/dashboard';
 import { formatSignedPct } from '@utils/formatSignedPct';
 import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 type PerformanceChartProps = {
   range: '7d' | '30d' | '90d' | '1y';
@@ -68,28 +69,22 @@ export function PerformanceChart(props: PerformanceChartProps) {
           <Skeleton className="h-[260px] w-full" />
         </div>
       ) : isError ? (
-        <div className="mt-2! flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
-          <Text as="div" className="text-sm font-semibold">
-            Historical data is unavailable right now.
-          </Text>
-          <Text as="div" size="sm" tone="muted">
-            {error instanceof Error ? error.message : 'Please try again in a moment.'}
-          </Text>
-          <div>
-            <Button variant="secondary" size="sm" onClick={refetch}>
-              Retry
-            </Button>
-          </div>
-        </div>
+        <StatusMessage
+          tone="danger"
+          title="Historical data is unavailable right now."
+          message={getErrorMessage(error, 'Please try again in a moment.')}
+          actionLabel="Retry"
+          onAction={() => {
+            void refetch();
+          }}
+        />
       ) : data.length === 0 ? (
-        <div className="flex flex-col gap-2 rounded-2xl border border-dashed border-(--ui-border) px-4 py-6">
-          <Text as="div" className="text-sm font-semibold">
-            No historical data yet.
-          </Text>
-          <Text as="div" size="sm" tone="muted">
-            Add holdings to see portfolio performance over time.
-          </Text>
-        </div>
+        <StatusMessage
+          tone="info"
+          title="No historical data yet."
+          message="Add holdings to see portfolio performance over time."
+          className="border-dashed bg-transparent"
+        />
       ) : (
         <>
           <Inline align="end" justify="between" className="mb-3 gap-3">

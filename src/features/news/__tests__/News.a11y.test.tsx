@@ -20,6 +20,8 @@ vi.mock('../hooks/useMarketNews', () => ({
     ],
     isLoading: false,
     isError: false,
+    error: null,
+    refetch: vi.fn(),
   }),
 }));
 
@@ -45,6 +47,8 @@ vi.mock('../hooks/useCompanyNews', () => ({
     ]),
     isLoading: false,
     isError: false,
+    error: null,
+    refetch: vi.fn(),
   }),
 }));
 

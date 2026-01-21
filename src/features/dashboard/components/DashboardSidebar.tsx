@@ -90,7 +90,11 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
   }, [chartRange, currency, holdingsWithPrice, metrics, performanceData, rate]);
 
   return (
-    <Sidebar collapsible="icon" width={260} className={cn('overflow-hidden rounded-2xl', 'h-full')}>
+    <Sidebar
+      collapsible="icon"
+      width={260}
+      className={cn('overflow-hidden rounded-2xl', 'h-auto w-full lg:h-full lg:w-(--sidebar-width)')}
+    >
       <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
         <Inline align="center" className="gap-3 px-1">
           <div className="min-w-0 group-data-[state=collapsed]/sidebar:hidden">

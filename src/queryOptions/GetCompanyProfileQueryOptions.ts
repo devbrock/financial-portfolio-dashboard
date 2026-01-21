@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { finnhubApi } from '@/services/api/functions/finnhubApi';
 import { ApiError } from '@/services/api/clients/apiError';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type GetCompanyProfileQueryKey = readonly ['companyProfile', string];
 
@@ -21,8 +22,8 @@ const GetCompanyProfileQueryOptions = (symbol: string) => {
     },
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     // Company profile data rarely changes, cache for 24 hours
-    staleTime: 86400000, // 24 hours in milliseconds
-    gcTime: 86400000, // Keep in cache for 24 hours
+    staleTime: QUERY_TIMINGS.daily.staleTime,
+    gcTime: QUERY_TIMINGS.daily.gcTime,
   });
 };
 

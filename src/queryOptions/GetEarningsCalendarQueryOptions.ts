@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { finnhubApi } from '@/services/api/functions/finnhubApi';
 import { ApiError } from '@/services/api/clients/apiError';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type GetEarningsCalendarQueryKey = readonly ['earningsCalendar', string, string];
 
@@ -20,6 +21,7 @@ export const GetEarningsCalendarQueryOptions = (from: string, to: string) => {
       return failureCount < 1;
     },
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    staleTime: 300000,
+    staleTime: QUERY_TIMINGS.search.staleTime,
+    gcTime: QUERY_TIMINGS.search.gcTime,
   });
 };

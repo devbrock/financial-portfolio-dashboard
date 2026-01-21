@@ -113,7 +113,7 @@ export function SidebarTrigger(props: SidebarTriggerProps) {
       }}
       className={cn(
         'inline-flex items-center justify-center rounded-xl',
-        'h-10 w-10 border border-(--ui-border) bg-(--ui-bg) text-(--ui-text)',
+        'h-11 w-11 border border-(--ui-border) bg-(--ui-bg) text-(--ui-text)',
         'hover:bg-(--ui-surface)',
         'focus-visible:ring-2 focus-visible:ring-(--ui-focus) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ui-bg) focus-visible:outline-none',
         className

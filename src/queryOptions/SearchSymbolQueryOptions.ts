@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { finnhubApi } from '@/services/api/functions/finnhubApi';
 import { ApiError } from '@/services/api/clients/apiError';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type SearchSymbolQueryKey = readonly ['symbolSearch', string, string | undefined];
 
@@ -22,8 +23,8 @@ const SearchSymbolQueryOptions = (query: string, exchange?: string) => {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     // Symbol search is user-triggered and results are relatively stable
     // Cache for 5 minutes to reduce API calls during form interaction
-    staleTime: 300000, // 5 minutes in milliseconds
-    gcTime: 600000, // Keep in cache for 10 minutes
+    staleTime: QUERY_TIMINGS.search.staleTime,
+    gcTime: QUERY_TIMINGS.search.gcTime,
     // Don't fetch automatically - only when user types
     enabled: query.length > 0,
   });

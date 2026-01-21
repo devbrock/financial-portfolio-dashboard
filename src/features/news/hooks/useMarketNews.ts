@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { GetMarketNewsQueryOptions } from '@/queryOptions/GetMarketNewsQueryOptions';
+import { QUERY_TIMINGS } from '@/queryOptions/queryTimings';
 
 export function useMarketNews(category = 'general') {
   const query = useQuery({
     ...GetMarketNewsQueryOptions(category),
-    refetchInterval: 60 * 60 * 1000,
-    staleTime: 55 * 60 * 1000,
+    refetchInterval: QUERY_TIMINGS.hourly.refetchInterval,
+    staleTime: QUERY_TIMINGS.hourly.staleTime,
+    gcTime: QUERY_TIMINGS.hourly.gcTime,
   });
 
   return {
@@ -13,5 +15,6 @@ export function useMarketNews(category = 'general') {
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error ?? null,
+    refetch: query.refetch,
   };
 }

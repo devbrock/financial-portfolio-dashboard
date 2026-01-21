@@ -8,6 +8,7 @@ import {
   Inline,
   Skeleton,
   Stack,
+  StatusMessage,
   Text,
 } from '@components';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
@@ -19,6 +20,7 @@ import { useCompanyNews } from './hooks/useCompanyNews';
 import { usePortfolioHoldings } from '@/features/portfolio/hooks/usePortfolioHoldings';
 import { usePortfolioWatchlist } from '@/features/portfolio/hooks/usePortfolioWatchlist';
 import type { FinnhubNewsItem } from '@/types/finnhub';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 export function News() {
   const navigate = useNavigate();
@@ -50,6 +52,13 @@ export function News() {
 
   const marketNews = useMarketNews('general');
   const companyNews = useCompanyNews(companySymbols, range.from, range.to);
+  const companyNewsCount = useMemo(() => {
+    let count = 0;
+    companySymbols.forEach(symbol => {
+      count += companyNews.newsBySymbol.get(symbol)?.length ?? 0;
+    });
+    return count;
+  }, [companyNews.newsBySymbol, companySymbols]);
 
   return (
     <AppShell activeNav={activeNav} onNavChange={handleNavChange}>
@@ -77,9 +86,21 @@ export function News() {
                     <Skeleton className="h-24 w-full" />
                   </div>
                 ) : marketNews.isError ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Unable to load market news right now.
-                  </Text>
+                  <StatusMessage
+                    tone="danger"
+                    title="Unable to load market news."
+                    message={getErrorMessage(marketNews.error, 'Please try again in a moment.')}
+                    actionLabel="Retry"
+                    onAction={() => {
+                      void marketNews.refetch();
+                    }}
+                  />
+                ) : marketNews.data.length === 0 ? (
+                  <StatusMessage
+                    title="No market headlines yet."
+                    message="Check back later for the latest stories."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : (
                   <div className="grid gap-3 lg:grid-cols-2">
                     {marketNews.data.slice(0, 6).map(item => (
@@ -103,18 +124,32 @@ export function News() {
               </CardHeader>
               <CardBody className="space-y-4">
                 {companySymbols.length === 0 ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Add stock holdings or watchlist symbols to see company news.
-                  </Text>
+                  <StatusMessage
+                    title="Follow a company to see updates."
+                    message="Add stock holdings or watchlist symbols to personalize this feed."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : companyNews.isLoading ? (
                   <div className="space-y-3">
                     <Skeleton className="h-6 w-40" />
                     <Skeleton className="h-24 w-full" />
                   </div>
                 ) : companyNews.isError ? (
-                  <Text as="div" size="sm" tone="muted">
-                    Unable to load company news right now.
-                  </Text>
+                  <StatusMessage
+                    tone="danger"
+                    title="Unable to load company news."
+                    message={getErrorMessage(companyNews.error, 'Please try again in a moment.')}
+                    actionLabel="Retry"
+                    onAction={() => {
+                      void companyNews.refetch();
+                    }}
+                  />
+                ) : companyNewsCount === 0 ? (
+                  <StatusMessage
+                    title="No company news yet."
+                    message="We'll show updates as soon as new stories are published."
+                    className="border-dashed bg-transparent"
+                  />
                 ) : (
                   companySymbols.map(symbol => (
                     <div key={symbol} className="space-y-4">
@@ -160,7 +195,7 @@ function NewsCard({ item }: { item: FinnhubNewsItem }) {
       href={item.url}
       target="_blank"
       rel="noreferrer"
-      className="group flex gap-4 rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4 transition hover:border-(--ui-primary)"
+      className="group flex gap-4 rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4 transition-shadow duration-200 hover:border-(--ui-primary) hover:shadow-sm motion-reduce:transition-none"
     >
       {item.image ? (
         <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-(--ui-surface)">

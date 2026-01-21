@@ -8,7 +8,9 @@ vi.mock('../hooks/useMarketQuotes', () => ({
     data: [],
     isLoading: false,
     isError: true,
+    error: new Error('fail'),
     dataUpdatedAt: 0,
+    refetch: vi.fn(),
   }),
 }));
 
@@ -19,6 +21,7 @@ vi.mock('../hooks/useEarningsCalendar', () => ({
     isError: true,
     error: new Error('fail'),
     dataUpdatedAt: 0,
+    refetch: vi.fn(),
   }),
 }));
 
@@ -32,8 +35,8 @@ vi.mock('@/features/portfolio/hooks/useCurrencyFormatter', () => ({
 describe('Market errors', () => {
   it('renders error placeholders when APIs fail', () => {
     renderWithProviders(<Market />);
-    expect(screen.getByText('Unable to load index data right now.')).toBeInTheDocument();
-    expect(screen.getByText('Unable to load sector data right now.')).toBeInTheDocument();
-    expect(screen.getByText('Unable to load earnings calendar right now.')).toBeInTheDocument();
+    expect(screen.getByText('Unable to load index data.')).toBeInTheDocument();
+    expect(screen.getByText('Unable to load sector data.')).toBeInTheDocument();
+    expect(screen.getByText('Unable to load the earnings calendar.')).toBeInTheDocument();
   });
 });

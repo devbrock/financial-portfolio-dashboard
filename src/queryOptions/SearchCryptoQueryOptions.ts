@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { coinGeckoApi } from '@functions/coinGeckoApi';
 import { ApiError } from '@/services/api/clients/apiError';
+import { QUERY_TIMINGS } from './queryTimings';
 
 export type SearchCryptoQueryKey = readonly ['cryptoSearch', string];
 
@@ -20,8 +21,8 @@ const SearchCryptoQueryOptions = (query: string) => {
       return failureCount < 1;
     },
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    staleTime: 300000,
-    gcTime: 600000,
+    staleTime: QUERY_TIMINGS.search.staleTime,
+    gcTime: QUERY_TIMINGS.search.gcTime,
     enabled: query.length > 0,
   });
 };

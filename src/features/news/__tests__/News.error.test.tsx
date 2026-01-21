@@ -8,6 +8,8 @@ vi.mock('../hooks/useMarketNews', () => ({
     data: [],
     isLoading: false,
     isError: true,
+    error: new Error('fail'),
+    refetch: vi.fn(),
   }),
 }));
 
@@ -16,6 +18,8 @@ vi.mock('../hooks/useCompanyNews', () => ({
     newsBySymbol: new Map(),
     isLoading: false,
     isError: true,
+    error: new Error('fail'),
+    refetch: vi.fn(),
   }),
 }));
 
@@ -39,7 +43,7 @@ vi.mock('@/features/portfolio/hooks/usePortfolioWatchlist', () => ({
 describe('News errors', () => {
   it('renders error states when news APIs fail', () => {
     renderWithProviders(<News />);
-    expect(screen.getByText('Unable to load market news right now.')).toBeInTheDocument();
-    expect(screen.getByText('Unable to load company news right now.')).toBeInTheDocument();
+    expect(screen.getByText('Unable to load market news.')).toBeInTheDocument();
+    expect(screen.getByText('Unable to load company news.')).toBeInTheDocument();
   });
 });
