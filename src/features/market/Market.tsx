@@ -63,7 +63,7 @@ export function Market() {
           <section aria-label="Major indices">
             <Card>
               <CardHeader>
-                <Heading as="h3" className="text-lg">
+                <Heading as="h2" className="text-lg">
                   Indices overview
                 </Heading>
                 <Text as="div" size="sm" tone="muted" className="text-right">
@@ -107,7 +107,7 @@ export function Market() {
           <section aria-label="Sector performance">
             <Card>
               <CardHeader>
-                <Heading as="h3" className="text-lg">
+                <Heading as="h2" className="text-lg">
                   Sector snapshot
                 </Heading>
                 <Text as="div" size="sm" tone="muted">
@@ -151,7 +151,7 @@ export function Market() {
           <section aria-label="Earnings calendar">
             <Card>
               <CardHeader>
-                <Heading as="h3" className="text-lg">
+                <Heading as="h2" className="text-lg">
                   Earnings calendar
                 </Heading>
                 <Text as="div" size="sm" tone="muted">

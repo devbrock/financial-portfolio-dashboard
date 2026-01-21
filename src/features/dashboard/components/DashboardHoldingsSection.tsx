@@ -40,7 +40,7 @@ export function DashboardHoldingsSection(props: DashboardHoldingsSectionProps) {
             className="grid w-full grid-cols-1 gap-3 md:grid-cols-3"
           >
             <div className="min-w-0 flex-1">
-              <Heading as="h3" className="text-base">
+              <Heading as="h2" className="text-base">
                 My Holdings
               </Heading>
               <Text as="div" size="sm" tone="muted">

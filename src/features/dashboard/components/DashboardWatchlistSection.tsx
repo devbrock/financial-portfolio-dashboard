@@ -18,7 +18,7 @@ export function DashboardWatchlistSection(props: DashboardWatchlistSectionProps)
         <CardHeader className="pb-3">
           <Inline align="center" justify="between" className="w-full gap-3">
             <div className="min-w-0">
-              <Heading as="h3" className="text-base">
+              <Heading as="h2" className="text-base">
                 My Watchlist
               </Heading>
               <Text as="div" size="sm" tone="muted">

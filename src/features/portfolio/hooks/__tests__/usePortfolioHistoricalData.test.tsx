@@ -7,9 +7,13 @@ vi.mock('../usePortfolioHoldings', () => ({
   usePortfolioHoldings: () => [],
 }));
 
-vi.mock('@tanstack/react-query', () => ({
-  useQueries: () => [],
-}));
+vi.mock('@tanstack/react-query', async importOriginal => {
+  const actual = await importOriginal<typeof import('@tanstack/react-query')>();
+  return {
+    ...actual,
+    useQueries: () => [],
+  };
+});
 
 describe('usePortfolioHistoricalData', () => {
   it('returns empty data when there are no holdings', () => {
