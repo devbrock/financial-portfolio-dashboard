@@ -53,7 +53,7 @@ export function Assistant() {
 
           <Card className="border border-(--ui-border) bg-(--ui-bg)">
             <CardBody className="flex h-[60vh] flex-col gap-4">
-              <div className="flex-1 space-y-4 overflow-y-auto pr-1">
+              <div className="flex-1 space-y-4! overflow-y-auto pr-1">
                 {messages.map(message => (
                   <MessageBubble key={message.id} role={message.role} content={message.content} />
                 ))}

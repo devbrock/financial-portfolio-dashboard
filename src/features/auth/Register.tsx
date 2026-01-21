@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { Container } from '@components';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { registerUser } from '@/features/auth/authSlice';
+import { resetPortfolio } from '@/features/portfolio/portfolioSlice';
+import { resetAssistant } from '@/features/assistant/assistantSlice';
 import { generateSessionId } from '@/utils/generateSessionId';
 import { registerSchema, type RegisterFormValues } from './registerFormSchema';
 import { RegisterIntroCard } from './components/RegisterIntroCard';
@@ -23,15 +25,13 @@ export function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  if (sessionId) {
-    return <Navigate to="/dashboard" />;
-  }
-
-  if (user) {
-    return <Navigate to="/login" />;
-  }
+  const hasExistingUser = Boolean(user || sessionId);
 
   const onSubmit = handleSubmit(values => {
+    if (hasExistingUser) {
+      dispatch(resetAssistant());
+      dispatch(resetPortfolio());
+    }
     dispatch(
       registerUser({
         ...values,

@@ -38,6 +38,7 @@ export function AllocationChart(props: AllocationChartProps) {
       ) : (
         <BarChart<AllocationSlice>
           data={data}
+          className='mt-4!'
           xKey="name"
           barColorKey="color"
           series={[

@@ -114,14 +114,8 @@ const portfolioSlice = createSlice({
     /**
      * Reset portfolio (for testing or user request)
      */
-    resetPortfolio: state => {
-      state.holdings = [];
-      state.watchlist = [];
-      state.userSeed = {
-        seed: '',
-        initialized: false,
-      };
-      state.historicalCache.stocks = {};
+    resetPortfolio: () => {
+      return initialState;
     },
 
     /**

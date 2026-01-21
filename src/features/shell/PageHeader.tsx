@@ -17,7 +17,7 @@ export function PageHeader(props: PageHeaderProps) {
       className="animate-in fade-in slide-in-from-top-1 gap-3 py-4 duration-300 motion-reduce:animate-none"
     >
       <div className="min-w-0">
-        <Heading as="h1" className="text-xl">
+        <Heading as="h1" className="text-3xl md:text-2xl">
           {title}
         </Heading>
         {subtitle ? (

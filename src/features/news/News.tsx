@@ -72,7 +72,7 @@ export function News() {
           <section aria-label="Market news">
             <Card>
               <CardHeader>
-                <Heading as="h2" className="text-base">
+                <Heading as="h2" className="text-lg">
                   Market headlines
                 </Heading>
                 <Text as="div" size="sm" tone="muted">
@@ -115,7 +115,7 @@ export function News() {
           <section aria-label="Company news">
             <Card>
               <CardHeader>
-                <Heading as="h2" className="text-base">
+                <Heading as="h2" className="text-lg">
                   Company news
                 </Heading>
                 <Text as="div" size="sm" tone="muted">
