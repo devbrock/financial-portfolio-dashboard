@@ -34,9 +34,9 @@ export function DashboardHeader(props: DashboardHeaderProps) {
     <Inline
       align="center"
       justify="between"
-      className="animate-in fade-in slide-in-from-top-1 gap-3 py-4 duration-300 motion-reduce:animate-none"
+      className="animate-in fade-in slide-in-from-top-1 duration-300 motion-reduce:animate-none grid grid-cols-2"
     >
-      <div className="min-w-0">
+      <div className="">
         <Heading as="h1" className="text-xl">
           Welcome back, {userName}!
         </Heading>
@@ -50,7 +50,7 @@ export function DashboardHeader(props: DashboardHeaderProps) {
           <Skeleton className="h-8 w-40" />
         ) : (
           <>
-            <Text as="div" className="text-2xl font-semibold">
+            <Text as="div" className="text-xl md:text-2xl font-semibold">
               {formatMoney(portfolioValue)}
             </Text>
             <Text as="div" size="sm" tone="muted" className="mt-1">

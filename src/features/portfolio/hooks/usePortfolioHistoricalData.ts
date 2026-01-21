@@ -247,9 +247,13 @@ export function usePortfolioHistoricalData(range: Range) {
         holding.assetType === 'stock'
           ? stockSeriesBySymbol.get(symbol)
           : cryptoSeriesBySymbol.get(symbol);
+      const priceEntries = Array.from(priceMap ?? [])
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([date, value]) => ({ date, value }));
       return {
         holding,
-        priceMap: priceMap ?? new Map<string, number>(),
+        priceEntries,
+        cursor: 0,
         purchaseDate: holding.purchaseDate.slice(0, 10),
         lastPrice: undefined as number | undefined,
       };
@@ -260,9 +264,12 @@ export function usePortfolioHistoricalData(range: Range) {
 
       holdingEntries.forEach(entry => {
         if (date < entry.purchaseDate) return;
-        const price = entry.priceMap.get(date);
-        if (typeof price === 'number') {
-          entry.lastPrice = price;
+
+        while (entry.cursor < entry.priceEntries.length) {
+          const next = entry.priceEntries[entry.cursor];
+          if (next.date > date) break;
+          entry.lastPrice = next.value;
+          entry.cursor += 1;
         }
         if (entry.lastPrice !== undefined) {
           totalValue += entry.lastPrice * entry.holding.quantity;

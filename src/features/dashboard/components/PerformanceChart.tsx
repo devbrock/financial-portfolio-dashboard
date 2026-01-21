@@ -30,10 +30,10 @@ export function PerformanceChart(props: PerformanceChartProps) {
   const { totalValue, changePct } = useMemo(() => {
     if (data.length === 0) return { totalValue: 0, changePct: 0 };
 
-    const firstValue = data[0].value;
+    const firstNonZero = data.find(point => point.value > 0)?.value ?? data[0].value;
     const lastValue = data[data.length - 1].value;
-    const change = lastValue - firstValue;
-    const percentage = firstValue !== 0 ? (change / firstValue) * 100 : 0;
+    const change = lastValue - firstNonZero;
+    const percentage = firstNonZero !== 0 ? (change / firstNonZero) * 100 : 0;
 
     return { totalValue: lastValue, changePct: percentage };
   }, [data]);
