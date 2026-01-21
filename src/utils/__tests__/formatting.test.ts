@@ -10,6 +10,10 @@ describe('formatting utilities', () => {
     expect(formatMoneyUsd(1234)).toContain('$1,234');
   });
 
+  it('formats USD money under 1000 with cents', () => {
+    expect(formatMoneyUsd(12.5)).toContain('12.50');
+  });
+
   it('formats compact numbers', () => {
     expect(formatCompact(1200)).toMatch(/1\.2|1\.3/);
   });

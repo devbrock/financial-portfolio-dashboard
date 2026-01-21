@@ -24,14 +24,31 @@ describe('utility extras', () => {
 
   it('generates a deterministic-length seed', () => {
     const nowSpy = vi.spyOn(Date, 'now');
-    nowSpy.mockReturnValueOnce(1000).mockReturnValueOnce(2000);
+    nowSpy.mockReturnValue(1000);
+    const originalHardwareConcurrency = navigator.hardwareConcurrency;
 
+    Object.defineProperty(navigator, 'hardwareConcurrency', {
+      value: 8,
+      configurable: true,
+      writable: true,
+    });
     const first = generateSeed();
+
+    Object.defineProperty(navigator, 'hardwareConcurrency', {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
     const second = generateSeed();
 
     expect(first).toHaveLength(16);
     expect(second).toHaveLength(16);
 
+    Object.defineProperty(navigator, 'hardwareConcurrency', {
+      value: originalHardwareConcurrency,
+      configurable: true,
+      writable: true,
+    });
     nowSpy.mockRestore();
   });
 });
