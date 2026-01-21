@@ -26,10 +26,7 @@ type AxeMatcherResult = {
   message(): string;
 };
 
-const formatViolationCountMessage = (
-  violationCount: number,
-  isNegated: boolean
-): string => {
+const formatViolationCountMessage = (violationCount: number, isNegated: boolean): string => {
   if (violationCount === 0) {
     return isNegated
       ? 'Expected at least one accessibility violation, but found none.'
@@ -48,9 +45,7 @@ const toHaveNoViolations = function (
   this: AxeMatcherContext,
   results: AxeResults
 ): AxeMatcherResult {
-  const violationCount = Array.isArray(results?.violations)
-    ? results.violations.length
-    : 0;
+  const violationCount = Array.isArray(results?.violations) ? results.violations.length : 0;
   const pass = violationCount === 0;
 
   return {
@@ -60,7 +55,6 @@ const toHaveNoViolations = function (
 };
 
 expect.extend({ toHaveNoViolations });
-
 
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({

@@ -103,7 +103,9 @@ describe('Market', () => {
 
   it('renders loading state for earnings', () => {
     mockUseMarketQuotes
-      .mockImplementationOnce(() => createQuotesState({ data: [{ symbol: 'SPY', name: 'S&P 500' }] }))
+      .mockImplementationOnce(() =>
+        createQuotesState({ data: [{ symbol: 'SPY', name: 'S&P 500' }] })
+      )
       .mockImplementationOnce(() => createQuotesState({ data: [{ symbol: 'XLK', name: 'Tech' }] }));
     mockUseEarningsCalendar.mockImplementation(() => createEarningsState({ isLoading: true }));
 
@@ -115,7 +117,9 @@ describe('Market', () => {
 
   it('renders the earnings table when data is available', () => {
     mockUseMarketQuotes
-      .mockImplementationOnce(() => createQuotesState({ data: [{ symbol: 'SPY', name: 'S&P 500' }] }))
+      .mockImplementationOnce(() =>
+        createQuotesState({ data: [{ symbol: 'SPY', name: 'S&P 500' }] })
+      )
       .mockImplementationOnce(() => createQuotesState({ data: [{ symbol: 'XLK', name: 'Tech' }] }));
     mockUseEarningsCalendar.mockImplementation(() =>
       createEarningsState({

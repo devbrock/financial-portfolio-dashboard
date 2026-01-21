@@ -15,4 +15,3 @@ describe('error utilities', () => {
     expect(getErrorMessage(null, 'Fallback')).toBe('Fallback');
   });
 });
-

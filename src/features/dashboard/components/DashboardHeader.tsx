@@ -58,7 +58,7 @@ export function DashboardHeader(props: DashboardHeaderProps) {
             </Text>
             <Text as="div" size="sm" tone="muted" className="mt-1">
               Daily P/L{' '}
-              <span className={dailyChangeUsd >= 0 ? 'text-emerald-700' :  'text-red-600'}>
+              <span className={dailyChangeUsd >= 0 ? 'text-emerald-700' : 'text-red-600'}>
                 {formatSignedMoney(dailyChangeUsd)}
               </span>{' '}
               ({formatSignedPct(dailyChangePct)})

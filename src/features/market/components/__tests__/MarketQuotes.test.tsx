@@ -62,9 +62,7 @@ describe('MarketQuotes', () => {
     );
     expect(screen.getByText('+0.8%')).toBeInTheDocument();
 
-    rerender(
-      <MarketQuoteRow name="Tech" symbol="XLK" loading={false} quote={{ c: 75, dp: 0 }} />
-    );
+    rerender(<MarketQuoteRow name="Tech" symbol="XLK" loading={false} quote={{ c: 75, dp: 0 }} />);
     expect(screen.getByText('0.0%')).toBeInTheDocument();
   });
 });
