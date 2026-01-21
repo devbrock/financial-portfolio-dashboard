@@ -19,12 +19,9 @@ export const Slot = React.forwardRef<HTMLElement, SlotProps>(function Slot(props
   const childProps = children.props as { className?: string };
   const mergedClassName = cn(childProps.className, className);
 
-  return React.cloneElement(
-    children,
-    {
-      ...(rest as React.HTMLAttributes<HTMLElement>),
-      ref,
-      className: mergedClassName || undefined,
-    } as React.Attributes & React.HTMLAttributes<HTMLElement>
-  );
+  return React.cloneElement(children, {
+    ...(rest as React.HTMLAttributes<HTMLElement>),
+    ref,
+    className: mergedClassName || undefined,
+  } as React.Attributes & React.HTMLAttributes<HTMLElement>);
 });

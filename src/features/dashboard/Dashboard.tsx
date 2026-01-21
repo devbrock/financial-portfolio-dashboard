@@ -58,9 +58,7 @@ export function Dashboard() {
     >
       <Container className="max-w-none px-0">
         <Stack gap="lg">
-          {isError ? (
-            <DashboardErrorBanner message={errorMessage} onRetry={handleRetry} />
-          ) : null}
+          {isError ? <DashboardErrorBanner message={errorMessage} onRetry={handleRetry} /> : null}
 
           <DashboardHeader
             userName={userName}

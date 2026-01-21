@@ -12,8 +12,13 @@ type AddWatchlistFormFieldsProps = {
 };
 
 export function AddWatchlistFormFields(props: AddWatchlistFormFieldsProps) {
-  const { assetOptions, isAssetSearchLoading, onAssetQueryChange, onAssetLabelChange, isDuplicateAsset } =
-    props;
+  const {
+    assetOptions,
+    isAssetSearchLoading,
+    onAssetQueryChange,
+    onAssetLabelChange,
+    isDuplicateAsset,
+  } = props;
   const {
     control,
     register,

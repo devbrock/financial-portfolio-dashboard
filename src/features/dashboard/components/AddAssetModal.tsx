@@ -155,7 +155,9 @@ export function AddAssetModal(props: AddAssetModalProps) {
             variant="primary"
             type="submit"
             form="add-asset-form"
-            disabled={form.formState.isSubmitting || addHoldingMutation.isPending || isDuplicateAsset}
+            disabled={
+              form.formState.isSubmitting || addHoldingMutation.isPending || isDuplicateAsset
+            }
           >
             Add Asset
           </Button>

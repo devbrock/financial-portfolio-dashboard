@@ -1,5 +1,15 @@
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { Button, Card, CardBody, CardHeader, Divider, Heading, Input, Stack, Text } from '@components';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Heading,
+  Input,
+  Stack,
+  Text,
+} from '@components';
 import type { RegisterFormValues } from '../registerFormSchema';
 
 type RegisterFormCardProps = {

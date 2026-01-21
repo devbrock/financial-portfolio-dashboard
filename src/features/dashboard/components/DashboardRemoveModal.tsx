@@ -29,8 +29,8 @@ export function DashboardRemoveModal(props: DashboardRemoveModalProps) {
       }
     >
       <Text as="p" size="sm" tone="muted">
-        Think of this like removing a sticky note from your desk: it doesn't change the company,
-        it just clears your view.
+        Think of this like removing a sticky note from your desk: it doesn't change the company, it
+        just clears your view.
       </Text>
     </Modal>
   );

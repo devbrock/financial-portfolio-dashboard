@@ -8,170 +8,148 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as OriongptRouteImport } from './routes/oriongpt'
-import { Route as NewsRouteImport } from './routes/news'
-import { Route as MarketRouteImport } from './routes/market'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as RegisterRouteImport } from './routes/register';
+import { Route as OriongptRouteImport } from './routes/oriongpt';
+import { Route as NewsRouteImport } from './routes/news';
+import { Route as MarketRouteImport } from './routes/market';
+import { Route as LoginRouteImport } from './routes/login';
+import { Route as DashboardRouteImport } from './routes/dashboard';
+import { Route as IndexRouteImport } from './routes/index';
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OriongptRoute = OriongptRouteImport.update({
   id: '/oriongpt',
   path: '/oriongpt',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const NewsRoute = NewsRouteImport.update({
   id: '/news',
   path: '/news',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/market': typeof MarketRoute
-  '/news': typeof NewsRoute
-  '/oriongpt': typeof OriongptRoute
-  '/register': typeof RegisterRoute
+  '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/market': typeof MarketRoute;
+  '/news': typeof NewsRoute;
+  '/oriongpt': typeof OriongptRoute;
+  '/register': typeof RegisterRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/market': typeof MarketRoute
-  '/news': typeof NewsRoute
-  '/oriongpt': typeof OriongptRoute
-  '/register': typeof RegisterRoute
+  '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/market': typeof MarketRoute;
+  '/news': typeof NewsRoute;
+  '/oriongpt': typeof OriongptRoute;
+  '/register': typeof RegisterRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/market': typeof MarketRoute
-  '/news': typeof NewsRoute
-  '/oriongpt': typeof OriongptRoute
-  '/register': typeof RegisterRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
+  '/login': typeof LoginRoute;
+  '/market': typeof MarketRoute;
+  '/news': typeof NewsRoute;
+  '/oriongpt': typeof OriongptRoute;
+  '/register': typeof RegisterRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/dashboard'
-    | '/login'
-    | '/market'
-    | '/news'
-    | '/oriongpt'
-    | '/register'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/dashboard'
-    | '/login'
-    | '/market'
-    | '/news'
-    | '/oriongpt'
-    | '/register'
-  id:
-    | '__root__'
-    | '/'
-    | '/dashboard'
-    | '/login'
-    | '/market'
-    | '/news'
-    | '/oriongpt'
-    | '/register'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/' | '/dashboard' | '/login' | '/market' | '/news' | '/oriongpt' | '/register';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/' | '/dashboard' | '/login' | '/market' | '/news' | '/oriongpt' | '/register';
+  id: '__root__' | '/' | '/dashboard' | '/login' | '/market' | '/news' | '/oriongpt' | '/register';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  MarketRoute: typeof MarketRoute
-  NewsRoute: typeof NewsRoute
-  OriongptRoute: typeof OriongptRoute
-  RegisterRoute: typeof RegisterRoute
+  IndexRoute: typeof IndexRoute;
+  DashboardRoute: typeof DashboardRoute;
+  LoginRoute: typeof LoginRoute;
+  MarketRoute: typeof MarketRoute;
+  NewsRoute: typeof NewsRoute;
+  OriongptRoute: typeof OriongptRoute;
+  RegisterRoute: typeof RegisterRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/register';
+      path: '/register';
+      fullPath: '/register';
+      preLoaderRoute: typeof RegisterRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/oriongpt': {
-      id: '/oriongpt'
-      path: '/oriongpt'
-      fullPath: '/oriongpt'
-      preLoaderRoute: typeof OriongptRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/oriongpt';
+      path: '/oriongpt';
+      fullPath: '/oriongpt';
+      preLoaderRoute: typeof OriongptRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/news';
+      path: '/news';
+      fullPath: '/news';
+      preLoaderRoute: typeof NewsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/market': {
-      id: '/market'
-      path: '/market'
-      fullPath: '/market'
-      preLoaderRoute: typeof MarketRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/market';
+      path: '/market';
+      fullPath: '/market';
+      preLoaderRoute: typeof MarketRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/dashboard';
+      path: '/dashboard';
+      fullPath: '/dashboard';
+      preLoaderRoute: typeof DashboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -183,7 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   NewsRoute: NewsRoute,
   OriongptRoute: OriongptRoute,
   RegisterRoute: RegisterRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

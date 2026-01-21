@@ -142,7 +142,9 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
             variant="primary"
             type="submit"
             form="add-watchlist-form"
-            disabled={form.formState.isSubmitting || addWatchlistMutation.isPending || isDuplicateAsset}
+            disabled={
+              form.formState.isSubmitting || addWatchlistMutation.isPending || isDuplicateAsset
+            }
           >
             Add to Watchlist
           </Button>

@@ -12,8 +12,13 @@ type AddAssetFormFieldsProps = {
 };
 
 export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
-  const { assetOptions, isAssetSearchLoading, onAssetQueryChange, onAssetLabelChange, isDuplicateAsset } =
-    props;
+  const {
+    assetOptions,
+    isAssetSearchLoading,
+    onAssetQueryChange,
+    onAssetLabelChange,
+    isDuplicateAsset,
+  } = props;
   const {
     control,
     register,

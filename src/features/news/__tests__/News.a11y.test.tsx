@@ -50,7 +50,14 @@ vi.mock('../hooks/useCompanyNews', () => ({
 
 vi.mock('@/features/portfolio/hooks/usePortfolioHoldings', () => ({
   usePortfolioHoldings: () => [
-    { id: '1', symbol: 'AAPL', assetType: 'stock', quantity: 1, purchasePrice: 100, purchaseDate: '2024-01-01' },
+    {
+      id: '1',
+      symbol: 'AAPL',
+      assetType: 'stock',
+      quantity: 1,
+      purchasePrice: 100,
+      purchaseDate: '2024-01-01',
+    },
   ],
 }));
 

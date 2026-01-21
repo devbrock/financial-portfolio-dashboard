@@ -13,18 +13,15 @@ type ComboboxListProps = {
 };
 
 export function ComboboxList(props: ComboboxListProps) {
-  const {
-    listboxId,
-    items,
-    loading,
-    selectedValue,
-    activeIndex,
-    onActiveIndexChange,
-    onSelect,
-  } = props;
+  const { listboxId, items, loading, selectedValue, activeIndex, onActiveIndexChange, onSelect } =
+    props;
 
   return (
-    <div id={listboxId} role="listbox" className={cn('absolute z-10 mt-2 w-full', comboboxPanelClassName)}>
+    <div
+      id={listboxId}
+      role="listbox"
+      className={cn('absolute z-10 mt-2 w-full', comboboxPanelClassName)}
+    >
       {loading ? (
         <div className="px-3 py-2 text-sm text-(--ui-text-muted)">Loading…</div>
       ) : (

@@ -91,8 +91,7 @@ export function useAssistantChat() {
           : [];
         const userMessages: OpenRouterMessage[] = pendingMessages
           .filter(
-            (msg): msg is AssistantMessage & { role: 'user' | 'assistant' } =>
-              msg.role !== 'system'
+            (msg): msg is AssistantMessage & { role: 'user' | 'assistant' } => msg.role !== 'system'
           )
           .map(msg => ({
             role: msg.role,

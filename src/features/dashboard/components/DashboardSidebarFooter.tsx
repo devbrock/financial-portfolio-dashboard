@@ -63,7 +63,7 @@ export function DashboardSidebarFooter(props: DashboardSidebarFooterProps) {
             <Text
               as="div"
               size="caption"
-              className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)"
+              className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
             >
               Theme
             </Text>
@@ -91,7 +91,7 @@ export function DashboardSidebarFooter(props: DashboardSidebarFooterProps) {
             <Text
               as="div"
               size="caption"
-              className="px-3 py-2 uppercase tracking-wide text-(--ui-text-muted)"
+              className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
             >
               Currency
             </Text>
