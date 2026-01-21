@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   IconButton,
   Inline,
@@ -75,9 +74,7 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
                 'animate-in fade-in zoom-in-95 duration-150 motion-reduce:animate-none'
               )}
             >
-              <DropdownMenuItem onClick={() => undefined}>View details</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onRemove(holding.id)}>Remove…</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onRemove(holding.id)}>Remove</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </Inline>
