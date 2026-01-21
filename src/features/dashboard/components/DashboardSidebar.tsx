@@ -32,7 +32,7 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
     <Sidebar
       collapsible="icon"
       width={260}
-      className={cn('overflow-hidden rounded-2xl', 'h-auto w-full lg:h-full lg:w-(--sidebar-width)')}
+      className={cn('overflow-hidden rounded-2xl', 'h-auto w-full lg:h-full lg:w-(--sidebar-width)', "hidden lg:block")}
     >
       <SidebarHeader className="group-data-[state=collapsed]/sidebar:hidden">
         <Inline align="center" className="gap-3 px-1">

@@ -27,7 +27,7 @@ type BottomNavProps = {
   onNavChange: (next: DashboardNav) => void;
 };
 
-const NAV_ITEMS: Array<{ key: DashboardNav; label: string; icon: JSX.Element }> = [
+const NAV_ITEMS: Array<{ key: DashboardNav; label: string; icon: React.ReactNode }> = [
   { key: 'Overview', label: 'Home', icon: <Home className="h-5 w-5" /> },
   { key: 'Market', label: 'Market', icon: <ChartLine className="h-5 w-5" /> },
   { key: 'News', label: 'News', icon: <Newspaper className="h-5 w-5" /> },
