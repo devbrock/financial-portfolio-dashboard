@@ -80,6 +80,7 @@ export function AppShell(props: AppShellProps) {
             id={mainId}
             className={cn(
               'min-h-0 min-w-0 flex-1 overflow-y-auto',
+              'pb-24' , 'lg:pb-0'
             )}
           >
             {children}
