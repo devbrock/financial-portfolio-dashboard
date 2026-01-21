@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, CardHeader, Heading, Inline, Input, Text } from '@components';
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { HoldingRow, SortDir, SortKey } from '@/types/dashboard';
 import { EmptyHoldings } from './EmptyHoldings';
 import { HoldingsMobileCard } from './HoldingsMobileCard';
