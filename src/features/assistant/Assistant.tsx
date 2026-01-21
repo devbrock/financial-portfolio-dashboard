@@ -53,12 +53,25 @@ export function Assistant() {
 
           <Card className="border border-(--ui-border) bg-(--ui-bg)">
             <CardBody className="flex h-[60vh] flex-col gap-4">
-              <div className="flex-1 space-y-4! overflow-y-auto pr-1">
+              <div
+                className="flex-1 space-y-4! overflow-y-auto pr-1"
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+              >
                 {messages.map(message => (
                   <MessageBubble key={message.id} role={message.role} content={message.content} />
                 ))}
-                {isLoading ? <div className="text-sm text-(--ui-text-muted)">Thinking…</div> : null}
-                {error ? <div className="text-sm text-red-600">{error}</div> : null}
+                {isLoading ? (
+                  <div role="status" className="text-sm text-(--ui-text-muted)">
+                    Thinking…
+                  </div>
+                ) : null}
+                {error ? (
+                  <div role="alert" className="text-sm text-red-600">
+                    {error}
+                  </div>
+                ) : null}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -66,6 +79,7 @@ export function Assistant() {
                 <textarea
                   value={inputValue}
                   onChange={event => setInputValue(event.target.value)}
+                  aria-label="Chat message"
                   onKeyDown={event => {
                     if (event.key === 'Enter' && !event.shiftKey) {
                       event.preventDefault();

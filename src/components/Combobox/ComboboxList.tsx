@@ -34,6 +34,7 @@ export function ComboboxList(props: ComboboxListProps) {
               id={`${listboxId}-opt-${idx}`}
               role="option"
               aria-selected={selected}
+              aria-disabled={item.disabled || undefined}
               data-active={active ? 'true' : 'false'}
               className={cn(
                 comboboxOptionClassName,

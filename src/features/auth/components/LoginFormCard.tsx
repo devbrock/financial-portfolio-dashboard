@@ -25,6 +25,8 @@ type LoginFormCardProps = {
 
 export function LoginFormCard(props: LoginFormCardProps) {
   const { submitError, isSubmitting, errors, register, onSubmit, onCreateAccount } = props;
+  const emailErrorId = 'login-email-error';
+  const passwordErrorId = 'login-password-error';
 
   return (
     <Card elevation="md" className="p-6 sm:p-8">
@@ -62,10 +64,12 @@ export function LoginFormCard(props: LoginFormCardProps) {
               autoComplete="username"
               placeholder="you@company.com"
               disabled={isSubmitting}
+              aria-describedby={errors.email ? emailErrorId : undefined}
+              aria-invalid={errors.email ? 'true' : undefined}
               {...register('email')}
             />
             {errors.email ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text id={emailErrorId} role="alert" size="caption" className="text-red-700 dark:text-red-200">
                 {errors.email.message}
               </Text>
             ) : null}
@@ -83,10 +87,17 @@ export function LoginFormCard(props: LoginFormCardProps) {
               autoComplete="current-password"
               placeholder="••••••••"
               disabled={isSubmitting}
+              aria-describedby={errors.password ? passwordErrorId : undefined}
+              aria-invalid={errors.password ? 'true' : undefined}
               {...register('password')}
             />
             {errors.password ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={passwordErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.password.message}
               </Text>
             ) : null}

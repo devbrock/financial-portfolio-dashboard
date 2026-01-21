@@ -152,6 +152,9 @@ export function Combobox(props: ComboboxProps) {
     // Delay so click selection can run first.
     window.setTimeout(() => setOpen(false), 0);
   };
+  const describedBy = [restInputProps['aria-describedby'], loading ? liveId : null]
+    .filter(Boolean)
+    .join(' ') || undefined;
 
   return (
     <div className={cn('relative', className)} data-testid={dataTestId}>
@@ -163,7 +166,7 @@ export function Combobox(props: ComboboxProps) {
         aria-controls={listboxId}
         aria-expanded={open}
         aria-activedescendant={activeItemId}
-        aria-describedby={loading ? liveId : restInputProps['aria-describedby']}
+        aria-describedby={describedBy}
         placeholder={placeholder}
         className={cn(inputClassName)}
         value={query}

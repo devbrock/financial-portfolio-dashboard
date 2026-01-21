@@ -22,6 +22,10 @@ type RegisterFormCardProps = {
 
 export function RegisterFormCard(props: RegisterFormCardProps) {
   const { isSubmitting, errors, register, onSubmit, onSignIn } = props;
+  const firstNameErrorId = 'register-first-name-error';
+  const lastNameErrorId = 'register-last-name-error';
+  const emailErrorId = 'register-email-error';
+  const passwordErrorId = 'register-password-error';
 
   return (
     <Card elevation="md" className="p-6 sm:p-8">
@@ -42,10 +46,17 @@ export function RegisterFormCard(props: RegisterFormCardProps) {
               id="register-first-name"
               placeholder="First name"
               disabled={isSubmitting}
+              aria-describedby={errors.firstName ? firstNameErrorId : undefined}
+              aria-invalid={errors.firstName ? 'true' : undefined}
               {...register('firstName')}
             />
             {errors.firstName ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={firstNameErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.firstName.message}
               </Text>
             ) : null}
@@ -59,10 +70,17 @@ export function RegisterFormCard(props: RegisterFormCardProps) {
               id="register-last-name"
               placeholder="Last name"
               disabled={isSubmitting}
+              aria-describedby={errors.lastName ? lastNameErrorId : undefined}
+              aria-invalid={errors.lastName ? 'true' : undefined}
               {...register('lastName')}
             />
             {errors.lastName ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={lastNameErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.lastName.message}
               </Text>
             ) : null}
@@ -78,10 +96,17 @@ export function RegisterFormCard(props: RegisterFormCardProps) {
               autoComplete="username"
               placeholder="you@company.com"
               disabled={isSubmitting}
+              aria-describedby={errors.email ? emailErrorId : undefined}
+              aria-invalid={errors.email ? 'true' : undefined}
               {...register('email')}
             />
             {errors.email ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={emailErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.email.message}
               </Text>
             ) : null}
@@ -97,10 +122,17 @@ export function RegisterFormCard(props: RegisterFormCardProps) {
               autoComplete="new-password"
               placeholder="••••••••"
               disabled={isSubmitting}
+              aria-describedby={errors.password ? passwordErrorId : undefined}
+              aria-invalid={errors.password ? 'true' : undefined}
               {...register('password')}
             />
             {errors.password ? (
-              <Text size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={passwordErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.password.message}
               </Text>
             ) : null}
