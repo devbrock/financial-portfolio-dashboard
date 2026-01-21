@@ -32,6 +32,10 @@ const formatNumber = (value: number, digits = 2) => value.toFixed(digits);
 
 const convert = (value: number, rate: number) => Number((value * rate).toFixed(2));
 
+/**
+ * exportPortfolioReportCSV
+ * Builds a portfolio report CSV and triggers a client-side download.
+ */
 export function exportPortfolioReportCSV(params: PortfolioReportParams): void {
   const { generatedAt, currency, rangeLabel, rate, performance, allocation, holdings } = params;
 

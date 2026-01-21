@@ -80,6 +80,10 @@ const parseCryptoSeries = (data?: CoinGeckoMarketChart) => {
   return map;
 };
 
+/**
+ * usePortfolioHistoricalData
+ * Aggregates historical price series for the portfolio over the selected range.
+ */
 export function usePortfolioHistoricalData(range: Range) {
   type StockSeries = AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
   type StockQueryOptions = UseQueryOptions<StockSeries, Error, StockSeries, readonly unknown[]>;

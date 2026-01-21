@@ -23,6 +23,10 @@ const formatHoldingsSummary = (holdings: HoldingWithPrice[]) => {
     .join(', ');
 };
 
+/**
+ * useAssistantChat
+ * Handles assistant messaging, tool context, and request lifecycle.
+ */
 export function useAssistantChat() {
   const { holdingsWithPrice, watchlistWithPrice, metrics, dataUpdatedAt } = usePortfolioData();
   const { data: marketIndices, dataUpdatedAt: marketUpdatedAt } = useMarketQuotes(INDEX_SYMBOLS);

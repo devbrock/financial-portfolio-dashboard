@@ -14,6 +14,10 @@ function formatDate(isoDate: string): string {
   }).format(date);
 }
 
+/**
+ * useDashboardData
+ * Maps portfolio data into dashboard-ready view models.
+ */
 export function useDashboardData() {
   const {
     holdingsWithPrice,

@@ -2,9 +2,7 @@ import { useMemo, useEffect, useState, useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import type { HoldingRow, SortDir, SortKey } from '@/types/dashboard';
 import { clampNumber } from '@/utils/clampNumber';
-import { compareStrings } from '@/utils/compareStrings';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addHolding,
@@ -18,7 +16,12 @@ import {
   removeWatchlistItemFromPortfolio,
 } from '@/services/api/functions/portfolioApi';
 import { useDashboardData } from './useDashboardData';
+import { useHoldingsFilterSort } from './useHoldingsFilterSort';
 
+/**
+ * useDashboardController
+ * Centralizes dashboard state, data transforms, and mutations.
+ */
 export function useDashboardController() {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -29,9 +32,6 @@ export function useDashboardController() {
   const rawWatchlist = useAppSelector(state => state.portfolio.watchlist);
   const user = useAppSelector(state => state.auth.user);
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
-  const [holdingsQuery, setHoldingsQuery] = useState('');
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
   const [lastUpdatedSeconds, setLastUpdatedSeconds] = useState(12);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
@@ -107,6 +107,14 @@ export function useDashboardController() {
     dataUpdatedAt,
   } = useDashboardData();
   const lastToastErrorRef = useRef<string | null>(null);
+  const {
+    holdingsQuery,
+    setHoldingsQuery,
+    sortKey,
+    sortDir,
+    triggerSort,
+    visibleHoldings,
+  } = useHoldingsFilterSort(holdings);
 
   useEffect(() => {
     const t = window.setInterval(() => {
@@ -155,52 +163,9 @@ export function useDashboardController() {
     return errorMessage || 'Market data unavailable.';
   }, [errorMessage, isError]);
 
-  const visibleHoldings: readonly HoldingRow[] = useMemo(() => {
-    const q = holdingsQuery.trim().toLowerCase();
-    const filtered = q
-      ? holdings.filter(h => h.name.toLowerCase().includes(q) || h.ticker.toLowerCase().includes(q))
-      : holdings;
-
-    const dir = sortDir === 'asc' ? 1 : -1;
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortKey) {
-        case 'name':
-          return dir * compareStrings(a.name, b.name);
-        case 'date':
-          return dir * compareStrings(a.dateIso, b.dateIso);
-        case 'status':
-          return dir * compareStrings(a.status, b.status);
-        case 'volume':
-          return dir * (a.volume - b.volume);
-        case 'changePct':
-          return dir * (a.changePct - b.changePct);
-        case 'purchasePrice':
-          return dir * (a.purchasePrice - b.purchasePrice);
-        case 'priceUsd':
-          return dir * (a.priceUsd - b.priceUsd);
-        case 'pnlUsd':
-          return dir * (a.pnlUsd - b.pnlUsd);
-      }
-    });
-
-    return sorted;
-  }, [holdings, holdingsQuery, sortDir, sortKey]);
-
   const handleRetry = useCallback(() => {
     queryClient.invalidateQueries();
   }, [queryClient]);
-
-  const triggerSort = useCallback(
-    (key: SortKey) => {
-      if (key === sortKey) {
-        setSortDir(prev => (prev === 'asc' ? 'desc' : 'asc'));
-        return;
-      }
-      setSortKey(key);
-      setSortDir('asc');
-    },
-    [sortKey]
-  );
 
   return {
     activeNav,
