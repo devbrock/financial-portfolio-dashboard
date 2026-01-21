@@ -26,10 +26,7 @@ export function useCompanyNews(symbols: readonly string[], from: string, to: str
   const isLoading = queries.some(query => query.isLoading);
   const isError = queries.some(query => query.isError);
   const error = queries.find(query => query.error)?.error ?? null;
-  const refetch = useCallback(
-    () => Promise.all(queries.map(query => query.refetch())),
-    [queries]
-  );
+  const refetch = useCallback(() => Promise.all(queries.map(query => query.refetch())), [queries]);
 
   return {
     newsBySymbol,

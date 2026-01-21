@@ -29,13 +29,14 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
   const assetSearchErrorId = 'asset-search-error';
   const assetSearchDuplicateId = 'asset-search-duplicate';
   const hasAssetSelectionError = Boolean(errors.assetSelection);
-  const assetSearchDescribedBy = [
-    assetSearchHelpId,
-    hasAssetSelectionError ? assetSearchErrorId : null,
-    isDuplicateAsset ? assetSearchDuplicateId : null,
-  ]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  const assetSearchDescribedBy =
+    [
+      assetSearchHelpId,
+      hasAssetSelectionError ? assetSearchErrorId : null,
+      isDuplicateAsset ? assetSearchDuplicateId : null,
+    ]
+      .filter(Boolean)
+      .join(' ') || undefined;
   const quantityErrorId = 'quantity-error';
   const purchasePriceErrorId = 'purchase-price-error';
   const purchaseDateErrorId = 'purchase-date-error';
@@ -93,7 +94,13 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
           Results include stocks and crypto. Pick one to continue.
         </Text>
         {errors.assetSelection ? (
-          <Text as="div" id={assetSearchErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+          <Text
+            as="div"
+            id={assetSearchErrorId}
+            role="alert"
+            size="sm"
+            className="mt-1 text-red-600"
+          >
             {errors.assetSelection.message}
           </Text>
         ) : null}
@@ -128,7 +135,13 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
             {...register('quantity', { valueAsNumber: true })}
           />
           {errors.quantity ? (
-            <Text as="div" id={quantityErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+            <Text
+              as="div"
+              id={quantityErrorId}
+              role="alert"
+              size="sm"
+              className="mt-1 text-red-600"
+            >
               {errors.quantity.message}
             </Text>
           ) : null}

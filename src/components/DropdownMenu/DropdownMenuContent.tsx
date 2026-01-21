@@ -40,8 +40,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     const padding = 8;
     const offset = sideOffset;
 
-    const desiredLeft =
-      align === 'end' ? triggerRect.right - contentRect.width : triggerRect.left;
+    const desiredLeft = align === 'end' ? triggerRect.right - contentRect.width : triggerRect.left;
     const nextLeft = Math.min(
       Math.max(padding, desiredLeft),
       Math.max(padding, viewportWidth - contentRect.width - padding)

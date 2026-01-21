@@ -69,7 +69,12 @@ export function LoginFormCard(props: LoginFormCardProps) {
               {...register('email')}
             />
             {errors.email ? (
-              <Text id={emailErrorId} role="alert" size="caption" className="text-red-700 dark:text-red-200">
+              <Text
+                id={emailErrorId}
+                role="alert"
+                size="caption"
+                className="text-red-700 dark:text-red-200"
+              >
                 {errors.email.message}
               </Text>
             ) : null}

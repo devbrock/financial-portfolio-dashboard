@@ -58,7 +58,7 @@ export function AppShell(props: AppShellProps) {
       >
         <a
           href={`#${mainId}`}
-          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg focus:text-(--ui-text-muted)"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:text-(--ui-text-muted) focus:shadow-lg"
         >
           Skip to main content
         </a>
@@ -73,15 +73,11 @@ export function AppShell(props: AppShellProps) {
           </div>
         ) : null}
         <div className="mx-auto flex h-full min-h-0 w-full flex-col gap-4 p-4 sm:gap-6 sm:p-6 lg:flex-row">
-          
-            <DashboardSidebar activeNav={activeNav} onNavChange={onNavChange} />
-          
+          <DashboardSidebar activeNav={activeNav} onNavChange={onNavChange} />
+
           <main
             id={mainId}
-            className={cn(
-              'min-h-0 min-w-0 flex-1 overflow-y-auto',
-              'pb-24' , 'lg:pb-0'
-            )}
+            className={cn('min-h-0 min-w-0 flex-1 overflow-y-auto', 'pb-24', 'lg:pb-0')}
           >
             {children}
           </main>

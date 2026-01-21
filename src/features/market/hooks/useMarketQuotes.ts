@@ -49,10 +49,7 @@ export function useMarketQuotes(items: readonly MarketSymbol[]) {
   const isError = queries.some(query => query.isError);
   const dataUpdatedAt = Math.max(0, ...queries.map(query => query.dataUpdatedAt ?? 0));
   const error = queries.find(query => query.error)?.error ?? null;
-  const refetch = useCallback(
-    () => Promise.all(queries.map(query => query.refetch())),
-    [queries]
-  );
+  const refetch = useCallback(() => Promise.all(queries.map(query => query.refetch())), [queries]);
 
   return {
     data,

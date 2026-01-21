@@ -139,10 +139,7 @@ export function usePortfolioData() {
   const isError = stocksError || profilesError || cryptoError || cryptoProfilesError;
   const firstError =
     stocksErrorObj || profilesErrorObj || cryptoErrorObj || cryptoProfilesErrorObj || null;
-  const errorMessage = getErrorMessage(
-    firstError,
-    "We couldn't load your latest market data."
-  );
+  const errorMessage = getErrorMessage(firstError, "We couldn't load your latest market data.");
 
   return {
     holdings,

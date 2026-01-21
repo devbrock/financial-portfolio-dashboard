@@ -29,17 +29,18 @@ export function AddWatchlistFormFields(props: AddWatchlistFormFieldsProps) {
   const watchlistSearchErrorId = 'watchlist-search-error';
   const watchlistSearchDuplicateId = 'watchlist-search-duplicate';
   const hasAssetSelectionError = Boolean(errors.assetSelection);
-  const watchlistSearchDescribedBy = [
-    watchlistSearchHelpId,
-    hasAssetSelectionError ? watchlistSearchErrorId : null,
-    isDuplicateAsset ? watchlistSearchDuplicateId : null,
-  ]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  const watchlistSearchDescribedBy =
+    [
+      watchlistSearchHelpId,
+      hasAssetSelectionError ? watchlistSearchErrorId : null,
+      isDuplicateAsset ? watchlistSearchDuplicateId : null,
+    ]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   return (
     <>
-      <div className='space-y-2! mt-2!'>
+      <div className="mt-2! space-y-2!">
         <Text as="label" htmlFor="watchlistSearch" size="sm">
           Search asset
         </Text>

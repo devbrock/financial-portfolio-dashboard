@@ -107,14 +107,8 @@ export function useDashboardController() {
     dataUpdatedAt,
   } = useDashboardData();
   const lastToastErrorRef = useRef<string | null>(null);
-  const {
-    holdingsQuery,
-    setHoldingsQuery,
-    sortKey,
-    sortDir,
-    triggerSort,
-    visibleHoldings,
-  } = useHoldingsFilterSort(holdings);
+  const { holdingsQuery, setHoldingsQuery, sortKey, sortDir, triggerSort, visibleHoldings } =
+    useHoldingsFilterSort(holdings);
 
   useEffect(() => {
     const t = window.setInterval(() => {

@@ -34,7 +34,11 @@ export function DashboardHoldingsSection(props: DashboardHoldingsSectionProps) {
     <section aria-label="Holdings">
       <Card>
         <CardHeader className="pb-3">
-          <Inline align="center" justify="between" className="w-full gap-3 grid grid-cols-1 md:grid-cols-3 ">
+          <Inline
+            align="center"
+            justify="between"
+            className="grid w-full grid-cols-1 gap-3 md:grid-cols-3"
+          >
             <div className="min-w-0 flex-1">
               <Heading as="h3" className="text-base">
                 My Holdings
@@ -44,12 +48,12 @@ export function DashboardHoldingsSection(props: DashboardHoldingsSectionProps) {
               </Text>
             </div>
 
-                <Input
-                  aria-label="Search holdings"
-                  placeholder="Search..."
-                  value={holdingsQuery}
-                  onChange={e => onHoldingsQueryChange(e.currentTarget.value)}
-                />
+            <Input
+              aria-label="Search holdings"
+              placeholder="Search..."
+              value={holdingsQuery}
+              onChange={e => onHoldingsQueryChange(e.currentTarget.value)}
+            />
 
             <div className="flex flex-1 justify-end">
               <Button variant="primary" leftIcon={<Plus />} onClick={onAddAsset}>

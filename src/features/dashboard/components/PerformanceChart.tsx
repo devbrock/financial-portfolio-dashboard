@@ -87,7 +87,7 @@ export function PerformanceChart(props: PerformanceChartProps) {
         />
       ) : (
         <>
-          <Inline align="end" justify="between" className="mb-3 my-4! gap-3">
+          <Inline align="end" justify="between" className="my-4! mb-3 gap-3">
             <div>
               <Text as="div" className="text-2xl font-semibold">
                 {formatMoney(totalValue)}

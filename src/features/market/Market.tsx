@@ -66,7 +66,7 @@ export function Market() {
                 <Heading as="h3" className="text-lg">
                   Indices overview
                 </Heading>
-                <Text as="div" size="sm" tone="muted" className='text-right'>
+                <Text as="div" size="sm" tone="muted" className="text-right">
                   Hourly snapshots of key U.S. benchmarks
                 </Text>
               </CardHeader>
