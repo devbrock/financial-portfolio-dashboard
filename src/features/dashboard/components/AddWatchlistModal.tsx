@@ -134,7 +134,7 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
       title="Add to watchlist"
       description="Track live price updates for a stock or crypto."
       footer={
-        <>
+        <span className='mt-4! space-x-4!'>
           <Button variant="secondary" onClick={() => handleClose(false)}>
             Cancel
           </Button>
@@ -148,24 +148,24 @@ export function AddWatchlistModal(props: AddWatchlistModalProps) {
           >
             Add to Watchlist
           </Button>
-        </>
+        </span>
       }
     >
-      <FormProvider {...form}>
-        <form
-          id="add-watchlist-form"
-          onSubmit={form.handleSubmit(onSubmitAddWatchlist, handleInvalid)}
-          className="space-y-3"
-        >
-          <AddWatchlistFormFields
-            assetOptions={assetOptions}
-            isAssetSearchLoading={isAssetSearchLoading}
-            onAssetQueryChange={handleAssetQueryChange}
-            onAssetLabelChange={setSelectedAssetLabel}
-            isDuplicateAsset={isDuplicateAsset}
-          />
-        </form>
-      </FormProvider>
+        <FormProvider {...form}>
+          <form
+            id="add-watchlist-form"
+            onSubmit={form.handleSubmit(onSubmitAddWatchlist, handleInvalid)}
+            className="space-y-3"
+          >
+            <AddWatchlistFormFields
+              assetOptions={assetOptions}
+              isAssetSearchLoading={isAssetSearchLoading}
+              onAssetQueryChange={handleAssetQueryChange}
+              onAssetLabelChange={setSelectedAssetLabel}
+              isDuplicateAsset={isDuplicateAsset}
+            />
+          </form>
+        </FormProvider>
     </Modal>
   );
 }

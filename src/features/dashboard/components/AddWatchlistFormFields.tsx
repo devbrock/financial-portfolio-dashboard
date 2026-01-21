@@ -28,7 +28,7 @@ export function AddWatchlistFormFields(props: AddWatchlistFormFieldsProps) {
 
   return (
     <>
-      <div>
+      <div className='space-y-2! mt-2!'>
         <Text as="label" htmlFor="watchlistSearch" size="sm">
           Search asset
         </Text>
