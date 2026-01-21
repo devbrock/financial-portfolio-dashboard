@@ -7,7 +7,7 @@ import { dropdownMenuContentClassName } from './DropdownMenu.styles';
 import { useDropdownMenuContext } from './DropdownMenuContext';
 
 export function DropdownMenuContent(props: DropdownMenuContentProps) {
-  const { className, style, minWidth, ...rest } = props;
+  const { className, style, minWidth, align = 'start', sideOffset = 8, ...rest } = props;
   const ctx = useDropdownMenuContext();
   const { open, setOpen, triggerAnchorRef, contentRef } = ctx;
   const [pos, setPos] = React.useState<{
@@ -25,7 +25,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     const trigger = triggerAnchorRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
-    setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width, side: 'bottom' });
+    setPos({ top: rect.bottom + sideOffset, left: rect.left, width: rect.width, side: 'bottom' });
   }, [open, triggerAnchorRef]);
 
   React.useLayoutEffect(() => {
@@ -36,23 +36,33 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     const triggerRect = trigger.getBoundingClientRect();
     const contentRect = content.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
     const padding = 8;
-    const offset = 8;
+    const offset = sideOffset;
 
+    const desiredLeft =
+      align === 'end' ? triggerRect.right - contentRect.width : triggerRect.left;
+    const nextLeft = Math.min(
+      Math.max(padding, desiredLeft),
+      Math.max(padding, viewportWidth - contentRect.width - padding)
+    );
     if (contentRect.bottom > viewportHeight - padding) {
       const nextTop = Math.max(padding, triggerRect.top - contentRect.height - offset);
-      if (nextTop !== pos.top || pos.side !== 'top') {
-        setPos(current => (current ? { ...current, top: nextTop, side: 'top' } : current));
+      if (nextTop !== pos.top || pos.side !== 'top' || pos.left !== nextLeft) {
+        setPos(current =>
+          current ? { ...current, top: nextTop, side: 'top', left: nextLeft } : current
+        );
       }
       return;
     }
-
-    if (pos.side !== 'bottom') {
+    if (pos.side !== 'bottom' || pos.left !== nextLeft) {
       setPos(current =>
-        current ? { ...current, top: triggerRect.bottom + offset, side: 'bottom' } : current
+        current
+          ? { ...current, top: triggerRect.bottom + offset, side: 'bottom', left: nextLeft }
+          : current
       );
     }
-  }, [contentRef, open, pos, triggerAnchorRef]);
+  }, [align, contentRef, open, pos, sideOffset, triggerAnchorRef]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -60,7 +70,12 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
       const trigger = triggerAnchorRef.current;
       if (!trigger) return;
       const rect = trigger.getBoundingClientRect();
-      setPos({ top: rect.bottom + 8, left: rect.left, width: rect.width, side: 'bottom' });
+      setPos({
+        top: rect.bottom + sideOffset,
+        left: rect.left,
+        width: rect.width,
+        side: 'bottom',
+      });
     };
     window.addEventListener('scroll', onReflow, true);
     window.addEventListener('resize', onReflow);
@@ -68,7 +83,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
       window.removeEventListener('scroll', onReflow, true);
       window.removeEventListener('resize', onReflow);
     };
-  }, [open, triggerAnchorRef]);
+  }, [open, sideOffset, triggerAnchorRef]);
 
   React.useEffect(() => {
     if (!open) return;

@@ -20,6 +20,14 @@ export type DropdownMenuContentProps = React.HTMLAttributes<HTMLDivElement> & {
    * Optional width override.
    */
   minWidth?: number;
+  /**
+   * Horizontal alignment relative to trigger.
+   */
+  align?: 'start' | 'end';
+  /**
+   * Vertical offset from trigger in pixels.
+   */
+  sideOffset?: number;
 };
 
 export type DropdownMenuItemProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {

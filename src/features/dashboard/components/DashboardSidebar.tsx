@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -14,14 +13,7 @@ import {
 import { BotMessageSquare, ChartLine, Home, Newspaper } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import OrionLogoLight from '@assets/orion_logo_light.svg';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { updatePreferences } from '@/features/portfolio/portfolioSlice';
-import { logoutUser } from '@/features/auth/authSlice';
-import { useNavigate } from '@tanstack/react-router';
-import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
-import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
-import { exportPortfolioReportCSV } from '@/utils/exportCSV';
-import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
+import { useDashboardFooterActions } from '@/features/dashboard/hooks/useDashboardFooterActions';
 import { DashboardSidebarFooter } from './DashboardSidebarFooter';
 
 export type DashboardNav = 'Overview' | 'Market' | 'News' | 'OrionGPT';
@@ -33,61 +25,8 @@ type DashboardSidebarProps = {
 
 export function DashboardSidebar(props: DashboardSidebarProps) {
   const { activeNav, onNavChange } = props;
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const theme = useAppSelector(state => state.portfolio.preferences.theme);
-  const currency = useAppSelector(state => state.portfolio.preferences.currency);
-  const chartRange = useAppSelector(state => state.portfolio.preferences.chartRange);
-  const { holdingsWithPrice, metrics } = usePortfolioData();
-  const { data: performanceData } = usePortfolioHistoricalData(chartRange);
-  const { rate } = useCurrencyFormatter();
-
-  const handleThemeChange = useCallback(
-    (nextTheme: 'light' | 'dark') => {
-      dispatch(updatePreferences({ theme: nextTheme }));
-    },
-    [dispatch]
-  );
-
-  const handleCurrencyChange = useCallback(
-    (nextCurrency: 'USD' | 'EUR' | 'GBP' | 'JPY') => {
-      dispatch(updatePreferences({ currency: nextCurrency }));
-    },
-    [dispatch]
-  );
-
-  const handleLogout = useCallback(() => {
-    dispatch(logoutUser());
-    navigate({ to: '/login' });
-  }, [dispatch, navigate]);
-
-  const handleExport = useCallback(() => {
-    const allocation = [
-      ...(metrics.stockPct > 0 ? [{ name: 'Stocks', valuePct: metrics.stockPct }] : []),
-      ...(metrics.cryptoPct > 0 ? [{ name: 'Crypto', valuePct: metrics.cryptoPct }] : []),
-    ];
-
-    const holdings = holdingsWithPrice.map(holding => ({
-      symbol: holding.symbol.toUpperCase(),
-      name: holding.companyName ?? holding.symbol,
-      quantity: holding.quantity,
-      purchasePrice: holding.purchasePrice,
-      currentPrice: holding.currentPrice,
-      totalValue: holding.currentPrice * holding.quantity,
-      pnl: holding.plUsd,
-      purchaseDate: holding.purchaseDate,
-    }));
-
-    exportPortfolioReportCSV({
-      generatedAt: new Date().toISOString(),
-      currency,
-      rangeLabel: chartRange,
-      rate,
-      performance: performanceData,
-      allocation,
-      holdings,
-    });
-  }, [chartRange, currency, holdingsWithPrice, metrics, performanceData, rate]);
+  const { theme, currency, onThemeChange, onCurrencyChange, onExport, onLogout } =
+    useDashboardFooterActions();
 
   return (
     <Sidebar
@@ -157,10 +96,10 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
       <DashboardSidebarFooter
         theme={theme}
         currency={currency}
-        onThemeChange={handleThemeChange}
-        onCurrencyChange={handleCurrencyChange}
-        onExport={handleExport}
-        onLogout={handleLogout}
+        onThemeChange={onThemeChange}
+        onCurrencyChange={onCurrencyChange}
+        onExport={onExport}
+        onLogout={onLogout}
       />
     </Sidebar>
   );

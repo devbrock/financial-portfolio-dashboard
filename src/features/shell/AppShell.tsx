@@ -4,8 +4,10 @@ import { SidebarProvider } from '@components';
 import { cn } from '@/utils/cn';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { DashboardSidebar } from '@/features/dashboard/components/DashboardSidebar';
+import { BottomNav } from './BottomNav';
 import type { DashboardNav } from '@/features/dashboard/components/DashboardSidebar';
 import { updatePreferences } from '@/features/portfolio/portfolioSlice';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 type AppShellProps = {
   activeNav: DashboardNav;
@@ -28,6 +30,7 @@ export function AppShell(props: AppShellProps) {
   const dispatch = useAppDispatch();
   const theme = useAppSelector(state => state.portfolio.preferences.theme);
   const sidebarOpen = useAppSelector(state => state.portfolio.preferences.sidebarOpen);
+  const showSidebar = useMediaQuery('(min-width: 1024px)');
 
   const handleSidebarChange = useCallback(
     (nextOpen: boolean) => {
@@ -72,11 +75,20 @@ export function AppShell(props: AppShellProps) {
           </div>
         ) : null}
         <div className="mx-auto flex h-full min-h-0 w-full flex-col gap-4 p-4 sm:gap-6 sm:p-6 lg:flex-row">
-          <DashboardSidebar activeNav={activeNav} onNavChange={onNavChange} />
-          <main id={mainId} className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+          {showSidebar ? (
+            <DashboardSidebar activeNav={activeNav} onNavChange={onNavChange} />
+          ) : null}
+          <main
+            id={mainId}
+            className={cn(
+              'min-h-0 min-w-0 flex-1 overflow-y-auto',
+              showSidebar ? 'pb-0' : 'pb-24'
+            )}
+          >
             {children}
           </main>
         </div>
+        {!showSidebar ? <BottomNav activeNav={activeNav} onNavChange={onNavChange} /> : null}
       </div>
     </SidebarProvider>
   );

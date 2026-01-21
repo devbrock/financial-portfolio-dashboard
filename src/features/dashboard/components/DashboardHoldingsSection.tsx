@@ -87,7 +87,7 @@ export function DashboardHoldingsSection(props: DashboardHoldingsSectionProps) {
             {visibleHoldings.length === 0 ? (
               <EmptyHoldings onAddHolding={onAddAsset} />
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4!">
                 {visibleHoldings.map(h => (
                   <HoldingsMobileCard
                     key={h.id}
