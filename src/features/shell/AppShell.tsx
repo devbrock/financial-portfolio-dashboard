@@ -58,7 +58,7 @@ export function AppShell(props: AppShellProps) {
       >
         <a
           href={`#${mainId}`}
-          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-6 focus:left-6 focus:z-50 focus:rounded-xl focus:bg-(--ui-bg) focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg focus:text-(--ui-text-muted)"
         >
           Skip to main content
         </a>
