@@ -26,7 +26,7 @@ export function DropdownMenuContent(props: DropdownMenuContentProps) {
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
     setPos({ top: rect.bottom + sideOffset, left: rect.left, width: rect.width, side: 'bottom' });
-  }, [open, triggerAnchorRef]);
+  }, [open, sideOffset, triggerAnchorRef]);
 
   React.useLayoutEffect(() => {
     if (!open || !pos) return;
