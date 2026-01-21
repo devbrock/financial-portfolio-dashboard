@@ -147,7 +147,7 @@ export function AddAssetModal(props: AddAssetModalProps) {
       title="Add asset"
       description="Record a new position to update your portfolio totals."
       footer={
-        <>
+        <span className='mt-4! space-x-4!'>
           <Button variant="secondary" onClick={() => handleClose(false)}>
             Cancel
           </Button>
@@ -161,14 +161,14 @@ export function AddAssetModal(props: AddAssetModalProps) {
           >
             Add Asset
           </Button>
-        </>
+        </span>
       }
     >
       <FormProvider {...form}>
         <form
           id="add-asset-form"
           onSubmit={form.handleSubmit(onSubmitAddAsset, handleInvalid)}
-          className="space-y-3"
+          className="space-y-4! mt-2!"
         >
           <AddAssetFormFields
             assetOptions={assetOptions}
