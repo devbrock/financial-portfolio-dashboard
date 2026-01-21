@@ -12,9 +12,6 @@ const STOCK_POOL = [
   { symbol: 'TSLA', priceRange: [200, 350] },
   { symbol: 'NVDA', priceRange: [450, 700] },
   { symbol: 'META', priceRange: [350, 500] },
-  { symbol: 'JPM', priceRange: [150, 200] },
-  { symbol: 'V', priceRange: [240, 290] },
-  { symbol: 'WMT', priceRange: [150, 180] },
 ] as const;
 
 /**
@@ -23,9 +20,6 @@ const STOCK_POOL = [
 const CRYPTO_POOL = [
   { symbol: 'bitcoin', priceRange: [40000, 70000] },
   { symbol: 'ethereum', priceRange: [2000, 4000] },
-  { symbol: 'cardano', priceRange: [0.3, 0.8] },
-  { symbol: 'solana', priceRange: [20, 150] },
-  { symbol: 'polkadot', priceRange: [5, 15] },
 ] as const;
 
 /**
@@ -55,7 +49,7 @@ export function generateMockHoldings(seed: string): Holding[] {
 
   // Determine number of assets (limit to reduce free API usage)
   const numStocks = 2;
-  const numCrypto = 2;
+  const numCrypto = 1;
 
   // Shuffle pools to get random selection
   const shuffledStocks = rng.shuffle([...STOCK_POOL]);

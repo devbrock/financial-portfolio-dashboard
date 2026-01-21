@@ -14,6 +14,15 @@ export type CoinGeckoMarketChart = {
   total_volumes: Array<[number, number]>;
 };
 
+export type CoinGeckoMarketCoin = {
+  id: string;
+  symbol: string;
+  name: string;
+  image?: string;
+  current_price?: number;
+  price_change_percentage_24h?: number;
+};
+
 export type CoinGeckoCoin = {
   id: string;
   symbol: string;

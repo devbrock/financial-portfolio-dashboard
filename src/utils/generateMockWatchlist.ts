@@ -14,7 +14,7 @@ const STOCK_POOL = [
   'WMT',
 ] as const;
 
-const CRYPTO_POOL = ['bitcoin', 'ethereum', 'cardano', 'solana', 'polkadot'] as const;
+const CRYPTO_POOL = ['bitcoin', 'ethereum'] as const;
 
 type PoolEntry = {
   symbol: string;

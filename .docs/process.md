@@ -45,3 +45,4 @@ Lastly, I needed to find an API to fetch Cryptocurrency data. While Alpha Vantag
 | `useStockHistoricalData`  | Historical stock data                        | 24 hours         | Historical data rarely changes |
 | `useCryptoPrice`          | Real-time cryptocurrency prices              | 60 seconds       | Real-time prices requirement   |
 | `useCryptoHistoricalData` | Historical cryptocurrency data               | 24 hours         | Historical data rarely changes |
+| `useCryptoSearch`         | Cryptocurrency lookup for autocomplete       | 5 minutes        | User-triggered, stable results |

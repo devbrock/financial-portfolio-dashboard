@@ -1,40 +1,51 @@
-import { useQueries } from '@tanstack/react-query';
-import { GetCryptoCoinQueryOptions } from '@/queryOptions/GetCryptoCoinQueryOptions';
-import type { CoinGeckoCoin } from '@/types/coinGecko';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { GetCryptoMarketsQueryOptions } from '@/queryOptions/GetCryptoMarketsQueryOptions';
+import type { CoinGeckoCoin, CoinGeckoMarketCoin } from '@/types/coinGecko';
 
-const COIN_DETAILS_PARAMS = {
-  localization: false,
-  tickers: false,
-  market_data: false,
-  community_data: false,
-  developer_data: false,
+const COIN_MARKETS_PARAMS = {
+  vs_currency: 'usd',
   sparkline: false,
 };
 
 /**
- * Fetch coin details for multiple coin IDs in parallel
+ * Fetch coin profiles for multiple coin IDs in one batch request
  */
 export function useCryptoProfiles(coinIds: string[]) {
-  const queries = useQueries({
-    queries: coinIds.map(coinId => GetCryptoCoinQueryOptions(coinId, COIN_DETAILS_PARAMS)),
+  const sortedIds = useMemo(() => Array.from(new Set(coinIds)).sort(), [coinIds]);
+  const params = useMemo(
+    () => ({
+      ...COIN_MARKETS_PARAMS,
+      ids: sortedIds.join(','),
+    }),
+    [sortedIds]
+  );
+
+  const { data, isLoading, isError, error } = useQuery({
+    ...GetCryptoMarketsQueryOptions(params),
+    enabled: sortedIds.length > 0,
   });
 
-  const isLoading = queries.some(query => query.isLoading);
-  const isError = queries.some(query => query.isError);
-  const error = queries.find(query => query.error)?.error ?? null;
-
   const profileMap = new Map<string, CoinGeckoCoin>();
-  queries.forEach((query, index) => {
-    if (query.data) {
-      profileMap.set(coinIds[index], query.data);
-    }
+  (data ?? []).forEach((coin: CoinGeckoMarketCoin) => {
+    profileMap.set(coin.id, {
+      id: coin.id,
+      symbol: coin.symbol,
+      name: coin.name,
+      image: coin.image
+        ? {
+            thumb: coin.image,
+            small: coin.image,
+            large: coin.image,
+          }
+        : undefined,
+    });
   });
 
   return {
     profileMap,
     isLoading,
     isError,
-    queries,
-    error,
+    error: error ?? null,
   };
 }

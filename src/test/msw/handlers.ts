@@ -130,6 +130,19 @@ export const handlers = [
     });
     return HttpResponse.json(response);
   }),
+  http.get(`${COINGECKO_BASE}/coins/markets`, ({ request }) => {
+    const url = new URL(request.url);
+    const ids = (url.searchParams.get('ids') ?? '').split(',').filter(Boolean);
+    const response = ids.map(id => ({
+      id,
+      symbol: id.slice(0, 3),
+      name: id === 'bitcoin' ? 'Bitcoin' : id,
+      image: 'https://assets.coingecko.com/coins/images/1/large.png',
+      current_price: id === 'bitcoin' ? 50000 : 100,
+      price_change_percentage_24h: id === 'bitcoin' ? 2.5 : -1.2,
+    }));
+    return HttpResponse.json(response);
+  }),
   http.get(`${COINGECKO_BASE}/coins/:id`, ({ params }) => {
     const id = params.id as string;
     return HttpResponse.json({
