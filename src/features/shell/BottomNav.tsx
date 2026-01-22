@@ -1,14 +1,16 @@
 import {
+  Bell,
+  BellOff,
   BotMessageSquare,
   ChartLine,
+  Check,
+  Download,
   Home,
+  LogOut,
+  Moon,
   Newspaper,
   Settings,
   Sun,
-  Moon,
-  Check,
-  Download,
-  LogOut,
 } from 'lucide-react';
 import { cn } from '@utils/cn';
 import type { DashboardNav } from '@/features/dashboard/components/DashboardSidebar';
@@ -36,8 +38,17 @@ const NAV_ITEMS: Array<{ key: DashboardNav; label: string; icon: React.ReactNode
 
 export function BottomNav(props: BottomNavProps) {
   const { activeNav, onNavChange } = props;
-  const { theme, currency, onThemeChange, onCurrencyChange, onExport, onLogout } =
-    useDashboardFooterActions();
+  const {
+    theme,
+    currency,
+    notificationsEnabled,
+    notificationPermission,
+    onThemeChange,
+    onCurrencyChange,
+    onToggleNotifications,
+    onExport,
+    onLogout,
+  } = useDashboardFooterActions();
   const settingsItemClassName = 'flex items-center justify-between gap-3';
 
   return (
@@ -132,6 +143,34 @@ export function BottomNav(props: BottomNavProps) {
                 {currency === code ? <Check className="h-4 w-4" /> : null}
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            <Text
+              as="div"
+              size="caption"
+              className="px-3 py-2 tracking-wide text-(--ui-text-muted) uppercase"
+            >
+              Notifications
+            </Text>
+            <DropdownMenuItem
+              className={settingsItemClassName}
+              onClick={onToggleNotifications}
+              disabled={notificationPermission === 'denied'}
+            >
+              <span className="inline-flex items-center gap-2">
+                {notificationsEnabled ? (
+                  <Bell className="h-4 w-4" />
+                ) : (
+                  <BellOff className="h-4 w-4" />
+                )}
+                {notificationsEnabled ? 'Enabled' : 'Disabled'}
+              </span>
+              {notificationsEnabled ? <Check className="h-4 w-4" /> : null}
+            </DropdownMenuItem>
+            {notificationPermission === 'denied' ? (
+              <Text as="div" size="caption" className="px-3 py-1 text-(--ui-text-muted)">
+                Notifications blocked by browser
+              </Text>
+            ) : null}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onExport}>
               <span className="inline-flex items-center gap-2">

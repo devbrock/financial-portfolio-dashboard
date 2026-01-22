@@ -1,5 +1,5 @@
-import { useMemo, useEffect } from 'react';
-import { useAppDispatch } from '@/store/hooks';
+import { useMemo, useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { initializePortfolio } from '../portfolioSlice';
 import { usePortfolioHoldings } from './usePortfolioHoldings';
 import { usePortfolioWatchlist } from './usePortfolioWatchlist';
@@ -10,6 +10,7 @@ import { useCryptoProfiles } from './useCryptoProfiles';
 import { enrichHoldingWithPrice, calculatePortfolioMetrics } from '@/utils/portfolioCalculations';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import { getOptimizedImageUrl } from '@/utils/getOptimizedImageUrl';
+import { processAndSendPriceAlerts } from '@/services/notifications';
 import type { HoldingWithPrice, WatchlistItemWithPrice } from '@/types/portfolio';
 
 /**
@@ -20,6 +21,16 @@ export function usePortfolioData() {
   const dispatch = useAppDispatch();
   const holdings = usePortfolioHoldings();
   const watchlist = usePortfolioWatchlist();
+
+  // Notification preferences from Redux
+  const notificationPrefs = useAppSelector(
+    state => state.portfolio.preferences.notifications
+  );
+  const notificationsEnabled = notificationPrefs?.enabled ?? false;
+  const notificationThreshold = notificationPrefs?.thresholdPct ?? 5;
+
+  // Track notified symbols to avoid duplicate notifications within a session
+  const notifiedSymbolsRef = useRef<Set<string>>(new Set());
 
   // Initialize portfolio on first load
   useEffect(() => {
@@ -138,12 +149,35 @@ export function usePortfolioData() {
     return calculatePortfolioMetrics(holdings, holdingsWithPrice);
   }, [holdings, holdingsWithPrice]);
 
-  // Loading state
+  // Loading state (defined before useEffect that depends on it)
   const isLoading = stocksLoading || profilesLoading || cryptoLoading || cryptoProfilesLoading;
   const isError = stocksError || profilesError || cryptoError || cryptoProfilesError;
   const firstError =
     stocksErrorObj || profilesErrorObj || cryptoErrorObj || cryptoProfilesErrorObj || null;
   const errorMessage = getErrorMessage(firstError, "We couldn't load your latest market data.");
+
+  // Check for significant price changes and send notifications
+  useEffect(() => {
+    // Only check when notifications are enabled and data has loaded
+    if (!notificationsEnabled || isLoading || dataUpdatedAt === 0) {
+      return;
+    }
+
+    // Process and send price alerts for significant movers
+    processAndSendPriceAlerts(
+      holdingsWithPrice,
+      watchlistWithPrice,
+      notificationThreshold,
+      notifiedSymbolsRef.current
+    );
+  }, [
+    notificationsEnabled,
+    notificationThreshold,
+    holdingsWithPrice,
+    watchlistWithPrice,
+    isLoading,
+    dataUpdatedAt,
+  ]);
 
   return {
     holdings,

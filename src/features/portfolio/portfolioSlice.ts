@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   Holding,
+  NotificationPreferences,
   PortfolioState,
   UserPreferences,
   WatchlistItem,
@@ -24,6 +25,11 @@ const initialState: PortfolioState = {
     sortPreference: {
       key: 'name',
       direction: 'asc',
+    },
+    notifications: {
+      enabled: false,
+      thresholdPct: 5,
+      permissionStatus: 'default',
     },
   },
   userSeed: {
@@ -133,6 +139,20 @@ const portfolioSlice = createSlice({
       }
       state.historicalCache.stocks[action.payload.symbol] = action.payload.entry;
     },
+
+    /**
+     * Update notification preferences.
+     * Allows partial updates to notification settings.
+     */
+    updateNotificationPreferences: (
+      state,
+      action: PayloadAction<Partial<NotificationPreferences>>
+    ) => {
+      state.preferences.notifications = {
+        ...state.preferences.notifications,
+        ...action.payload,
+      };
+    },
   },
 });
 
@@ -146,6 +166,7 @@ export const {
   updatePreferences,
   resetPortfolio,
   setStockHistoricalCache,
+  updateNotificationPreferences,
 } = portfolioSlice.actions;
 
 export default portfolioSlice.reducer;

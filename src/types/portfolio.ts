@@ -18,6 +18,18 @@ export type WatchlistItem = {
   assetType: AssetType;
 };
 
+/**
+ * Notification preferences for price alerts
+ */
+export type NotificationPreferences = {
+  /** Whether notifications are enabled */
+  enabled: boolean;
+  /** The threshold percentage for triggering notifications (e.g., 5 means 5%) */
+  thresholdPct: number;
+  /** Permission status from the browser */
+  permissionStatus: NotificationPermission | 'unsupported';
+};
+
 export type UserPreferences = {
   theme: 'light' | 'dark';
   currency: 'USD' | 'EUR' | 'GBP' | 'JPY';
@@ -27,6 +39,8 @@ export type UserPreferences = {
     key: string;
     direction: 'asc' | 'desc';
   };
+  /** Price alert notification preferences */
+  notifications: NotificationPreferences;
 };
 
 export type UserSeed = {

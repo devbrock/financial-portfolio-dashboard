@@ -25,8 +25,17 @@ type DashboardSidebarProps = {
 
 export function DashboardSidebar(props: DashboardSidebarProps) {
   const { activeNav, onNavChange } = props;
-  const { theme, currency, onThemeChange, onCurrencyChange, onExport, onLogout } =
-    useDashboardFooterActions();
+  const {
+    theme,
+    currency,
+    notificationsEnabled,
+    notificationPermission,
+    onThemeChange,
+    onCurrencyChange,
+    onToggleNotifications,
+    onExport,
+    onLogout,
+  } = useDashboardFooterActions();
 
   return (
     <Sidebar
@@ -100,8 +109,11 @@ export function DashboardSidebar(props: DashboardSidebarProps) {
       <DashboardSidebarFooter
         theme={theme}
         currency={currency}
+        notificationsEnabled={notificationsEnabled}
+        notificationPermission={notificationPermission}
         onThemeChange={onThemeChange}
         onCurrencyChange={onCurrencyChange}
+        onToggleNotifications={onToggleNotifications}
         onExport={onExport}
         onLogout={onLogout}
       />

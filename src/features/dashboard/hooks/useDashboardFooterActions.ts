@@ -7,6 +7,7 @@ import { usePortfolioData } from '@/features/portfolio/hooks/usePortfolioData';
 import { usePortfolioHistoricalData } from '@/features/portfolio/hooks/usePortfolioHistoricalData';
 import { exportPortfolioReportCSV } from '@/utils/exportCSV';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
+import { useNotifications } from '@/hooks/useNotifications';
 
 type Theme = 'light' | 'dark';
 type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY';
@@ -24,6 +25,13 @@ export function useDashboardFooterActions() {
   const { holdingsWithPrice, metrics } = usePortfolioData();
   const { data: performanceData } = usePortfolioHistoricalData(chartRange);
   const { rate } = useCurrencyFormatter();
+
+  // Notification state and actions
+  const {
+    enabled: notificationsEnabled,
+    permissionStatus: notificationPermission,
+    toggleNotifications,
+  } = useNotifications();
 
   const onThemeChange = useCallback(
     (nextTheme: Theme) => {
@@ -72,11 +80,18 @@ export function useDashboardFooterActions() {
     });
   }, [chartRange, currency, holdingsWithPrice, metrics, performanceData, rate]);
 
+  const onToggleNotifications = useCallback(() => {
+    void toggleNotifications();
+  }, [toggleNotifications]);
+
   return {
     theme,
     currency,
+    notificationsEnabled,
+    notificationPermission,
     onThemeChange,
     onCurrencyChange,
+    onToggleNotifications,
     onExport,
     onLogout,
   };
