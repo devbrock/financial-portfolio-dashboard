@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { BarChart, ChartContainer, Skeleton, Text } from '@components';
+import { BarChart, ChartContainer, Skeleton, StatusMessage, Text } from '@components';
 import { cn } from '@/utils/cn';
 import type { AllocationSlice } from '@/types/dashboard';
 import { useCurrencyFormatter } from '@/features/portfolio/hooks/useCurrencyFormatter';
@@ -35,6 +35,13 @@ export function AllocationChart(props: AllocationChartProps) {
           <Skeleton className="h-6 w-44" />
           <Skeleton className="mx-auto h-[260px] w-full" />
         </div>
+      ) : data.length === 0 ? (
+        <StatusMessage
+          tone="info"
+          title="No diversification data yet."
+          message="Add holdings to see your allocation breakdown."
+          className="border-dashed bg-transparent"
+        />
       ) : (
         <BarChart<AllocationSlice>
           data={data}

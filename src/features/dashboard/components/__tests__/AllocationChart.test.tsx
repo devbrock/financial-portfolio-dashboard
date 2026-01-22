@@ -16,4 +16,12 @@ describe('AllocationChart', () => {
     expect(screen.getByText('Current allocation')).toBeInTheDocument();
     expect(screen.getByText('$1,000.00')).toBeInTheDocument();
   });
+
+  it('renders an empty state when no allocation data is present', () => {
+    renderWithProviders(<AllocationChart data={[]} totalInvested={0} />);
+    expect(screen.getByText('No diversification data yet.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Add holdings to see your allocation breakdown.')
+    ).toBeInTheDocument();
+  });
 });
