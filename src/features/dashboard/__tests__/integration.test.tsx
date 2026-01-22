@@ -25,7 +25,7 @@ describe('dashboard flows', () => {
     renderWithProviders(<Dashboard />);
 
     await user.click(screen.getByRole('button', { name: 'Add Asset' }));
-    const searchInput = screen.getByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
+    const searchInput = await screen.findByPlaceholderText('Search RBLX, Adobe, BTC, Ethereum...');
     await user.type(searchInput, 'AAPL');
     const option = await screen.findByText(/Stock · AAPL — Apple Inc/i);
     await user.click(option);
