@@ -103,7 +103,15 @@ export function HoldingsTable(props: HoldingsTableProps) {
                   )}
                 >
                   {h.logo ? (
-                    <img src={h.logo} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={h.logo}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      width={36}
+                      height={36}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   ) : (
                     <span className="text-sm font-semibold">{h.name.slice(0, 1)}</span>
                   )}

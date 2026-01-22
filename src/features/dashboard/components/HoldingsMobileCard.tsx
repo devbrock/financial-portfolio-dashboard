@@ -45,7 +45,15 @@ export function HoldingsMobileCard(props: HoldingsMobileCardProps) {
               )}
             >
               {holding.logo ? (
-                <img src={holding.logo} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={holding.logo}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  width={40}
+                  height={40}
+                  loading="lazy"
+                  decoding="async"
+                />
               ) : (
                 <span className="text-sm font-semibold">{holding.name.slice(0, 1)}</span>
               )}

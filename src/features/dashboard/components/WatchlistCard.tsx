@@ -37,7 +37,15 @@ export function WatchlistCard(props: WatchlistCardProps) {
               aria-hidden="true"
             >
               {item.logo ? (
-                <img src={item.logo} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={item.logo}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  width={40}
+                  height={40}
+                  loading="lazy"
+                  decoding="async"
+                />
               ) : (
                 <span className="text-sm font-semibold">{item.name.slice(0, 1)}</span>
               )}

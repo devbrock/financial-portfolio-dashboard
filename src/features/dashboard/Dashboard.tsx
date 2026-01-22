@@ -1,7 +1,6 @@
+import { lazy, Suspense } from 'react';
 import { Container, Stack } from '@components';
 import {
-  AddAssetModal,
-  AddWatchlistModal,
   DashboardChartsSection,
   DashboardErrorBanner,
   DashboardHeader,
@@ -11,6 +10,16 @@ import {
 } from './components';
 import { AppShell } from '@/features/shell/AppShell';
 import { useDashboardController } from './hooks/useDashboardController';
+
+/**
+ * Lazy-loaded modals to avoid shipping form validation schemas on initial load.
+ */
+const AddAssetModal = lazy(() =>
+  import('./components/AddAssetModal').then(mod => ({ default: mod.AddAssetModal }))
+);
+const AddWatchlistModal = lazy(() =>
+  import('./components/AddWatchlistModal').then(mod => ({ default: mod.AddWatchlistModal }))
+);
 
 export function Dashboard() {
   const {
@@ -108,8 +117,19 @@ export function Dashboard() {
         }}
       />
 
-      <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
-      <AddWatchlistModal open={isAddWatchlistOpen} onOpenChange={setIsAddWatchlistOpen} />
+      {isAddAssetOpen ? (
+        <Suspense fallback={null}>
+          <AddAssetModal open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} />
+        </Suspense>
+      ) : null}
+      {isAddWatchlistOpen ? (
+        <Suspense fallback={null}>
+          <AddWatchlistModal
+            open={isAddWatchlistOpen}
+            onOpenChange={setIsAddWatchlistOpen}
+          />
+        </Suspense>
+      ) : null}
     </AppShell>
   );
 }

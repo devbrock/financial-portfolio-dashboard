@@ -9,6 +9,7 @@ import { useCryptoPrices } from './useCryptoPrices';
 import { useCryptoProfiles } from './useCryptoProfiles';
 import { enrichHoldingWithPrice, calculatePortfolioMetrics } from '@/utils/portfolioCalculations';
 import { getErrorMessage } from '@/utils/getErrorMessage';
+import { getOptimizedImageUrl } from '@/utils/getOptimizedImageUrl';
 import type { HoldingWithPrice, WatchlistItemWithPrice } from '@/types/portfolio';
 
 /**
@@ -88,12 +89,14 @@ export function usePortfolioData() {
         const profile = profileMap.get(symbol);
         const currentPrice = quote?.c || holding.purchasePrice;
 
-        return enrichHoldingWithPrice(holding, currentPrice, profile?.name, profile?.logo);
+        const logo = getOptimizedImageUrl(profile?.logo);
+        return enrichHoldingWithPrice(holding, currentPrice, profile?.name, logo);
       } else {
         // Crypto
         const currentPrice = cryptoPriceMap.get(symbol) || holding.purchasePrice;
         const profile = cryptoProfileMap.get(symbol);
-        const logo = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+        const logoSource = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+        const logo = getOptimizedImageUrl(logoSource);
         return enrichHoldingWithPrice(holding, currentPrice, profile?.name, logo);
       }
     });
@@ -112,12 +115,13 @@ export function usePortfolioData() {
           currentPrice: quote?.c ?? 0,
           changePct: quote?.dp ?? 0,
           companyName: profile?.name,
-          logo: profile?.logo,
+          logo: getOptimizedImageUrl(profile?.logo),
         };
       }
 
       const profile = cryptoProfileMap.get(symbol);
-      const logo = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+      const logoSource = profile?.image?.small || profile?.image?.thumb || profile?.image?.large;
+      const logo = getOptimizedImageUrl(logoSource);
 
       return {
         ...item,
