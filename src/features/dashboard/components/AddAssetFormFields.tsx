@@ -1,7 +1,8 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import { Combobox, Inline, Input, Text } from '@components';
+import { Combobox, Text } from '@components';
 import type { ComboboxItem } from '@components';
 import type { AddAssetFormValues } from './AddAssetForm.types';
+import { PurchaseDetailsFields } from './PurchaseDetailsFields';
 
 type AddAssetFormFieldsProps = {
   assetOptions: ComboboxItem[];
@@ -11,6 +12,9 @@ type AddAssetFormFieldsProps = {
   isDuplicateAsset: boolean;
 };
 
+/**
+ * Renders all form fields for the add asset modal.
+ */
 export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
   const {
     assetOptions,
@@ -25,6 +29,7 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
     setValue,
     formState: { errors },
   } = useFormContext<AddAssetFormValues>();
+
   const assetSearchHelpId = 'asset-search-help';
   const assetSearchErrorId = 'asset-search-error';
   const assetSearchDuplicateId = 'asset-search-duplicate';
@@ -37,9 +42,6 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
     ]
       .filter(Boolean)
       .join(' ') || undefined;
-  const quantityErrorId = 'quantity-error';
-  const purchasePriceErrorId = 'purchase-price-error';
-  const purchaseDateErrorId = 'purchase-date-error';
 
   return (
     <>
@@ -62,9 +64,7 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
                 onAssetLabelChange(selectedItem?.label ?? '');
                 const isStock = nextValue.startsWith('stock:');
                 const rawSymbol = nextValue.replace(isStock ? 'stock:' : 'crypto:', '');
-                setValue('assetType', isStock ? 'stock' : 'crypto', {
-                  shouldValidate: true,
-                });
+                setValue('assetType', isStock ? 'stock' : 'crypto', { shouldValidate: true });
                 setValue('symbol', isStock ? rawSymbol.toUpperCase() : rawSymbol.toLowerCase(), {
                   shouldValidate: true,
                 });
@@ -73,9 +73,7 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
                 if (field.value) {
                   field.onChange('');
                   onAssetLabelChange('');
-                  setValue('assetType', 'stock', {
-                    shouldValidate: true,
-                  });
+                  setValue('assetType', 'stock', { shouldValidate: true });
                   setValue('symbol', '', { shouldValidate: true });
                 }
               }}
@@ -94,24 +92,12 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
           Results include stocks and crypto. Pick one to continue.
         </Text>
         {errors.assetSelection ? (
-          <Text
-            as="div"
-            id={assetSearchErrorId}
-            role="alert"
-            size="sm"
-            className="mt-1 text-red-600"
-          >
+          <Text as="div" id={assetSearchErrorId} role="alert" size="sm" className="mt-1 text-red-600">
             {errors.assetSelection.message}
           </Text>
         ) : null}
         {isDuplicateAsset ? (
-          <Text
-            as="div"
-            id={assetSearchDuplicateId}
-            role="status"
-            size="sm"
-            className="mt-1 text-amber-600"
-          >
+          <Text as="div" id={assetSearchDuplicateId} role="status" size="sm" className="mt-1 text-amber-600">
             You already have this asset in your portfolio.
           </Text>
         ) : null}
@@ -120,83 +106,7 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
       <input type="hidden" {...register('assetType')} />
       <input type="hidden" {...register('symbol')} />
 
-      <Inline align="start" className="gap-3">
-        <div className="w-full">
-          <Text as="label" htmlFor="quantity" size="sm">
-            Quantity
-          </Text>
-          <Input
-            id="quantity"
-            type="number"
-            step="any"
-            className="mt-1"
-            aria-describedby={errors.quantity ? quantityErrorId : undefined}
-            aria-invalid={errors.quantity ? 'true' : undefined}
-            {...register('quantity', { valueAsNumber: true })}
-          />
-          {errors.quantity ? (
-            <Text
-              as="div"
-              id={quantityErrorId}
-              role="alert"
-              size="sm"
-              className="mt-1 text-red-600"
-            >
-              {errors.quantity.message}
-            </Text>
-          ) : null}
-        </div>
-        <div className="w-full">
-          <Text as="label" htmlFor="purchasePrice" size="sm">
-            Purchase price (USD)
-          </Text>
-          <Input
-            id="purchasePrice"
-            type="number"
-            step="any"
-            className="mt-1"
-            aria-describedby={errors.purchasePrice ? purchasePriceErrorId : undefined}
-            aria-invalid={errors.purchasePrice ? 'true' : undefined}
-            {...register('purchasePrice', { valueAsNumber: true })}
-          />
-          {errors.purchasePrice ? (
-            <Text
-              as="div"
-              id={purchasePriceErrorId}
-              role="alert"
-              size="sm"
-              className="mt-1 text-red-600"
-            >
-              {errors.purchasePrice.message}
-            </Text>
-          ) : null}
-        </div>
-      </Inline>
-
-      <div>
-        <Text as="label" htmlFor="purchaseDate" size="sm">
-          Purchase date
-        </Text>
-        <Input
-          id="purchaseDate"
-          type="date"
-          className="mt-1"
-          aria-describedby={errors.purchaseDate ? purchaseDateErrorId : undefined}
-          aria-invalid={errors.purchaseDate ? 'true' : undefined}
-          {...register('purchaseDate')}
-        />
-        {errors.purchaseDate ? (
-          <Text
-            as="div"
-            id={purchaseDateErrorId}
-            role="alert"
-            size="sm"
-            className="mt-1 text-red-600"
-          >
-            {errors.purchaseDate.message}
-          </Text>
-        ) : null}
-      </div>
+      <PurchaseDetailsFields />
     </>
   );
 }

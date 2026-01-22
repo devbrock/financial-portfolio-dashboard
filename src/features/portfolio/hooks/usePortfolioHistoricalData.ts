@@ -9,104 +9,37 @@ import type {
   AlphaVantageTimeSeriesDaily,
   AlphaVantageTimeSeriesMonthly,
 } from '@/types/alphaVantage';
-import type { CoinGeckoMarketChart } from '@/types/coinGecko';
 import { alphaVantageApi } from '@/services/api/functions/alphaVantageApi';
+import {
+  type HistoricalRange,
+  RANGE_DAYS,
+  buildDateRange,
+  buildMonthlyDateRange,
+  getStockSeries,
+  parseStockSeries,
+  parseCryptoSeries,
+} from '../utils/historicalDataTransforms';
 
-type Range = '7d' | '30d' | '90d' | '1y';
-
-const RANGE_DAYS: Record<Range, number> = {
-  '7d': 7,
-  '30d': 30,
-  '90d': 90,
-  '1y': 365,
-};
+type StockSeries = AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
+type StockQueryOptions = UseQueryOptions<StockSeries, Error, StockSeries, readonly unknown[]>;
 
 const STOCK_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-
-const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
-
-const buildDateRange = (days: number) => {
-  const end = new Date();
-  end.setUTCHours(0, 0, 0, 0);
-
-  const dates: string[] = [];
-  for (let offset = days - 1; offset >= 0; offset -= 1) {
-    const next = new Date(end);
-    next.setUTCDate(end.getUTCDate() - offset);
-    dates.push(toDateKey(next));
-  }
-  return dates;
-};
-
-const isDailySeries = (
-  data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly
-): data is AlphaVantageTimeSeriesDaily => 'Time Series (Daily)' in data;
-
-const isMonthlySeries = (
-  data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly
-): data is AlphaVantageTimeSeriesMonthly => 'Time Series (Monthly)' in data;
-
-const getStockSeries = (data?: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly) => {
-  if (!data) return null;
-  if (isDailySeries(data)) return data['Time Series (Daily)'];
-  if (isMonthlySeries(data)) return data['Time Series (Monthly)'];
-  return null;
-};
-
-const parseStockSeries = (data?: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly) => {
-  const series = getStockSeries(data);
-  const map = new Map<string, number>();
-  if (!series) return map;
-
-  Object.entries(series).forEach(([date, daily]) => {
-    const close = Number(daily['4. close']);
-    if (!Number.isNaN(close)) {
-      map.set(date, close);
-    }
-  });
-
-  return map;
-};
-
-const parseCryptoSeries = (data?: CoinGeckoMarketChart) => {
-  const map = new Map<string, number>();
-  if (!data?.prices?.length) return map;
-
-  data.prices.forEach(([timestamp, price]) => {
-    const date = toDateKey(new Date(timestamp));
-    map.set(date, price);
-  });
-
-  return map;
-};
 
 /**
  * usePortfolioHistoricalData
  * Aggregates historical price series for the portfolio over the selected range.
  */
-export function usePortfolioHistoricalData(range: Range) {
-  type StockSeries = AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
-  type StockQueryOptions = UseQueryOptions<StockSeries, Error, StockSeries, readonly unknown[]>;
-
+export function usePortfolioHistoricalData(range: HistoricalRange) {
   const holdings = usePortfolioHoldings();
   const dispatch = useAppDispatch();
   const stockCache = useAppSelector(state => state.portfolio.historicalCache?.stocks ?? {});
   const rangeDays = RANGE_DAYS[range];
   const useMonthly = range === '1y';
   const dateRange = useMemo(() => buildDateRange(rangeDays), [rangeDays]);
-  const monthlyDateRange = useMemo(() => {
-    if (!useMonthly) return dateRange;
-    const end = new Date();
-    end.setUTCDate(1);
-    end.setUTCHours(0, 0, 0, 0);
-    const dates: string[] = [];
-    for (let offset = 11; offset >= 0; offset -= 1) {
-      const next = new Date(end);
-      next.setUTCMonth(end.getUTCMonth() - offset);
-      dates.push(toDateKey(next));
-    }
-    return dates;
-  }, [dateRange, useMonthly]);
+  const monthlyDateRange = useMemo(
+    () => (useMonthly ? buildMonthlyDateRange() : dateRange),
+    [dateRange, useMonthly]
+  );
   const outputsize = 'compact';
 
   const stockHoldings = useMemo(
@@ -117,46 +50,29 @@ export function usePortfolioHistoricalData(range: Range) {
     () => holdings.filter(holding => holding.assetType === 'crypto'),
     [holdings]
   );
-
   const stockSymbols = useMemo(
-    () => Array.from(new Set(stockHoldings.map(holding => holding.symbol.toUpperCase()))),
+    () => Array.from(new Set(stockHoldings.map(h => h.symbol.toUpperCase()))),
     [stockHoldings]
   );
   const cryptoSymbols = useMemo(
-    () => Array.from(new Set(cryptoHoldings.map(holding => holding.symbol.toLowerCase()))),
+    () => Array.from(new Set(cryptoHoldings.map(h => h.symbol.toLowerCase()))),
     [cryptoHoldings]
   );
 
   const cryptoParams = useMemo(
-    () => ({
-      vs_currency: 'usd',
-      days: String(rangeDays),
-    }),
+    () => ({ vs_currency: 'usd', days: String(rangeDays) }),
     [rangeDays]
   );
 
   const cachedStockMeta = useMemo(() => {
-    // eslint-disable-next-line react-hooks/purity
     const now = Date.now();
-    const meta = new Map<
-      string,
-      {
-        data: AlphaVantageTimeSeriesDaily | AlphaVantageTimeSeriesMonthly;
-        isFresh: boolean;
-        fetchedAt: number;
-      }
-    >();
+    const meta = new Map<string, { data: StockSeries; isFresh: boolean; fetchedAt: number }>();
     stockSymbols.forEach(symbol => {
       const entry = stockCache[symbol];
       if (!entry) return;
-      const age = now - entry.fetchedAt;
-      const isFresh = age < STOCK_CACHE_TTL_MS;
+      const isFresh = now - entry.fetchedAt < STOCK_CACHE_TTL_MS;
       if (isFresh) {
-        meta.set(symbol, {
-          data: entry.data,
-          isFresh,
-          fetchedAt: entry.fetchedAt,
-        });
+        meta.set(symbol, { data: entry.data, isFresh, fetchedAt: entry.fetchedAt });
       }
     });
     return meta;
@@ -167,56 +83,41 @@ export function usePortfolioHistoricalData(range: Range) {
       const cached = cachedStockMeta.get(symbol);
       const baseOptions: StockQueryOptions = {
         queryKey: ['stockHistoricalMonthly', symbol] as const,
-        queryFn: async () => {
-          const response = await alphaVantageApi.getTimeSeriesMonthly(symbol);
-          return response.data;
-        },
+        queryFn: async () => (await alphaVantageApi.getTimeSeriesMonthly(symbol)).data,
         enabled: !cached?.isFresh,
         initialData: cached?.data,
         initialDataUpdatedAt: cached?.fetchedAt,
         staleTime: STOCK_CACHE_TTL_MS,
       };
-
-      if (useMonthly) {
-        return baseOptions;
-      }
+      if (useMonthly) return baseOptions;
 
       const dailyOptions = GetStockHistoricalDataQueryOptions(symbol, outputsize);
       return {
         ...baseOptions,
         ...dailyOptions,
-        queryFn: async () => {
-          const response = await alphaVantageApi.getTimeSeriesDaily(symbol, outputsize);
-          return response.data;
-        },
+        queryFn: async () => (await alphaVantageApi.getTimeSeriesDaily(symbol, outputsize)).data,
       };
     }) as StockQueryOptions[],
   }) as UseQueryResult<StockSeries, Error>[];
+
   const cryptoQueries = useQueries({
     queries: cryptoSymbols.map(coinId => GetCryptoHistoricalDataQueryOptions(coinId, cryptoParams)),
   });
 
   const isLoading =
-    stockQueries.some(query => query.isLoading) || cryptoQueries.some(query => query.isLoading);
-  const hasMissingStockData = stockQueries.some((query, index) => {
-    const symbol = stockSymbols[index];
-    const fallback = cachedStockMeta.get(symbol)?.data;
-    const data = query.data ?? fallback;
-    const series = getStockSeries(data);
+    stockQueries.some(q => q.isLoading) || cryptoQueries.some(q => q.isLoading);
+  const hasMissingStockData = stockQueries.some((query, i) => {
+    const fallback = cachedStockMeta.get(stockSymbols[i])?.data;
+    const series = getStockSeries(query.data ?? fallback);
     return series ? !Object.keys(series).length : true;
   });
-  const hasMissingCryptoData = cryptoQueries.some(
-    query => query.data && !query.data.prices?.length
-  );
+  const hasMissingCryptoData = cryptoQueries.some(q => q.data && !q.data.prices?.length);
   const hasMissingData = hasMissingStockData || hasMissingCryptoData;
-
   const isError =
-    stockQueries.some(query => query.isError) ||
-    cryptoQueries.some(query => query.isError) ||
-    hasMissingData;
+    stockQueries.some(q => q.isError) || cryptoQueries.some(q => q.isError) || hasMissingData;
   const error =
-    stockQueries.find(query => query.error)?.error ??
-    cryptoQueries.find(query => query.error)?.error ??
+    stockQueries.find(q => q.error)?.error ??
+    cryptoQueries.find(q => q.error)?.error ??
     (hasMissingData ? new Error('Historical data is unavailable. Please try again soon.') : null);
 
   const historicalData = useMemo(() => {
@@ -224,101 +125,59 @@ export function usePortfolioHistoricalData(range: Range) {
     const targetRange = useMonthly ? monthlyDateRange : dateRange;
     if (targetRange.length === 0) return [];
 
-    const stockSeriesBySymbol = new Map<string, Map<string, number>>();
-    stockQueries.forEach((query, index) => {
-      const symbol = stockSymbols[index];
-      const fallback = cachedStockMeta.get(symbol)?.data;
-      const data = query.data ?? fallback;
-      if (!data) return;
-      stockSeriesBySymbol.set(symbol, parseStockSeries(data));
+    const stockSeriesMap = new Map<string, Map<string, number>>();
+    stockQueries.forEach((q, i) => {
+      const fallback = cachedStockMeta.get(stockSymbols[i])?.data;
+      const data = q.data ?? fallback;
+      if (data) stockSeriesMap.set(stockSymbols[i], parseStockSeries(data));
     });
 
-    const cryptoSeriesBySymbol = new Map<string, Map<string, number>>();
-    cryptoQueries.forEach((query, index) => {
-      if (!query.data) return;
-      const symbol = cryptoSymbols[index];
-      cryptoSeriesBySymbol.set(symbol, parseCryptoSeries(query.data));
+    const cryptoSeriesMap = new Map<string, Map<string, number>>();
+    cryptoQueries.forEach((q, i) => {
+      if (q.data) cryptoSeriesMap.set(cryptoSymbols[i], parseCryptoSeries(q.data));
     });
 
-    const holdingEntries = holdings.map(holding => {
-      const symbol =
-        holding.assetType === 'stock' ? holding.symbol.toUpperCase() : holding.symbol.toLowerCase();
-      const priceMap =
-        holding.assetType === 'stock'
-          ? stockSeriesBySymbol.get(symbol)
-          : cryptoSeriesBySymbol.get(symbol);
-      const priceEntries = Array.from(priceMap ?? [])
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([date, value]) => ({ date, value }));
-      return {
-        holding,
-        priceEntries,
-        cursor: 0,
-        purchaseDate: holding.purchaseDate.slice(0, 10),
-        lastPrice: undefined as number | undefined,
-      };
-    });
+    const entries = holdings.map(h => ({
+      holding: h,
+      priceEntries: Array.from(
+        (h.assetType === 'stock'
+          ? stockSeriesMap.get(h.symbol.toUpperCase())
+          : cryptoSeriesMap.get(h.symbol.toLowerCase())) ?? []
+      )
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, value]) => ({ date, value })),
+      cursor: 0,
+      purchaseDate: h.purchaseDate.slice(0, 10),
+      lastPrice: undefined as number | undefined,
+    }));
 
     return targetRange.map(date => {
       let totalValue = 0;
-
-      holdingEntries.forEach(entry => {
-        if (date < entry.purchaseDate) return;
-
-        while (entry.cursor < entry.priceEntries.length) {
-          const next = entry.priceEntries[entry.cursor];
-          if (next.date > date) break;
-          entry.lastPrice = next.value;
-          entry.cursor += 1;
+      entries.forEach(e => {
+        if (date < e.purchaseDate) return;
+        while (e.cursor < e.priceEntries.length && e.priceEntries[e.cursor].date <= date) {
+          e.lastPrice = e.priceEntries[e.cursor].value;
+          e.cursor += 1;
         }
-        if (entry.lastPrice !== undefined) {
-          totalValue += entry.lastPrice * entry.holding.quantity;
-        }
+        if (e.lastPrice !== undefined) totalValue += e.lastPrice * e.holding.quantity;
       });
-
       return { date, value: totalValue };
     });
-  }, [
-    holdings,
-    dateRange,
-    monthlyDateRange,
-    stockQueries,
-    cryptoQueries,
-    stockSymbols,
-    cryptoSymbols,
-    cachedStockMeta,
-    useMonthly,
-  ]);
+  }, [holdings, dateRange, monthlyDateRange, stockQueries, cryptoQueries, stockSymbols, cryptoSymbols, cachedStockMeta, useMonthly]);
 
   const refetch = useCallback(() => {
-    void Promise.all([...stockQueries, ...cryptoQueries].map(query => query.refetch()));
+    void Promise.all([...stockQueries, ...cryptoQueries].map(q => q.refetch()));
   }, [stockQueries, cryptoQueries]);
 
   useEffect(() => {
-    stockQueries.forEach((query, index) => {
-      const symbol = stockSymbols[index];
+    stockQueries.forEach((q, i) => {
+      const symbol = stockSymbols[i];
       const cached = cachedStockMeta.get(symbol);
-      const fetchedAt = query.dataUpdatedAt || Date.now();
-      if (!query.data) return;
-      if (cached && cached.fetchedAt >= fetchedAt) return;
-      dispatch(
-        setStockHistoricalCache({
-          symbol,
-          entry: {
-            data: query.data,
-            outputsize,
-            fetchedAt,
-          },
-        })
-      );
+      const fetchedAt = q.dataUpdatedAt || Date.now();
+      if (!q.data || (cached && cached.fetchedAt >= fetchedAt)) return;
+      dispatch(setStockHistoricalCache({ symbol, entry: { data: q.data, outputsize, fetchedAt } }));
     });
   }, [cachedStockMeta, dispatch, outputsize, stockQueries, stockSymbols]);
 
-  return {
-    data: historicalData,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  };
+  return { data: historicalData, isLoading, isError, error, refetch };
 }

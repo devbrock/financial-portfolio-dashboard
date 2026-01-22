@@ -1,16 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Container,
-  Heading,
-  Inline,
-  Skeleton,
-  Stack,
-  StatusMessage,
-  Text,
-} from '@components';
+import { Container, Stack } from '@components';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { AppShell } from '@/features/shell/AppShell';
 import { DASHBOARD_NAV_ROUTES, getActiveNav } from '@/features/navigation/dashboardNav';
@@ -19,9 +8,12 @@ import { useMarketNews } from './hooks/useMarketNews';
 import { useCompanyNews } from './hooks/useCompanyNews';
 import { usePortfolioHoldings } from '@/features/portfolio/hooks/usePortfolioHoldings';
 import { usePortfolioWatchlist } from '@/features/portfolio/hooks/usePortfolioWatchlist';
-import type { FinnhubNewsItem } from '@/types/finnhub';
-import { getErrorMessage } from '@/utils/getErrorMessage';
+import { MarketNewsSection } from './components/MarketNewsSection';
+import { CompanyNewsSection } from './components/CompanyNewsSection';
 
+/**
+ * News page displaying market headlines and company-specific news.
+ */
 export function News() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: state => state.location.pathname });
@@ -52,6 +44,7 @@ export function News() {
 
   const marketNews = useMarketNews('general');
   const companyNews = useCompanyNews(companySymbols, range.from, range.to);
+
   const companyNewsCount = useMemo(() => {
     let count = 0;
     companySymbols.forEach(symbol => {
@@ -69,152 +62,25 @@ export function News() {
             subtitle="Market headlines plus updates tied to your holdings and watchlist."
           />
 
-          <section aria-label="Market news">
-            <Card>
-              <CardHeader>
-                <Heading as="h2" className="text-lg">
-                  Market headlines
-                </Heading>
-                <Text as="div" size="sm" tone="muted">
-                  Latest broad-market stories
-                </Text>
-              </CardHeader>
-              <CardBody>
-                {marketNews.isLoading ? (
-                  <div className="space-y-3">
-                    <Skeleton className="h-6 w-40" />
-                    <Skeleton className="h-24 w-full" />
-                  </div>
-                ) : marketNews.isError ? (
-                  <StatusMessage
-                    tone="danger"
-                    title="Unable to load market news."
-                    message={getErrorMessage(marketNews.error, 'Please try again in a moment.')}
-                    actionLabel="Retry"
-                    onAction={() => {
-                      void marketNews.refetch();
-                    }}
-                  />
-                ) : marketNews.data.length === 0 ? (
-                  <StatusMessage
-                    title="No market headlines yet."
-                    message="Check back later for the latest stories."
-                    className="border-dashed bg-transparent"
-                  />
-                ) : (
-                  <div className="grid gap-3 lg:grid-cols-2">
-                    {marketNews.data.slice(0, 6).map(item => (
-                      <NewsCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                )}
-              </CardBody>
-            </Card>
-          </section>
+          <MarketNewsSection
+            data={marketNews.data}
+            isLoading={marketNews.isLoading}
+            isError={marketNews.isError}
+            error={marketNews.error}
+            onRetry={() => void marketNews.refetch()}
+          />
 
-          <section aria-label="Company news">
-            <Card>
-              <CardHeader>
-                <Heading as="h2" className="text-lg">
-                  Company news
-                </Heading>
-                <Text as="div" size="sm" tone="muted">
-                  Updates for your holdings and watchlist
-                </Text>
-              </CardHeader>
-              <CardBody className="space-y-4">
-                {companySymbols.length === 0 ? (
-                  <StatusMessage
-                    title="Follow a company to see updates."
-                    message="Add stock holdings or watchlist symbols to personalize this feed."
-                    className="border-dashed bg-transparent"
-                  />
-                ) : companyNews.isLoading ? (
-                  <div className="space-y-3">
-                    <Skeleton className="h-6 w-40" />
-                    <Skeleton className="h-24 w-full" />
-                  </div>
-                ) : companyNews.isError ? (
-                  <StatusMessage
-                    tone="danger"
-                    title="Unable to load company news."
-                    message={getErrorMessage(companyNews.error, 'Please try again in a moment.')}
-                    actionLabel="Retry"
-                    onAction={() => {
-                      void companyNews.refetch();
-                    }}
-                  />
-                ) : companyNewsCount === 0 ? (
-                  <StatusMessage
-                    title="No company news yet."
-                    message="We'll show updates as soon as new stories are published."
-                    className="border-dashed bg-transparent"
-                  />
-                ) : (
-                  companySymbols.map(symbol => (
-                    <div key={symbol} className="space-y-4">
-                      <Inline align="center" justify="between" className="pt-4 pb-2">
-                        <Heading as="h3" className="text-base">
-                          {symbol}
-                        </Heading>
-                        <Text as="div" size="sm" tone="muted">
-                          Last 7 days
-                        </Text>
-                      </Inline>
-                      <div className="grid gap-3 lg:grid-cols-2">
-                        {(companyNews.newsBySymbol.get(symbol) ?? []).slice(0, 4).map(item => (
-                          <NewsCard key={item.id} item={item} />
-                        ))}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </CardBody>
-            </Card>
-          </section>
+          <CompanyNewsSection
+            symbols={companySymbols}
+            newsBySymbol={companyNews.newsBySymbol}
+            newsCount={companyNewsCount}
+            isLoading={companyNews.isLoading}
+            isError={companyNews.isError}
+            error={companyNews.error}
+            onRetry={() => void companyNews.refetch()}
+          />
         </Stack>
       </Container>
     </AppShell>
-  );
-}
-
-function formatNewsTime(timestamp: number) {
-  const date = new Date(timestamp * 1000);
-  if (Number.isNaN(date.getTime())) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(date);
-}
-
-function NewsCard({ item }: { item: FinnhubNewsItem }) {
-  return (
-    <a
-      href={item.url}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex gap-4 rounded-2xl border border-(--ui-border) bg-(--ui-bg) p-4 transition-shadow duration-200 hover:border-(--ui-primary) hover:shadow-sm motion-reduce:transition-none"
-    >
-      {item.image ? (
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-(--ui-surface)">
-          <img src={item.image} alt="" className="h-full w-full object-cover" />
-        </div>
-      ) : null}
-      <div className="min-w-0">
-        <Text as="div" className="line-clamp-2 text-sm font-semibold">
-          {item.headline}
-        </Text>
-        <Text as="div" size="sm" tone="muted" className="mt-1 line-clamp-2">
-          {item.summary}
-        </Text>
-        <Inline align="center" className="mt-2 gap-2 text-xs text-(--ui-text-muted)">
-          <span>{item.source}</span>
-          <span aria-hidden="true">•</span>
-          <span>{formatNewsTime(item.datetime)}</span>
-        </Inline>
-      </div>
-    </a>
   );
 }

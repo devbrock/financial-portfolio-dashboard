@@ -5,6 +5,8 @@ import { useControllableState } from '../_internal/useControllableState';
 import type { ComboboxItem, ComboboxProps } from './Combobox.types';
 import { ComboboxList } from './ComboboxList';
 import { findLabel } from './comboboxUtils';
+import { createComboboxKeyHandler } from './useComboboxKeyboard';
+
 /**
  * Combobox
  * Searchable select for symbols; supports debounced input and keyboard navigation.
@@ -55,12 +57,10 @@ export function Combobox(props: ComboboxProps) {
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
-  // Keep input text in sync with selected value when closed.
   React.useEffect(() => {
     if (!open) setQuery(findLabel(items, selectedValue));
   }, [items, open, selectedValue]);
 
-  // Debounce query for filtering (and future async hooks).
   React.useEffect(() => {
     const handle = window.setTimeout(() => setDebouncedQuery(query), debounceMs);
     return () => window.clearTimeout(handle);
@@ -78,15 +78,10 @@ export function Combobox(props: ComboboxProps) {
   }, [items, debouncedQuery, minChars, filterItems]);
 
   const activeItemId =
-    activeIndex >= 0 && activeIndex < filtered.length
-      ? `${listboxId}-opt-${activeIndex}`
-      : undefined;
+    activeIndex >= 0 && activeIndex < filtered.length ? `${listboxId}-opt-${activeIndex}` : undefined;
 
   const openIfReady = React.useCallback(
-    (nextQuery: string) => {
-      if (nextQuery.trim().length >= minChars) setOpen(true);
-      else setOpen(false);
-    },
+    (nextQuery: string) => setOpen(nextQuery.trim().length >= minChars),
     [minChars]
   );
 
@@ -101,60 +96,22 @@ export function Combobox(props: ComboboxProps) {
     [closeOnSelect, setSelectedValue]
   );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    onKeyDown?.(e);
-    if (e.defaultPrevented) return;
-
-    switch (e.key) {
-      case 'ArrowDown': {
-        e.preventDefault();
-        if (!open) setOpen(true);
-        setActiveIndex(prev => {
-          const next = Math.min(prev + 1, filtered.length - 1);
-          return Number.isFinite(next) ? next : -1;
-        });
-        break;
-      }
-      case 'ArrowUp': {
-        e.preventDefault();
-        setActiveIndex(prev => Math.max(prev - 1, 0));
-        break;
-      }
-      case 'Enter': {
-        if (!open) return;
-        const item = filtered[activeIndex];
-        if (item) {
-          e.preventDefault();
-          handleSelect(item);
-        }
-        break;
-      }
-      case 'Escape': {
-        if (!open) return;
-        e.preventDefault();
-        setOpen(false);
-        setActiveIndex(-1);
-        break;
-      }
-    }
-  };
+  const handleKeyDown = createComboboxKeyHandler({
+    open, setOpen, activeIndex, setActiveIndex, filtered, handleSelect, onKeyDown,
+  });
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     onFocus?.(e);
-    if (e.defaultPrevented) return;
-    openIfReady(query);
+    if (!e.defaultPrevented) openIfReady(query);
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     onBlur?.(e);
-    if (e.defaultPrevented) return;
-    if (!closeOnBlur) return;
-    // Delay so click selection can run first.
-    window.setTimeout(() => setOpen(false), 0);
+    if (!e.defaultPrevented && closeOnBlur) window.setTimeout(() => setOpen(false), 0);
   };
+
   const describedBy =
-    [restInputProps['aria-describedby'], loading ? liveId : null].filter(Boolean).join(' ') ||
-    undefined;
+    [restInputProps['aria-describedby'], loading ? liveId : null].filter(Boolean).join(' ') || undefined;
 
   return (
     <div className={cn('relative', className)} data-testid={dataTestId}>
@@ -171,8 +128,7 @@ export function Combobox(props: ComboboxProps) {
         className={cn(inputClassName)}
         value={query}
         onChange={e => {
-          const nextRaw = e.currentTarget.value;
-          const next = inputTransform ? inputTransform(nextRaw) : nextRaw;
+          const next = inputTransform ? inputTransform(e.currentTarget.value) : e.currentTarget.value;
           setQuery(next);
           setActiveIndex(-1);
           openIfReady(next);
