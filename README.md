@@ -1,4 +1,4 @@
-# 🌟 Orion — Financial Portfolio Dashboard
+# 🌟 Orion Wealth — Financial Portfolio Dashboard
 
 <div align="center">
 
@@ -43,9 +43,9 @@
 
 ## 🌌 Overview
 
-**Orion** is a responsive financial portfolio dashboard that empowers users to track their stock and cryptocurrency investments in one unified interface. Named after the constellation that has guided travelers for millennia, Orion helps navigate the complex world of personal finance with clarity and precision.
+**Orion Wealth** is a responsive financial portfolio dashboard that empowers users to track their stock and cryptocurrency investments in one unified interface. Named after the constellation that has guided travelers for millennia, Orion helps navigate the complex world of personal finance with clarity and precision.
 
-Built from the ground up with **React 19**, **TypeScript**, and a custom component library, Orion delivers a polished, executive-ready experience that works seamlessly across desktop, tablet, and mobile devices.
+Built from the ground up with **React 19**, **TypeScript**, and a custom component library, Orion Wealth delivers a polished, executive-ready experience that works seamlessly across desktop, tablet, and mobile devices.
 
 ---
 
@@ -133,7 +133,7 @@ Built from the ground up with **React 19**, **TypeScript**, and a custom compone
 
 ### API Keys
 
-Orion integrates with multiple financial APIs. You'll need to register for the following:
+Orion Wealth integrates with multiple financial APIs. You'll need to register for the following:
 
 | API | Purpose | Rate Limit | Registration |
 |-----|---------|------------|--------------|
@@ -148,7 +148,7 @@ Orion integrates with multiple financial APIs. You'll need to register for the f
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/financial-portfolio-dashboard.git
+   git clone https://github.com/devbrock/financial-portfolio-dashboard.git
    cd financial-portfolio-dashboard
    ```
 
@@ -328,7 +328,7 @@ src/
 
 ### State Management Strategy
 
-Orion employs a **dual-store architecture** that cleanly separates concerns:
+Orion Wealth employs a **dual-store architecture** that cleanly separates concerns:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -401,7 +401,7 @@ TanStack Router offers type-safe routing with automatic code splitting at the ro
 
 ### Why a Custom Component Library?
 
-Per the technical requirements, no UI component libraries (Material-UI, Chakra, etc.) were used. But it was important to me that this application have a consistent look and feel to the Orion Financial brand, so that reviewers would easily be able to invision this as an actual product. So I tracked down the actual branding kit that was used by Paradigm to create the Orion Financial brand. I used this branding kit to create a custom design spec sheet for the component library.Every component, from buttons to modals to charts, is built from scratch with TailwindCSS. This ensures complete control over accessibility, styling, and bundle size.
+Per the technical requirements, no UI component libraries (Material-UI, Chakra, etc.) were used. But it was important to me that Orion Wealth have a consistent look and feel to the Orion Financial brand, so that reviewers would easily be able to invision this as an actual product. So I tracked down the actual branding kit that was used by Paradigm to create the Orion Financial brand. I used this branding kit to create a custom design spec sheet for the component library.Every component, from buttons to modals to charts, is built from scratch with TailwindCSS. This ensures complete control over accessibility, styling, and bundle size.
 
 ### Why Recharts?
 
