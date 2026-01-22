@@ -18,6 +18,26 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        /**
+         * Manual chunk splitting to reduce main bundle size and improve caching.
+         * Separates large vendor dependencies into their own cacheable chunks.
+         */
+        manualChunks: {
+          // Core React runtime
+          vendor: ["react", "react-dom", "react/jsx-runtime"],
+          // Routing (TanStack Router)
+          router: ["@tanstack/react-router"],
+          // Data fetching (TanStack Query)
+          query: ["@tanstack/react-query"],
+          // Charting library (heavy)
+          charts: ["recharts"],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
