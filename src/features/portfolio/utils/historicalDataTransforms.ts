@@ -112,4 +112,3 @@ export const RANGE_DAYS: Record<HistoricalRange, number> = {
   '90d': 90,
   '1y': 365,
 };
-

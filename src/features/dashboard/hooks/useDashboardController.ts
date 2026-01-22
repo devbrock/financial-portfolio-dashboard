@@ -40,8 +40,16 @@ export function useDashboardController() {
 
   const { removeHolding, removeWatchlist } = useDashboardMutations();
   const {
-    watchlist, allocation, holdings, metrics,
-    dailyPlUsd, dailyPlPct, isLoading, isError, errorMessage, dataUpdatedAt,
+    watchlist,
+    allocation,
+    holdings,
+    metrics,
+    dailyPlUsd,
+    dailyPlPct,
+    isLoading,
+    isError,
+    errorMessage,
+    dataUpdatedAt,
   } = useDashboardData();
   const { holdingsQuery, setHoldingsQuery, sortKey, sortDir, triggerSort, visibleHoldings } =
     useHoldingsFilterSort(holdings);
@@ -64,7 +72,10 @@ export function useDashboardController() {
     if (dataUpdatedAt > 0) {
       const start = window.setTimeout(() => setFlashPrices(true), 0);
       const stop = window.setTimeout(() => setFlashPrices(false), 1200);
-      return () => { window.clearTimeout(start); window.clearTimeout(stop); };
+      return () => {
+        window.clearTimeout(start);
+        window.clearTimeout(stop);
+      };
     }
   }, [dataUpdatedAt]);
 
@@ -83,17 +94,47 @@ export function useDashboardController() {
     return 'Portfolio data loaded.';
   }, [dataUpdatedAt, isLoading]);
 
-  const errorAnnounce = useMemo(() => (isError ? errorMessage || 'Market data unavailable.' : ''), [errorMessage, isError]);
+  const errorAnnounce = useMemo(
+    () => (isError ? errorMessage || 'Market data unavailable.' : ''),
+    [errorMessage, isError]
+  );
   const handleRetry = useCallback(() => queryClient.invalidateQueries(), [queryClient]);
 
   return {
-    activeNav, handleNavChange, userName: user?.firstName || 'Investor',
-    range, setRange, holdingsQuery, setHoldingsQuery, sortKey, sortDir, triggerSort,
-    confirmRemoveId, setConfirmRemoveId, lastUpdatedSeconds,
-    isAddAssetOpen, setIsAddAssetOpen, isAddWatchlistOpen, setIsAddWatchlistOpen,
-    flashPrices, handleAddAsset, handleAddWatchlist,
-    watchlist, allocation, holdings, metrics, dailyPlUsd, dailyPlPct,
-    isLoading, isError, errorMessage, liveMessage, errorAnnounce, visibleHoldings,
-    handleRetry, removeHolding, removeWatchlist,
+    activeNav,
+    handleNavChange,
+    userName: user?.firstName || 'Investor',
+    range,
+    setRange,
+    holdingsQuery,
+    setHoldingsQuery,
+    sortKey,
+    sortDir,
+    triggerSort,
+    confirmRemoveId,
+    setConfirmRemoveId,
+    lastUpdatedSeconds,
+    isAddAssetOpen,
+    setIsAddAssetOpen,
+    isAddWatchlistOpen,
+    setIsAddWatchlistOpen,
+    flashPrices,
+    handleAddAsset,
+    handleAddWatchlist,
+    watchlist,
+    allocation,
+    holdings,
+    metrics,
+    dailyPlUsd,
+    dailyPlPct,
+    isLoading,
+    isError,
+    errorMessage,
+    liveMessage,
+    errorAnnounce,
+    visibleHoldings,
+    handleRetry,
+    removeHolding,
+    removeWatchlist,
   };
 }

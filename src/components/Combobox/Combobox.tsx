@@ -78,7 +78,9 @@ export function Combobox(props: ComboboxProps) {
   }, [items, debouncedQuery, minChars, filterItems]);
 
   const activeItemId =
-    activeIndex >= 0 && activeIndex < filtered.length ? `${listboxId}-opt-${activeIndex}` : undefined;
+    activeIndex >= 0 && activeIndex < filtered.length
+      ? `${listboxId}-opt-${activeIndex}`
+      : undefined;
 
   const openIfReady = React.useCallback(
     (nextQuery: string) => setOpen(nextQuery.trim().length >= minChars),
@@ -97,7 +99,13 @@ export function Combobox(props: ComboboxProps) {
   );
 
   const handleKeyDown = createComboboxKeyHandler({
-    open, setOpen, activeIndex, setActiveIndex, filtered, handleSelect, onKeyDown,
+    open,
+    setOpen,
+    activeIndex,
+    setActiveIndex,
+    filtered,
+    handleSelect,
+    onKeyDown,
   });
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -111,7 +119,8 @@ export function Combobox(props: ComboboxProps) {
   };
 
   const describedBy =
-    [restInputProps['aria-describedby'], loading ? liveId : null].filter(Boolean).join(' ') || undefined;
+    [restInputProps['aria-describedby'], loading ? liveId : null].filter(Boolean).join(' ') ||
+    undefined;
 
   return (
     <div className={cn('relative', className)} data-testid={dataTestId}>
@@ -128,7 +137,9 @@ export function Combobox(props: ComboboxProps) {
         className={cn(inputClassName)}
         value={query}
         onChange={e => {
-          const next = inputTransform ? inputTransform(e.currentTarget.value) : e.currentTarget.value;
+          const next = inputTransform
+            ? inputTransform(e.currentTarget.value)
+            : e.currentTarget.value;
           setQuery(next);
           setActiveIndex(-1);
           openIfReady(next);

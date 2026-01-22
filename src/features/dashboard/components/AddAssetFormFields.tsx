@@ -92,12 +92,24 @@ export function AddAssetFormFields(props: AddAssetFormFieldsProps) {
           Results include stocks and crypto. Pick one to continue.
         </Text>
         {errors.assetSelection ? (
-          <Text as="div" id={assetSearchErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+          <Text
+            as="div"
+            id={assetSearchErrorId}
+            role="alert"
+            size="sm"
+            className="mt-1 text-red-600"
+          >
             {errors.assetSelection.message}
           </Text>
         ) : null}
         {isDuplicateAsset ? (
-          <Text as="div" id={assetSearchDuplicateId} role="status" size="sm" className="mt-1 text-amber-600">
+          <Text
+            as="div"
+            id={assetSearchDuplicateId}
+            role="status"
+            size="sm"
+            className="mt-1 text-amber-600"
+          >
             You already have this asset in your portfolio.
           </Text>
         ) : null}

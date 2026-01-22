@@ -32,7 +32,13 @@ export function PurchaseDetailsFields() {
             {...register('quantity', { valueAsNumber: true })}
           />
           {errors.quantity ? (
-            <Text as="div" id={quantityErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+            <Text
+              as="div"
+              id={quantityErrorId}
+              role="alert"
+              size="sm"
+              className="mt-1 text-red-600"
+            >
               {errors.quantity.message}
             </Text>
           ) : null}
@@ -51,7 +57,13 @@ export function PurchaseDetailsFields() {
             {...register('purchasePrice', { valueAsNumber: true })}
           />
           {errors.purchasePrice ? (
-            <Text as="div" id={purchasePriceErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+            <Text
+              as="div"
+              id={purchasePriceErrorId}
+              role="alert"
+              size="sm"
+              className="mt-1 text-red-600"
+            >
               {errors.purchasePrice.message}
             </Text>
           ) : null}
@@ -71,7 +83,13 @@ export function PurchaseDetailsFields() {
           {...register('purchaseDate')}
         />
         {errors.purchaseDate ? (
-          <Text as="div" id={purchaseDateErrorId} role="alert" size="sm" className="mt-1 text-red-600">
+          <Text
+            as="div"
+            id={purchaseDateErrorId}
+            role="alert"
+            size="sm"
+            className="mt-1 text-red-600"
+          >
             {errors.purchaseDate.message}
           </Text>
         ) : null}
@@ -79,4 +97,3 @@ export function PurchaseDetailsFields() {
     </>
   );
 }
-

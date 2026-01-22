@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  StatusMessage,
-  Text,
-} from '@components';
+import { Card, CardBody, CardHeader, Heading, StatusMessage, Text } from '@components';
 import { MarketQuoteTile } from './MarketQuotes';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import type { MarketQuote } from '../hooks/useMarketQuotes';
@@ -21,13 +14,7 @@ type IndicesSectionProps = {
 /**
  * Displays the major indices overview card.
  */
-export function IndicesSection({
-  data,
-  isLoading,
-  isError,
-  error,
-  onRetry,
-}: IndicesSectionProps) {
+export function IndicesSection({ data, isLoading, isError, error, onRetry }: IndicesSectionProps) {
   return (
     <section aria-label="Major indices">
       <Card>
@@ -72,4 +59,3 @@ export function IndicesSection({
     </section>
   );
 }
-

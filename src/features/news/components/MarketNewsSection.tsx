@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  Skeleton,
-  StatusMessage,
-  Text,
-} from '@components';
+import { Card, CardBody, CardHeader, Heading, Skeleton, StatusMessage, Text } from '@components';
 import { NewsCard } from './NewsCard';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import type { FinnhubNewsItem } from '@/types/finnhub';
@@ -72,4 +64,3 @@ export function MarketNewsSection({
     </section>
   );
 }
-

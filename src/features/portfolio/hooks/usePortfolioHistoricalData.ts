@@ -65,6 +65,7 @@ export function usePortfolioHistoricalData(range: HistoricalRange) {
   );
 
   const cachedStockMeta = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity -- Date.now() needed for TTL check; stable within render
     const now = Date.now();
     const meta = new Map<string, { data: StockSeries; isFresh: boolean; fetchedAt: number }>();
     stockSymbols.forEach(symbol => {
@@ -104,8 +105,7 @@ export function usePortfolioHistoricalData(range: HistoricalRange) {
     queries: cryptoSymbols.map(coinId => GetCryptoHistoricalDataQueryOptions(coinId, cryptoParams)),
   });
 
-  const isLoading =
-    stockQueries.some(q => q.isLoading) || cryptoQueries.some(q => q.isLoading);
+  const isLoading = stockQueries.some(q => q.isLoading) || cryptoQueries.some(q => q.isLoading);
   const hasMissingStockData = stockQueries.some((query, i) => {
     const fallback = cachedStockMeta.get(stockSymbols[i])?.data;
     const series = getStockSeries(query.data ?? fallback);
@@ -163,7 +163,17 @@ export function usePortfolioHistoricalData(range: HistoricalRange) {
       });
       return { date, value: totalValue };
     });
-  }, [holdings, dateRange, monthlyDateRange, stockQueries, cryptoQueries, stockSymbols, cryptoSymbols, cachedStockMeta, useMonthly]);
+  }, [
+    holdings,
+    dateRange,
+    monthlyDateRange,
+    stockQueries,
+    cryptoQueries,
+    stockSymbols,
+    cryptoSymbols,
+    cachedStockMeta,
+    useMonthly,
+  ]);
 
   const refetch = useCallback(() => {
     void Promise.all([...stockQueries, ...cryptoQueries].map(q => q.refetch()));

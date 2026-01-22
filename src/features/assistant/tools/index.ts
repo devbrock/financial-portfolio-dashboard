@@ -53,4 +53,3 @@ export {
 
 // Portfolio tools
 export { getTopMovers, getPortfolioRangeSummary } from './portfolioTools';
-

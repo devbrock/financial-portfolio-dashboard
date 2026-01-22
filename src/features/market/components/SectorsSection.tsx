@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  StatusMessage,
-  Text,
-} from '@components';
+import { Card, CardBody, CardHeader, Heading, StatusMessage, Text } from '@components';
 import { MarketQuoteRow } from './MarketQuotes';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import type { MarketQuote } from '../hooks/useMarketQuotes';
@@ -21,13 +14,7 @@ type SectorsSectionProps = {
 /**
  * Displays the sector performance snapshot card.
  */
-export function SectorsSection({
-  data,
-  isLoading,
-  isError,
-  error,
-  onRetry,
-}: SectorsSectionProps) {
+export function SectorsSection({ data, isLoading, isError, error, onRetry }: SectorsSectionProps) {
   return (
     <section aria-label="Sector performance">
       <Card>
@@ -72,4 +59,3 @@ export function SectorsSection({
     </section>
   );
 }
-

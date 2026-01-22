@@ -15,10 +15,10 @@ import {
 } from '@components';
 import { formatDate, formatEarningsTime } from '../marketFormatters';
 import { getErrorMessage } from '@/utils/getErrorMessage';
-import type { FinnhubEarningsCalendarEvent } from '@/types/finnhub';
+import type { FinnhubEarningsCalendarEntry } from '@/types/finnhub';
 
 type EarningsSectionProps = {
-  data: FinnhubEarningsCalendarEvent[];
+  data: FinnhubEarningsCalendarEntry[];
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
@@ -108,4 +108,3 @@ export function EarningsSection({
     </section>
   );
 }
-

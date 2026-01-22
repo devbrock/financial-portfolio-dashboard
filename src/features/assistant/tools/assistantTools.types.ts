@@ -13,4 +13,3 @@ export type AssistantToolData = {
   marketIndices: MarketQuote[];
   marketUpdatedAt: number;
 };
-

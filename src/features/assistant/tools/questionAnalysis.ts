@@ -48,4 +48,3 @@ export const extractRangeDays = (question: string): number | null => {
 
   return null;
 };
-

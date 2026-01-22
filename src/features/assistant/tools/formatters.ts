@@ -50,4 +50,3 @@ export const formatIndex = (quote: MarketQuote): string => {
   const changePct = quote.quote?.dp ?? 0;
   return `${quote.name} (${quote.symbol}) ${formatCurrency(price)} | ${formatPct(changePct)}`;
 };
-

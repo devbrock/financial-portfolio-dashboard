@@ -64,4 +64,3 @@ export function useDashboardMutations() {
     removeWatchlist: (id: string) => removeWatchlistMutation.mutate(id),
   };
 }
-
