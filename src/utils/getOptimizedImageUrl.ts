@@ -42,4 +42,3 @@ export function getOptimizedImageUrl(
     return sourceUrl;
   }
 }
-

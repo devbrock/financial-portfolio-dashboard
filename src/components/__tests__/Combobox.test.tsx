@@ -161,7 +161,6 @@ describe('Combobox', () => {
     });
 
     it('does nothing on Escape when listbox is closed', () => {
-      const setOpen = vi.fn();
       render(<Combobox items={items} minChars={1} />);
 
       const input = screen.getByRole('combobox');
@@ -479,4 +478,3 @@ describe('Combobox', () => {
     });
   });
 });
-

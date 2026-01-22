@@ -23,9 +23,7 @@ export function usePortfolioData() {
   const watchlist = usePortfolioWatchlist();
 
   // Notification preferences from Redux
-  const notificationPrefs = useAppSelector(
-    state => state.portfolio.preferences.notifications
-  );
+  const notificationPrefs = useAppSelector(state => state.portfolio.preferences.notifications);
   const notificationsEnabled = notificationPrefs?.enabled ?? false;
   const notificationThreshold = notificationPrefs?.thresholdPct ?? 5;
 

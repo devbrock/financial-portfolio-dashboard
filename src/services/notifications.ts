@@ -60,7 +60,9 @@ export function getNotificationPermission(): NotificationPermission | 'unsupport
  *
  * @returns Promise resolving to the permission status
  */
-export async function requestNotificationPermission(): Promise<NotificationPermission | 'unsupported'> {
+export async function requestNotificationPermission(): Promise<
+  NotificationPermission | 'unsupported'
+> {
   if (!isNotificationSupported()) {
     return 'unsupported';
   }
@@ -128,7 +130,7 @@ export function sendPriceAlertNotification(alert: PriceAlert): Notification | nu
  * @returns Array of price alerts for assets exceeding the threshold
  */
 export function detectSignificantPriceChanges(
-  holdings: HoldingWithPrice[],
+  _holdings: HoldingWithPrice[],
   watchlist: WatchlistItemWithPrice[],
   thresholdPct: number,
   previouslyNotified: Set<string>
@@ -178,12 +180,7 @@ export function processAndSendPriceAlerts(
     return 0;
   }
 
-  const alerts = detectSignificantPriceChanges(
-    holdings,
-    watchlist,
-    thresholdPct,
-    notifiedSymbols
-  );
+  const alerts = detectSignificantPriceChanges(holdings, watchlist, thresholdPct, notifiedSymbols);
 
   let sentCount = 0;
 
@@ -206,4 +203,3 @@ export function processAndSendPriceAlerts(
 export function clearNotifiedSymbols(notifiedSymbols: Set<string>): void {
   notifiedSymbols.clear();
 }
-

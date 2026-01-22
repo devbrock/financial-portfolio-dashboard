@@ -25,6 +25,12 @@ describe('useNotifications', () => {
   const mockRequestPermission = vi.mocked(notificationsService.requestNotificationPermission);
   const mockProcessAlerts = vi.mocked(notificationsService.processAndSendPriceAlerts);
 
+  const defaultNotificationPrefs: PortfolioState['preferences']['notifications'] = {
+    enabled: false,
+    thresholdPct: 5,
+    permissionStatus: 'default',
+  };
+
   const createPreloadedState = (
     notificationPrefs?: PortfolioState['preferences']['notifications']
   ): { portfolio: PortfolioState } => ({
@@ -37,7 +43,7 @@ describe('useNotifications', () => {
         chartRange: '30d',
         sidebarOpen: true,
         sortPreference: { key: 'name', direction: 'asc' },
-        notifications: notificationPrefs,
+        notifications: notificationPrefs ?? defaultNotificationPrefs,
       },
       userSeed: { seed: 'test-seed', initialized: true },
       historicalCache: { stocks: {} },
@@ -117,11 +123,13 @@ describe('useNotifications', () => {
       mockGetPermission.mockReturnValue('granted');
       mockRequestPermission.mockResolvedValue('granted');
 
-      const store = createTestStore(createPreloadedState({
-        enabled: false,
-        thresholdPct: 5,
-        permissionStatus: 'default',
-      }));
+      const store = createTestStore(
+        createPreloadedState({
+          enabled: false,
+          thresholdPct: 5,
+          permissionStatus: 'default',
+        })
+      );
       const wrapper = createTestWrapper(store);
 
       const { result } = renderHook(() => useNotifications(), { wrapper });
@@ -253,7 +261,7 @@ describe('useNotifications', () => {
   describe('disableNotifications', () => {
     it('disables notifications in store', () => {
       mockGetPermission.mockReturnValue('granted');
-      
+
       const store = createTestStore(
         createPreloadedState({
           enabled: true,
@@ -276,7 +284,7 @@ describe('useNotifications', () => {
   describe('toggleNotifications', () => {
     it('disables when currently enabled', async () => {
       mockGetPermission.mockReturnValue('granted');
-      
+
       const store = createTestStore(
         createPreloadedState({
           enabled: true,
@@ -361,7 +369,7 @@ describe('useNotifications', () => {
   describe('checkPriceAlerts', () => {
     it('returns 0 when notifications are disabled', () => {
       mockGetPermission.mockReturnValue('granted');
-      
+
       const store = createTestStore(
         createPreloadedState({
           enabled: false,
@@ -384,7 +392,7 @@ describe('useNotifications', () => {
 
     it('returns 0 when permission not granted', () => {
       mockGetPermission.mockReturnValue('denied');
-      
+
       const store = createTestStore(
         createPreloadedState({
           enabled: true,
@@ -433,7 +441,7 @@ describe('useNotifications', () => {
   describe('resetNotifiedSymbols', () => {
     it('clears the notified symbols set', () => {
       mockGetPermission.mockReturnValue('granted');
-      
+
       const store = createTestStore(
         createPreloadedState({
           enabled: true,

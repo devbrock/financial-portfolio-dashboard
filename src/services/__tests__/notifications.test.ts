@@ -21,16 +21,22 @@ describe('notifications service', () => {
   const originalNotification = globalThis.Notification;
 
   // Track mock notification instances
-  let mockNotificationInstances: Array<{ close: ReturnType<typeof vi.fn> }> = [];
+  type MockNotificationInstance = {
+    title: string;
+    options?: NotificationOptions;
+    close: ReturnType<typeof vi.fn>;
+  };
+  let mockNotificationInstances: MockNotificationInstance[] = [];
 
   // Create a proper mock Notification class
   class MockNotification {
+    title: string;
+    options?: NotificationOptions;
     close = vi.fn();
 
-    constructor(
-      public title: string,
-      public options?: NotificationOptions
-    ) {
+    constructor(title: string, options?: NotificationOptions) {
+      this.title = title;
+      this.options = options;
       mockNotificationInstances.push(this);
     }
 

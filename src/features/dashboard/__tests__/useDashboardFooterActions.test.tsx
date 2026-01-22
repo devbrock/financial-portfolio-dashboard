@@ -81,6 +81,11 @@ describe('useDashboardFooterActions', () => {
         chartRange: '30d',
         sidebarOpen: true,
         sortPreference: { key: 'name', direction: 'asc' },
+        notifications: {
+          enabled: false,
+          thresholdPct: 5,
+          permissionStatus: 'default',
+        },
       },
       userSeed: { seed: 'test-seed', initialized: true },
       historicalCache: { stocks: {} },
@@ -240,4 +245,3 @@ describe('useDashboardFooterActions', () => {
     });
   });
 });
-

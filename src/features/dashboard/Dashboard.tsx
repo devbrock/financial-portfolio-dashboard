@@ -124,10 +124,7 @@ export function Dashboard() {
       ) : null}
       {isAddWatchlistOpen ? (
         <Suspense fallback={null}>
-          <AddWatchlistModal
-            open={isAddWatchlistOpen}
-            onOpenChange={setIsAddWatchlistOpen}
-          />
+          <AddWatchlistModal open={isAddWatchlistOpen} onOpenChange={setIsAddWatchlistOpen} />
         </Suspense>
       ) : null}
     </AppShell>

@@ -40,10 +40,7 @@ export type UseNotificationsReturn = {
   /** Update the threshold percentage */
   setThreshold: (pct: number) => void;
   /** Check for significant price changes and send notifications */
-  checkPriceAlerts: (
-    holdings: HoldingWithPrice[],
-    watchlist: WatchlistItemWithPrice[]
-  ) => number;
+  checkPriceAlerts: (holdings: HoldingWithPrice[], watchlist: WatchlistItemWithPrice[]) => number;
   /** Clear the list of already-notified symbols (resets for new day) */
   resetNotifiedSymbols: () => void;
 };
@@ -72,9 +69,7 @@ export function useNotifications(): UseNotificationsReturn {
   const dispatch = useAppDispatch();
 
   // Get notification preferences from Redux
-  const notificationPrefs = useAppSelector(
-    state => state.portfolio.preferences.notifications
-  );
+  const notificationPrefs = useAppSelector(state => state.portfolio.preferences.notifications);
 
   // Handle undefined preferences for backwards compatibility with existing stored state
   const enabled = notificationPrefs?.enabled ?? false;
@@ -199,4 +194,3 @@ export function useNotifications(): UseNotificationsReturn {
     resetNotifiedSymbols,
   };
 }
-
