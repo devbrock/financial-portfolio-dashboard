@@ -438,6 +438,7 @@ If given more time, the following enhancements would be prioritized:
 - [ ] **Offline Support** — Service worker for offline portfolio viewing
 - [ ] **Push Notifications** — Mobile push for price alerts (currently browser-only)
 - [ ] **Portfolio Rebalancing** — Suggestions based on target allocation
+- [ ] **Data Export** — More advanced data export functionality, including PDF reports
 
 ---
 
