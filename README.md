@@ -432,6 +432,7 @@ If given more time, the following enhancements would be prioritized:
 - [ ] **Benchmark Comparison** — Overlay S&P 500 performance on portfolio charts
 - [ ] **Advanced Charts** — Candlestick views, volume indicators, technical analysis
 - [ ] **WebSocket Streaming** — True real-time price updates for active trading
+- [ ] **Additional Agent Tooling** — Additional agent tools to help with portfolio management and analysis
 
 ### Nice to Have
 - [ ] **Offline Support** — Service worker for offline portfolio viewing
