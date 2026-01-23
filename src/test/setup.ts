@@ -1,8 +1,20 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
+import { createElement } from 'react';
+import type { ReactNode } from 'react';
 import { afterAll, afterEach, beforeAll, expect, vi } from 'vitest';
 import type { AxeResults } from 'jest-axe';
 import { server } from './msw/server';
+
+vi.mock('recharts', async () => {
+  const actual = await vi.importActual<typeof import('recharts')>('recharts');
+
+  return {
+    ...actual,
+    ResponsiveContainer: ({ children }: { children: ReactNode }) =>
+      createElement('div', { style: { width: 800, height: 400 } }, children),
+  };
+});
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'warn' });
@@ -67,4 +79,96 @@ if (!window.matchMedia) {
     removeListener: vi.fn(),
     dispatchEvent: vi.fn(),
   }));
+}
+
+const DEFAULT_ELEMENT_WIDTH = 800;
+const DEFAULT_ELEMENT_HEIGHT = 400;
+
+Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+  configurable: true,
+  get() {
+    return DEFAULT_ELEMENT_WIDTH;
+  },
+});
+
+Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+  configurable: true,
+  get() {
+    return DEFAULT_ELEMENT_HEIGHT;
+  },
+});
+
+Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
+  configurable: true,
+  get() {
+    return DEFAULT_ELEMENT_WIDTH;
+  },
+});
+
+Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
+  configurable: true,
+  get() {
+    return DEFAULT_ELEMENT_HEIGHT;
+  },
+});
+
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+  configurable: true,
+  value() {
+    const rect = originalGetBoundingClientRect?.call(this);
+    if (rect && (rect.width > 0 || rect.height > 0)) {
+      return rect;
+    }
+
+    return {
+      x: 0,
+      y: 0,
+      width: DEFAULT_ELEMENT_WIDTH,
+      height: DEFAULT_ELEMENT_HEIGHT,
+      top: 0,
+      left: 0,
+      right: DEFAULT_ELEMENT_WIDTH,
+      bottom: DEFAULT_ELEMENT_HEIGHT,
+      toJSON: () => '',
+    };
+  },
+});
+
+if (!window.ResizeObserver) {
+  class ResizeObserverMock {
+    private callback: ResizeObserverCallback;
+
+    constructor(callback: ResizeObserverCallback) {
+      this.callback = callback;
+    }
+
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: {
+              x: 0,
+              y: 0,
+              width: DEFAULT_ELEMENT_WIDTH,
+              height: DEFAULT_ELEMENT_HEIGHT,
+              top: 0,
+              left: 0,
+              right: DEFAULT_ELEMENT_WIDTH,
+              bottom: DEFAULT_ELEMENT_HEIGHT,
+              toJSON: () => '',
+            },
+          } as ResizeObserverEntry,
+        ],
+        this
+      );
+    }
+
+    unobserve() {}
+
+    disconnect() {}
+  }
+
+  window.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 }

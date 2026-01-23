@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 const FINNHUB_BASE = 'https://finnhub.io/api/v1';
 const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
 const ALPHAVANTAGE_BASE = 'https://www.alphavantage.co';
+const EXCHANGERATE_BASE = 'https://api.exchangerate-api.com/v4/latest';
 
 export const handlers = [
   http.get(`${FINNHUB_BASE}/search`, ({ request }) => {
@@ -192,4 +193,20 @@ export const handlers = [
       },
     });
   }),
+  http.get(`${EXCHANGERATE_BASE}/:base`, ({ params }) => {
+    const base = (params.base as string)?.toUpperCase() ?? 'USD';
+    return HttpResponse.json({
+      base,
+      date: '2024-01-05',
+      rates: {
+        EUR: base === 'USD' ? 0.92 : 1.09,
+        GBP: base === 'USD' ? 0.79 : 1.27,
+        JPY: base === 'USD' ? 147.5 : 0.0068,
+        USD: 1,
+      },
+    });
+  }),
+  http.options(`${EXCHANGERATE_BASE}/:base`, () =>
+    new HttpResponse(null, { status: 204 }),
+  ),
 ];

@@ -10,8 +10,10 @@ function ProblemChild(): ReactElement {
 
 describe('ErrorBoundary', () => {
   const originalLocation = window.location;
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn> | null = null;
 
   beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     Object.defineProperty(window, 'location', {
       configurable: true,
       value: {
@@ -22,6 +24,8 @@ describe('ErrorBoundary', () => {
   });
 
   afterEach(() => {
+    consoleErrorSpy?.mockRestore();
+    consoleErrorSpy = null;
     Object.defineProperty(window, 'location', {
       configurable: true,
       value: originalLocation,
